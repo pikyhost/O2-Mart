@@ -90,6 +90,6 @@ talbe:
 
 
 
-Route::get('/clear-cache', function() {
-    return 'Cache cleared';
+Route::get('/final-test', function() {
+    return 'All tests done';
 });
