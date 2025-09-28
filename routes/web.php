@@ -87,3 +87,9 @@ talbe:
 4- save pdf
 
 */
+
+
+
+Route::get('/clear-cache', function() {
+    return 'Cache cleared';
+});
