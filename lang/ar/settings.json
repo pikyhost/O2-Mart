@@ -1,0 +1,29 @@
+{
+    "title": "الإعدادات",
+    "website_name_section": "اسم الموقع",
+    "website_name_description": "هذا القسم لإعداد اسم الموقع.",
+    "website_name_en": "اسم الموقع (إنجليزي)",
+    "website_name_ar": "اسم الموقع (عربي)",
+
+    "logo_section": "الشعار",
+    "logo_description": "هذا القسم لرفع شعار الموقع.",
+    "logo_en": "شعار الموقع (إنجليزي)",
+    "logo_ar": "شعار الموقع (عربي)",
+
+    "favicon_section": "الأيقونة المفضلة",
+    "favicon_description": "هذا القسم لرفع الأيقونة المفضلة للموقع.",
+    "favicon_en": "الأيقونة المفضلة (إنجليزي)",
+    "favicon_ar": "الأيقونة المفضلة (عربي)",
+    "contact_info": "معلومات الاتصال",
+    "contact_info_description": "تحديث تفاصيل الاتصال الخاصة بك.",
+    "phone": "رقم الهاتف",
+    "email": "عنوان البريد الإلكتروني",
+    "social_media": "روابط وسائل التواصل الاجتماعي",
+    "social_media_description": "إدارة حسابات وسائل التواصل الاجتماعي الخاصة بك.",
+    "facebook": "فيسبوك",
+    "youtube": "يوتيوب",
+    "instagram": "إنستجرام",
+    "x": "إكس (تويتر)",
+    "snapchat": "سناب شات",
+    "tiktok": "تيك توك"
+}

@@ -1,0 +1,788 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\OrderAddress;
+use App\Models\OrderItem;
+use App\Models\Cart;
+use App\Models\Coupon;
+use App\Models\CouponUsage;
+use App\Models\UserAddress;
+use App\Services\CartService;
+use App\Services\JeeblyService;
+use App\Services\ShippingCalculatorService;
+use App\Services\PaymobPaymentService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+
+class CheckoutController extends Controller
+{
+    /**
+     * User Checkout (Auth only)
+     */
+
+
+    public function userCheckout(Request $request)
+    {
+        try {
+            \Log::info('Checkout Step 1: Starting userCheckout');
+            $itemsData = $request->input('items', []);
+            \Log::info('Checkout Step 2: Got items data', ['items_count' => count($itemsData)]);
+            $validationErrors = [];
+
+        foreach ($itemsData as $index => $item) {
+            $shippingOption = $item['shipping_option'] ?? 'delivery_only';
+
+            if ($shippingOption === 'with_installation') {
+                if (empty($item['mobile_van_id'])) {
+                    $validationErrors["items.$index.mobile_van_id"] = 'Mobile van ID is required for installation at home.';
+                }
+                if (empty($item['installation_date'])) {
+                    $validationErrors["items.$index.installation_date"] = 'Installation date is required for home service.';
+                }
+            }
+
+            if ($shippingOption === 'installation_center') {
+                if (empty($item['installation_center_id'])) {
+                    $validationErrors["items.$index.installation_center_id"] = 'Installation center ID is required.';
+                }
+                if (empty($item['installation_date'])) {
+                    $validationErrors["items.$index.installation_date"] = 'Installation date is required for installation center.';
+                }
+            }
+        }
+
+        if (!empty($validationErrors)) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Validation failed.',
+                'errors'  => $validationErrors,
+            ], 422);
+        }
+
+        \Log::info('Checkout Step 3: Getting user');
+        $user = Auth::user();
+        if (!$user) {
+            \Log::error('Checkout Error: User not authenticated');
+            return response()->json(['status' => 'error', 'message' => 'User not authenticated'], 401);
+        }
+        \Log::info('Checkout Step 4: User found', ['user_id' => $user->id]);
+        
+        $paymentMethod = $request->input('payment_method', 'paymob');
+        if ($paymentMethod !== 'paymob') {
+            return response()->json(['message' => 'Only Paymob payment is supported.'], 400);
+        }
+        \Log::info('Checkout Step 5: Payment method validated');
+
+        \Log::info('Checkout Step 6: Getting cart for user', ['user_id' => $user->id]);
+        $cart = Cart::with('items.buyable')->where('user_id', $user->id)->first();
+        if (!$cart) {
+            \Log::error('Checkout Error: No cart found', ['user_id' => $user->id]);
+            return response()->json(['status' => 'error', 'message' => 'No cart found for user'], 400);
+        }
+        \Log::info('Checkout Step 7: Cart found', ['cart_id' => $cart->id, 'items_count' => $cart->items->count()]);
+        
+        \Log::info('Checkout Step 8: Handling address selection');
+        // Handle address selection
+        $selectedAddress = null;
+        if ($request->has('address_id') && $request->address_id) {
+            \Log::info('Checkout Step 9: Looking for address', ['address_id' => $request->address_id]);
+            $selectedAddress = UserAddress::where('user_id', $user->id)->find($request->address_id);
+        }
+        
+        if (!$selectedAddress) {
+            \Log::info('Checkout Step 10: Looking for primary address');
+            $selectedAddress = UserAddress::where('user_id', $user->id)->where('is_primary', true)->first();
+        }
+        
+        if (!$selectedAddress) {
+            \Log::error('Checkout Error: No address found');
+            return response()->json(['status' => 'error', 'message' => 'No address found for user'], 422);
+        }
+        
+        \Log::info('Checkout Step 11: Address found', ['address_id' => $selectedAddress->id]);
+        $areaId = $selectedAddress->area_id ?? $request->input('area_id');
+        if (!$areaId) {
+            \Log::error('Checkout Error: No area ID', ['selected_address' => $selectedAddress->toArray()]);
+            return response()->json(['status' => 'error', 'message' => 'No valid area found.'], 422);
+        }
+        \Log::info('Checkout Step 12: Area ID found', ['area_id' => $areaId]);
+
+        \Log::info('Checkout Step 13: Checking cart items');
+        if ($cart->items->isEmpty()) {
+            \Log::error('Checkout Error: Cart is empty');
+            return response()->json(['status' => 'error', 'message' => 'Cart is empty.'], 400);
+        }
+        \Log::info('Checkout Step 14: Cart has items', ['items_count' => $cart->items->count()]);
+
+        \Log::info('Checkout Step 15: Updating cart area', ['area_id' => $areaId]);
+        $cart->update(['area_id' => $areaId]);
+        
+        \Log::info('Checkout Step 16: Starting shipping calculation');
+        $monthlyShipments = $user->shipment_count ?? 20;
+        try {
+            \Log::info('Checkout Step 17: Calling ShippingCalculatorService', ['monthly_shipments' => $monthlyShipments]);
+            $shipping = ShippingCalculatorService::calculate($cart, $monthlyShipments);
+            \Log::info('Checkout Step 18: Shipping calculated', ['shipping' => $shipping]);
+            if (!empty($shipping['error'])) {
+                \Log::error('Checkout Error: Shipping calculation failed', ['shipping' => $shipping]);
+                return response()->json(['status' => 'error', 'message' => $shipping['message'] ?? 'Shipping calculation failed.'], 400);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Checkout Error: Shipping calculation exception', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json(['status' => 'error', 'message' => 'Shipping calculation error: ' . $e->getMessage()], 400);
+        }
+
+        $installationGroups = [];
+        foreach ($cart->items as $cartItem) {
+            if ($cartItem->shipping_option === 'with_installation') {
+                $key = $cartItem->mobile_van_id . '_' . $cartItem->installation_date;
+                $installationGroups[$key] = true;
+            }
+        }
+        $settings = \App\Models\ShippingSetting::first();
+        $installationFeeValue = $settings?->installation_fee ?? 200;
+        $installationFees = count($installationGroups) * $installationFeeValue;
+
+
+        // Calculate subtotal with buy 3 get 1 free logic
+        $subtotal = 0;
+        foreach ($cart->items as $item) {
+            $price = $item->price ?? $item->buyable->discounted_price ?? $item->buyable->price_including_vat ?? 0;
+            $isOfferActive = $item->buyable->buy_3_get_1_free ?? false;
+            $paidQuantity = $isOfferActive && $item->quantity >= 4 
+                ? $item->quantity - 1 
+                : $item->quantity;
+            $subtotal += $price * $paidQuantity;
+        }
+
+        // Coupon logic
+        $coupon = null;
+        $discountAmount = 0;
+        $couponCode = $request->input('coupon_code') ?? $cart->applied_coupon;
+
+        if ($couponCode) {
+            $coupon = Coupon::where('code', $couponCode)
+                ->where('is_active', true)
+                ->where(function ($q) {
+                    $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+                })->first();
+
+            if (!$coupon) return response()->json(['message' => 'Invalid or expired coupon code.'], 400);
+
+            $totalUsed = CouponUsage::where('coupon_id', $coupon->id)->count();
+            $usedByUser = CouponUsage::where('coupon_id', $coupon->id)->where('user_id', $user->id)->count();
+
+            if ($coupon->usage_limit && $totalUsed >= $coupon->usage_limit) return response()->json(['message' => 'Coupon usage limit reached.'], 400);
+            if ($coupon->usage_limit_per_user && $usedByUser >= $coupon->usage_limit_per_user) return response()->json(['message' => 'You have already used this coupon.'], 400);
+
+            if ($coupon->min_order_amount && $subtotal < $coupon->min_order_amount) return response()->json(['message' => 'Order total below coupon minimum.'], 400);
+
+            switch ($coupon->type) {
+                case 'free_shipping':
+                    $shipping['total'] = 0;
+                    break;
+                case 'discount_amount':
+                    $discountAmount = min($coupon->value, $subtotal);
+                    break;
+                case 'discount_percentage':
+                    $discountAmount = round($subtotal * ($coupon->value / 100), 2);
+                    break;
+            }
+        } else {
+            $discountAmount = $cart->discount_amount ?? 0;
+        }
+
+        $netSubtotal = max(0, $subtotal - $discountAmount);
+$vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
+$vatBase = $netSubtotal + $shipping['total'] + $installationFees;
+$vat = round($vatBase * $vatPercent, 2);
+$total = $vatBase + $vat;
+
+
+        $order = Order::create([
+            'user_id'           => $user->id,
+            'subtotal'          => $subtotal,
+            'shipping_cost'     => $shipping['total'],
+            'installation_fees' => $installationFees,
+            'discount'          => $discountAmount,
+            'coupon_code'       => $coupon?->code,
+            'shipping_breakdown'=> $shipping['breakdown'],
+            'shipping_response' => json_encode($shipping['breakdown']),
+            'total'             => $total,
+            'car_make'          => $request->input('car_make'),
+            'car_model'         => $request->input('car_model'),
+            'car_year'          => $request->input('car_year'),
+            'plate_number'      => $request->input('plate_number'),
+            'vin'               => $request->input('vin'),
+            'payment_method'    => 'paymob',
+            'country_id'        => $selectedAddress?->country_id,
+            'governorate_id'    => $selectedAddress?->governorate_id,
+            'city_id'           => $selectedAddress?->city_id,
+            'title'             => $request->input('title'),
+        ]);
+
+        foreach ($cart->items as $cartItem) {
+            $product = $cartItem->buyable;
+            $unitPrice = $cartItem->price ?? $product->discounted_price ?? $product->price_including_vat ?? 0;
+            $itemData = collect($itemsData)->first(fn($i) => $i['buyable_type'] === strtolower(class_basename($cartItem->buyable_type)) && $i['buyable_id'] == $product->id);
+
+            OrderItem::create([
+                'order_id' => $order->id,
+                'buyable_type' => get_class($product),
+                'buyable_id' => $product->id,
+                'quantity' => $cartItem->quantity,
+                'price_per_unit' => $unitPrice,
+                'subtotal' => $unitPrice * $cartItem->quantity,
+                'product_name' => $product->name ?? '',
+                'sku' => $product->sku ?? '',
+                'image_url' => $product->getFirstMediaUrl('feature_image') ?? '',
+                'shipping_option' => $itemData['shipping_option'] ?? 'delivery_only',
+                'installation_center_id' => $itemData['installation_center_id'] ?? null,
+                'mobile_van_id' => $itemData['mobile_van_id'] ?? null,
+                'installation_date' => $itemData['installation_date'] ?? null,
+            ]);
+        }
+
+        if ($selectedAddress) {
+            OrderAddress::create([
+                'order_id'       => $order->id,
+                'type'           => 'shipping',
+                'country_id'     => $selectedAddress->country_id,
+                'governorate_id' => $selectedAddress->governorate_id,
+                'city_id'        => $selectedAddress->city_id,
+                'area_id'        => $selectedAddress->area_id,
+                'address_line'   => $selectedAddress->address_line_1 ?? $selectedAddress->address_line,
+                'phone'          => $selectedAddress->phone,
+            ]);
+        }
+
+        // try {
+        //     (new JeeblyService())->createShipment($order); 
+        // } catch (\Exception $e) {
+        //     \Log::error('Failed to create shipment with Jeebly', ['error' => $e->getMessage()]);
+        //                 Log::info('Trying to create shipment for order', ['id' => $order->id]);
+
+        // }
+        if ($coupon) {
+            CouponUsage::create([
+                'coupon_id' => $coupon->id,
+                'user_id'   => $user->id,
+                'session_id'=> session()->getId(),
+                'order_id'  => $order->id,
+            ]);
+        }
+
+        $paymob = new PaymobPaymentService();
+        $request->merge([
+            'amount_cents'      => intval(round($order->total * 100)),
+            'contact_email'     => $user->email,
+            'name'              => $user->name,
+            'merchant_order_id' => $order->id,
+            'phone_number'      => $selectedAddress?->phone ?? '01000000000',
+        ]);
+
+        $iframeResult = $paymob->sendPayment($request);
+        $order->update([
+            'payment_url'     => $iframeResult['iframe_url'] ?? null,
+            'paymob_order_id' => $iframeResult['paymob_order_id'] ?? null,
+        ]);
+
+        $cart->delete();
+        // Mail::to($user->email)->send(new \App\Mail\OrderReceiptMail($order));
+
+        \Log::info('Checkout Step 19: Checkout completed successfully');
+        return response()->json([
+            'order_id'           => $order->id,
+            'paymob_order_id'    => $order->paymob_order_id,
+            'total'              => $order->total,
+            'discount'           => $discountAmount,
+            'coupon_code'        => $coupon?->code,
+            'shipping_cost'      => $shipping['total'],
+            'installation_fees'  => $installationFees,
+            'shipping_breakdown' => $shipping['breakdown'],
+            'payment_method'     => 'paymob',
+            'payment_url'        => $iframeResult['iframe_url'] ?? null,
+        ]);
+        
+        } catch (\Exception $e) {
+            \Log::error('Checkout Fatal Error', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Checkout failed: ' . $e->getMessage(),
+                'debug' => [
+                    'file' => basename($e->getFile()),
+                    'line' => $e->getLine()
+                ]
+            ], 500);
+        }
+    }
+
+
+
+
+    /**
+     * Guest Checkout (session-based)
+     */
+    public function guestCheckout(Request $request)
+    {
+        $sessionId = $request->header('X-Session-ID') ?? session()->getId();
+
+        $validated = $request->validate([
+            'title' => 'nullable|string|max:10',
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'email' => 'required|email',
+            'mobile' => 'required|string',
+            'address_id' => 'nullable|integer|exists:user_addresses,id',
+            'address_name' => 'nullable|string',
+            'country_id' => 'required_without:address_id|integer',
+            'governorate_id' => 'required_without:address_id|integer',
+            'city_id' => 'required_without:address_id|integer',
+            'area_id' => 'required_without:address_id|integer',
+            'address_line' => 'required_without:address_id|string',
+            'additional_instructions' => 'nullable|string',
+
+            // Vehicle
+            'car_make' => 'nullable|string',
+            'car_model' => 'nullable|string',
+            'car_year' => 'nullable|integer',
+            'plate_number' => 'nullable|string',
+            'vin' => 'nullable|string',
+
+            // Items shipping info
+            'items' => 'required|array|min:1',
+            'items.*.buyable_type' => 'required|string|in:auto_part,battery,tyre,rim',
+            'items.*.buyable_id' => 'required|integer',
+            'items.*.shipping_option' => 'nullable|string|in:delivery_only,with_installation,installation_center',
+            'items.*.installation_center_id' => 'nullable|integer',
+            'items.*.mobile_van_id' => 'nullable|integer',
+            'items.*.installation_date' => 'nullable|date',
+            'coupon_code' => 'nullable|string',
+        ]);
+
+        $cart = Cart::with('items.buyable')->where('session_id', $sessionId)->first();
+        if (!$cart || $cart->items->isEmpty()) {
+            return response()->json(['message' => 'Cart is empty.'], 400);
+        }
+
+        // Handle address selection vs manual entry
+        if (!empty($validated['address_id'])) {
+            $selectedAddress = UserAddress::find($validated['address_id']);
+            if (!$selectedAddress) {
+                return response()->json(['message' => 'Selected address not found.'], 400);
+            }
+            
+            // Use selected address data
+            $areaId = $selectedAddress->area_id;
+            $validated['country_id'] = $selectedAddress->country_id;
+            $validated['governorate_id'] = $selectedAddress->governorate_id;
+            $validated['city_id'] = $selectedAddress->city_id;
+            $validated['address_line'] = $selectedAddress->address_line_1;
+            $validated['additional_instructions'] = $selectedAddress->additional_info;
+        } else {
+            $areaId = $validated['area_id'];
+        }
+        $cart->update(['area_id' => $areaId]);
+
+        $shipping = ShippingCalculatorService::calculate($cart, 5); // use default 5 shipments for guests
+        if (!empty($shipping['error'])) {
+            return response()->json(['message' => 'Shipping calculation failed.'], 400);
+        }
+
+        //  Installation Fees Calculation (Updated)
+        $installationGroups = [];
+        foreach ($cart->items as $cartItem) {
+            if ($cartItem->shipping_option === 'with_installation') {
+                $key = $cartItem->mobile_van_id . '_' . $cartItem->installation_date;
+                $installationGroups[$key] = true;
+            }
+        }
+        $settings = \App\Models\ShippingSetting::first();
+        $installationFeeValue = $settings?->installation_fee ?? 200;
+        $installationFees = count($installationGroups) * $installationFeeValue;
+
+
+        // Calculate subtotal with buy 3 get 1 free logic
+        $subtotal = 0;
+        foreach ($cart->items as $item) {
+            $isOfferActive = $item->buyable->buy_3_get_1_free ?? false;
+            $paidQuantity = $isOfferActive && $item->quantity >= 4 
+                ? $item->quantity - 1 
+                : $item->quantity;
+            $subtotal += $item->price_per_unit * $paidQuantity;
+        }
+
+        // Coupon logic
+        $coupon = null;
+        $discountAmount = 0;
+        $couponCode = $validated['coupon_code'] ?? $cart->applied_coupon;
+
+        if ($couponCode) {
+            $coupon = Coupon::where('code', $couponCode)
+                ->where('is_active', true)
+                ->where(function ($q) {
+                    $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+                })->first();
+
+            if (!$coupon) return response()->json(['message' => 'Invalid or expired coupon code.'], 400);
+
+            $totalUsed = CouponUsage::where('coupon_id', $coupon->id)->count();
+            $usedByGuest = CouponUsage::where('coupon_id', $coupon->id)->where('session_id', $sessionId)->count();
+
+            if ($coupon->usage_limit && $totalUsed >= $coupon->usage_limit) return response()->json(['message' => 'Coupon usage limit reached.'], 400);
+            if ($coupon->usage_limit_per_user && $usedByGuest >= $coupon->usage_limit_per_user) return response()->json(['message' => 'You have already used this coupon.'], 400);
+
+            if ($coupon->min_order_amount && $subtotal < $coupon->min_order_amount) return response()->json(['message' => 'Order total below coupon minimum.'], 400);
+
+            switch ($coupon->type) {
+                case 'free_shipping':
+                    $shipping['total'] = 0;
+                    break;
+                case 'discount_amount':
+                    $discountAmount = min($coupon->value, $subtotal);
+                    break;
+                case 'discount_percentage':
+                    $discountAmount = round($subtotal * ($coupon->value / 100), 2);
+                    break;
+            }
+        } else {
+            $discountAmount = $cart->discount_amount ?? 0;
+        }
+
+        $netSubtotal = max(0, $subtotal - $discountAmount);
+        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
+        $vatBase = $netSubtotal + $shipping['total'] + $installationFees;
+        $vat = round($vatBase * $vatPercent, 2);
+        $total = $vatBase + $vat;
+
+
+        $order = Order::create([
+            'user_id' => null,
+            'contact_name' => $validated['first_name'] . ' ' . $validated['last_name'],
+            'contact_email' => $validated['email'],
+            'contact_phone' => $validated['mobile'],
+            'subtotal' => $subtotal,
+            'shipping_cost' => $shipping['total'],
+            'installation_fees' => $installationFees,
+            'discount' => $discountAmount,
+            'coupon_code' => $coupon?->code,
+            'shipping_breakdown' => $shipping['breakdown'],
+            'shipping_response' => json_encode($shipping['breakdown']),
+            'total' => $total,
+            'payment_method' => 'paymob',
+            'country_id' => $validated['country_id'],
+            'governorate_id' => $validated['governorate_id'],
+            'city_id' => $validated['city_id'],
+            'checkout_token' => $sessionId . '_' . time() . '_' . rand(1000, 9999),
+            'car_make' => $validated['car_make'] ?? null,
+            'car_model' => $validated['car_model'] ?? null,
+            'car_year' => $validated['car_year'] ?? null,
+            'plate_number' => $validated['plate_number'] ?? null,
+            'vin' => $validated['vin'] ?? null,
+            'title' => $validated['title'] ?? null,
+        ]);
+
+        foreach ($cart->items as $cartItem) {
+            $product = $cartItem->buyable;
+            $itemData = collect($validated['items'])->first(fn($i) => $i['buyable_type'] === strtolower(class_basename($cartItem->buyable_type)) && $i['buyable_id'] == $product->id);
+
+            OrderItem::create([
+                'order_id' => $order->id,
+                'buyable_type' => get_class($product),
+                'buyable_id' => $product->id,
+                'quantity' => $cartItem->quantity,
+                'price_per_unit' => $cartItem->price_per_unit,
+                'subtotal' => $cartItem->price_per_unit * $cartItem->quantity,
+                'product_name' => $product->name ?? '',
+                'sku' => $product->sku ?? '',
+                'image_url' => $product->getFirstMediaUrl('feature_image') ?? '',
+                'shipping_option' => $itemData['shipping_option'] ?? 'delivery_only',
+                'installation_center_id' => $itemData['installation_center_id'] ?? null,
+                'mobile_van_id' => $itemData['mobile_van_id'] ?? null,
+                'installation_date' => $itemData['installation_date'] ?? null,
+            ]);
+        }
+
+        // Save Guest Address
+        OrderAddress::create([
+            'order_id' => $order->id,
+            'type' => 'shipping',
+            'country_id' => $validated['country_id'],
+            'governorate_id' => $validated['governorate_id'],
+            'city_id' => $validated['city_id'],
+            'area_id' => $validated['area_id'],
+            'address_line' => $validated['address_line'],
+            'phone' => $validated['mobile'],
+        ]);
+
+        // Send to Jeebly
+        // try {
+        //     (new JeeblyService())->createShipment($order);
+        // } catch (\Exception $e) {
+        //     \Log::error('Jeebly failed', ['e' => $e->getMessage()]);
+        // }
+        if ($coupon) {
+            CouponUsage::create([
+                'coupon_id' => $coupon->id,
+                'session_id'=> $sessionId,
+                'order_id'  => $order->id,
+            ]);
+        }
+
+        // Paymob
+        $request->merge([
+            'amount_cents' => intval(round($order->total * 100)),
+            'contact_email' => $validated['email'],
+            'name' => $validated['first_name'] . ' ' . $validated['last_name'],
+            'merchant_order_id' => $order->id,
+            'phone_number' => $validated['mobile'],
+        ]);
+
+        $paymob = new PaymobPaymentService();
+        $iframe = $paymob->sendPayment($request);
+
+        $order->update([
+            'payment_url' => $iframe['iframe_url'] ?? null,
+            'paymob_order_id' => $iframe['paymob_order_id'] ?? null,
+        ]);
+
+        $cart->delete();
+
+        return response()->json([
+            'order_id' => $order->id,
+            'paymob_order_id' => $order->paymob_order_id,
+            'total' => $order->total,
+            'discount' => $discountAmount,
+            'coupon_code' => $coupon?->code,
+            'installation_fees'  => $installationFees,
+            'shipping_breakdown' => $shipping['breakdown'],
+            'shipping_cost' => $shipping['total'],
+            'payment_url' => $iframe['iframe_url'] ?? null,
+        ]);
+    }
+
+    public function getTracking($id)
+    {
+        $order = Order::findOrFail($id);
+
+        if (!Auth::check() || Auth::id() !== $order->user_id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        if (!$order->tracking_number) {
+            return response()->json(['message' => 'No tracking number found for this order.'], 404);
+        }
+
+        $trackingData = (new JeeblyService())->trackShipment($order->tracking_number);
+        $tracking = $trackingData['Tracking'] ?? [];
+
+        return response()->json([
+            'order_id'        => $order->id,
+            'tracking_number' => $order->tracking_number,
+            'tracking_url'    => $order->tracking_url,
+            'status'          => $tracking['last_status'] ?? null,
+            'desc'            => $tracking['description'] ?? null,
+            'hub_name'        => $tracking['hub_name'] ?? null,
+            'event_date_time' => $tracking['event_date_time'] ?? null,
+            'failure_reason'  => $tracking['failure_reason'] ?? null,
+            'timeline'        => $tracking['events'] ?? [],
+
+        ]);
+    }
+
+
+    public function getGuestTracking($id, Request $request)
+    {
+        $sessionId = $request->header('X-Session-ID') ?? session()->getId();
+        $order = Order::where('id', $id)
+            ->where('checkout_token', $sessionId)
+            ->first();
+
+        if (!$order) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        if (!$order->tracking_number) {
+            return response()->json(['message' => 'No tracking number found for this order.'], 404);
+        }
+
+        $trackingData = (new JeeblyService())->trackShipment($order->tracking_number);
+        $tracking = $trackingData['Tracking'] ?? [];
+
+        return response()->json([
+            'order_id'        => $order->id,
+            'tracking_number' => $order->tracking_number,
+            'tracking_url'    => $order->tracking_url,
+            'status'          => $tracking['last_status'] ?? null,
+            'desc'            => $tracking['description'] ?? null,
+            'hub_name'        => $tracking['hub_name'] ?? null,
+            'event_date_time' => $tracking['event_date_time'] ?? null,
+            'failure_reason'  => $tracking['failure_reason'] ?? null,
+            'timeline'        => $tracking['shipment_timeline'] ?? [],
+        ]);
+    }
+
+
+    public function updateCartArea(Request $request)
+    {
+        $request->validate([
+            'area_id' => 'required|integer|exists:areas,id'
+        ]);
+        
+        $cart = CartService::getCurrentCart();
+        if (!$cart) {
+            return response()->json(['message' => 'Cart not found.'], 404);
+        }
+        
+        $cart->update(['area_id' => $request->area_id]);
+        
+        // Return updated cart summary with new shipping cost
+        $summary = CartService::generateCartSummary($cart);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Cart area updated successfully',
+            'summary' => $summary
+        ]);
+    }
+
+    public function getUserOrders()
+    {
+        $user = Auth::user();
+
+        $orders = Order::with('items')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'order_id'      => $order->id,
+                    'date'          => $order->created_at->format('F j, Y'),
+                    'status'        => $order->status ?? 'pending',
+                    'total'         => 'AED ' . number_format($order->total, 2) . ' for ' . $order->items->count() . ' item' . ($order->items->count() > 1 ? 's' : ''),
+                    'tracking_no'   => $order->tracking_number,
+                    'view_url'      => route('api.orders.view', ['id' => $order->id]),
+                ];
+            });
+
+        return response()->json([
+            'orders' => $orders,
+        ]);
+    }
+    
+    public function getCheckoutAddresses(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+        
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Authentication required',
+                'is_authenticated' => false,
+                'has_addresses' => false,
+                'addresses' => [],
+            ], 401);
+        }
+        
+        $addresses = UserAddress::with(['country', 'governorate', 'city', 'area'])
+            ->where('user_id', $user->id)
+            ->get()
+            ->map(function ($address) {
+                return [
+                    'id' => $address->id,
+                    'label' => $address->label,
+                    'full_name' => $address->full_name,
+                    'phone' => $address->phone,
+                    'address_line' => $address->address_line_1,
+                    'additional_info' => $address->additional_info,
+                    'country_id' => $address->country_id,
+                    'governorate_id' => $address->governorate_id,
+                    'city_id' => $address->city_id,
+                    'area_id' => $address->area_id,
+                    'country_name' => $address->country?->name,
+                    'governorate_name' => $address->governorate?->name,
+                    'city_name' => $address->city?->name,
+                    'area_name' => $address->area?->name,
+                    'is_primary' => $address->is_primary,
+                    'display_text' => $address->label . ' - ' . $address->address_line_1 . ', ' . $address->area?->name . ', ' . $address->city?->name,
+                ];
+            });
+            
+        return response()->json([
+            'status' => 'success',
+            'is_authenticated' => true,
+            'has_addresses' => $addresses->count() > 0,
+            'addresses' => $addresses,
+        ]);
+    }
+    
+    public function saveCheckoutAddress(Request $request)
+    {
+        $validated = $request->validate([
+            'address_name' => 'required|string|max:255',
+            'address' => 'required|string',
+            'phone' => 'required|string|max:20',
+            'country_id' => 'required|integer|exists:countries,id',
+            'city_id' => 'required|integer|exists:cities,id',
+            'area_id' => 'required|integer|exists:areas,id',
+        ]);
+        
+        $user = Auth::guard('sanctum')->user();
+        
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Authentication required to save address'
+            ], 401);
+        }
+        
+        // Check if user already has addresses
+        $existingAddresses = UserAddress::where('user_id', $user->id)->count();
+        
+        // If no existing addresses, make this primary
+        if ($existingAddresses === 0) {
+            $validated['is_primary'] = true;
+        }
+        
+        // If setting as primary, remove primary from other addresses
+        if ($validated['is_primary'] ?? false) {
+            UserAddress::where('user_id', $user->id)->update(['is_primary' => false]);
+        }
+        
+        $city = \App\Models\City::find($validated['city_id']);
+        
+        $address = UserAddress::create([
+            'user_id' => $user->id,
+            'session_id' => null,
+            'label' => $validated['address_name'],
+            'phone' => $validated['phone'],
+            'address_line_1' => $validated['address'],
+            'country_id' => $validated['country_id'],
+            'governorate_id' => $city->governorate_id,
+            'city_id' => $validated['city_id'],
+            'area_id' => $validated['area_id'],
+            'is_primary' => $validated['is_primary'] ?? false,
+        ]);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Address saved successfully',
+            'address' => [
+                'id' => $address->id,
+                'address_name' => $address->label,
+                'display_text' => $address->label . ' - ' . $address->address_line_1,
+            ],
+        ]);
+    }
+
+
+}

@@ -1,0 +1,1311 @@
+{
+    "Must be Collection?": "يجب أن يكون ضمن مجموعة؟",
+    "This product must be added to the cart and ordered in a quantity of 2 or more.": "يجب إضافة هذا المنتج إلى السلة وطلبه بكمية لا تقل عن 2.",
+    "Tag": "وسم",
+    "Add New Tag": "إضافة وسم جديد",
+    "Saved successfully": "تم الحفظ بنجاح",
+    "Tag Name": "اسم الوسم",
+    "Manage blog tags": "إدارة وسوم المدونة",
+    "Last Updated": "آخر تحديث",
+    "Blogs Management": "إدارة المدونات",
+    "User Likes": "إعجابات المستخدمين",
+    "Favorite Article": "مقالة مفضلة",
+    "Favorite Articles": "المقالات المفضلة",
+    "Article Title": "عنوان المقالة",
+    "Added Date": "تاريخ الإضافة",
+    "Updated Date": "تاريخ التحديث",
+    "All Users": "جميع المستخدمين",
+    "Article": "المقالة",
+    "All Articles": "جميع المقالات",
+    "Blogs": "المدونات",
+    "Blog": "مدونة",
+    "Author": "المؤلف",
+    "Content": "المحتوى",
+    "Featured Image": "الصورة الرئيسية",
+    "Select Category": "اختر تصنيفًا",
+    "Tags": "الوسوم",
+    "Publish Date": "تاريخ النشر",
+    "Select Status": "اختر الحالة",
+    "Search for a Category...": "ابحث عن تصنيف...",
+    "Unknown Category": "تصنيف غير معروف",
+    "Showing blogs in category and subcategories:": "عرض المدونات في التصنيف والتصنيفات الفرعية:",
+    "Showing blogs in category:": "عرض المدونات في التصنيف:",
+    "Select Author": "اختر مؤلفًا",
+    "Select Tags": "اختر وسومًا",
+    "Delete Blog": "حذف المدونة",
+    "Are you sure you want to delete this blog?": "هل أنت متأكد أنك تريد حذف هذه المدونة؟",
+    "Delete Selected Blogs": "حذف المدونات المحددة",
+    "Are you sure you want to delete the selected blogs?": "هل أنت متأكد أنك تريد حذف المدونات المحددة؟",
+    "Timestamps": "الطوابع الزمنية",
+    "Published At": "تاريخ النشر",
+    "No content available": "لا يوجد محتوى متاح",
+    "Blog Categories": "تصنيفات المدونة",
+    "Blog Category": "تصنيف المدونة",
+    "Select a parent category": "اختر تصنيفًا رئيسيًا",
+    "A category cannot be its own parent.": "لا يمكن أن يكون التصنيف والدًا لنفسه.",
+    "Delete Blog Category": "حذف تصنيف المدونة",
+    "Are you sure you want to delete this category?": "هل أنت متأكد أنك تريد حذف هذا التصنيف؟",
+    "Delete Selected Categories": "حذف التصنيفات المحددة",
+    "Are you sure you want to delete the selected categories?": "هل أنت متأكد أنك تريد حذف التصنيفات المحددة؟",
+    "Send Offer or Update": "إرسال عرض أو تحديث",
+    "Choose what to send": "اختر ما تريد إرساله",
+    "Promotional Discount": "خصم ترويجي",
+    "Product Highlight": "عرض منتج",
+    "Blog Article": "مقالة مدونة",
+    "Custom Message": "رسالة مخصصة",
+    "Select a Discount": "اختر خصماً",
+    "Select a Product": "اختر منتجاً",
+    "Select a Blog Article": "اختر مقالة",
+    "Write your message": "اكتب رسالتك هنا",
+    "Your message was successfully sent!": "تم إرسال الرسالة بنجاح!",
+    "Verified At": "تم التحقق عند",
+    "Size Guide Images": "صور دليل المقاسات",
+    "Size Guides Images": "صور دليل المقاسات",
+    "Newsletter Subscriber": "مشترك النشرة البريدية",
+    "Newsletter Subscribers": "مشتركي النشرة البريدية",
+    "IP Address": "عنوان IP",
+    "Newsletter": "النشرة الإخبارية",
+    "newsletter_emails": "عناوين النشرة الإخبارية",
+    "newsletter_email": "عنوان النشرة الإخبارية",
+    "Enable/disable available shipping partners and configure their visibility at checkout": "تمكين/تعطيل شركات الشحن المتاحة وتكوين ظهورها عند الدفع",
+    "Brand Colors": "ألوان العلامة التجارية",
+    "These colors will be applied throughout the frontend design": "سيتم تطبيق هذه الألوان عبر واجهة الموقع الأمامية",
+    "Primary Brand Color": "اللون الأساسي للعلامة التجارية",
+    "Secondary Brand Color": "اللون الثانوي للعلامة التجارية",
+    "Applied to: Primary buttons, headers, main CTAs, and key interactive elements (Hex code)": "يُطبق على: الأزرار الأساسية، العناوين، الدعوات الرئيسية للعمل، والعناصر التفاعلية الرئيسية (كود HEX)",
+    "Applied to: Secondary buttons, accents, borders, and complementary design elements (Hex code)": "يُطبق على: الأزرار الثانوية، اللمسات الزخرفية، الحدود، وعناصر التصميم التكميلية (كود HEX)",
+    "Shipping Providers": "مزودو الشحن",
+    "Enable Aramex": "تمكين أرامكس",
+    "Enable Bosta": "تمكين بوستا",
+    "Enable J&T": "تمكين جي آند تي",
+    "Enable Aramex as a shipping option for customers.": "تمكين أرامكس كخيار شحن للعملاء.",
+    "Enable Bosta as a shipping option for customers.": "تمكين بوستا كخيار شحن للعملاء.",
+    "Enable J&T Express as a shipping option for customers.": "تمكين جي آند تي إكسبريس كخيار شحن للعملاء.",
+    "Size Guides": "دليل المقاسات",
+    "Size Guide": "دليل المقاسات",
+    "Shipping Status": "حالة الشحن",
+    "Shipping Response": "رد الشحن",
+    "Bundle ID": "معرف الحزمة",
+    "Category ID": "معرف الفئة",
+    "Cost": "التكلفة",
+    "Shipping Estimate Time": "الوقت المقدر للتوصيل",
+    "Average Rating": "متوسط التقييم",
+    "Label ID": "معرف التصنيف",
+    "Summary": "ملخص",
+    "Is Published": "منشور",
+    "Is Featured": "مميز",
+    "Is Free Shipping": "شحن مجاني",
+    "Email Verified At": "تاريخ التحقق من البريد",
+    "Orders Count": "عدد الطلبات",
+    "Times Ordered": "مرات الطلب",
+    "Wheel Prizes": "جوائز عجلة الحظ",
+    "Available": "متاح",
+    "Probability %": "احتمالية %",
+    "Prize Name": "اسم الجائزة",
+    "Prize Type": "نوع الجائزة",
+    "Is Winner": "فائز",
+    "Winner": "فائز",
+    "Spin Date": "تاريخ التدوير",
+    "Only Winners": "الفائزون فقط",
+    "Spin": "تدوير",
+    "Spins History": "سجل التدويرات",
+    "Prize Information": "معلومات الجائزة",
+    "Points": "نقاط",
+    "None (Just for show)": "لا شيء (للعرض فقط)",
+    "Probability & Availability": "الاحتمالية والتوفر",
+    "Probability": "الاحتمالية",
+    "Is Available": "متاح",
+    "Limits": "الحدود",
+    "Daily Limit": "الحد اليومي",
+    "Only Available": "المتاحة فقط",
+    "points": "نقاط",
+    "Prize": "جائزة",
+    "wheel_of_fortune" : "عجلة الحظ",
+    "Date Range": "النطاق الزمني",
+    "Start Date": "تاريخ البدء",
+    "End Date": "تاريخ الانتهاء",
+    "Spin Settings": "إعدادات التدوير",
+    "Max spins per user": "الحد الأقصى للمحاولات لكل مستخدم",
+    "Cooldown period": "فترة الانتظار",
+    "hours": "ساعات",
+    "Only Active": "النشطة فقط",
+    "Ended Wheels": "العجلات المنتهية",
+    "Prizes": "الجوائز",
+    "Spins": "المحاولات",
+    "Delete selected": "حذف المحدد",
+    "Wheel": "عجلةالحظ",
+    "Wheels": "عجلات الحظ",
+    "Spins Per User": "محاولات لكل مستخدم",
+    "Cooldown (hours)": "فترة الانتظار (ساعات)",
+    "Coupon Usage": "استخدام القسيمة",
+    "Coupon Usages": "استخدامات الكوبونات",
+    "Discounts": "الخصومات",
+    "Usage Details": "تفاصيل الاستخدام",
+    "Order": "الطلب",
+    "Order ID": "معرّف الطلب",
+    "Coupon Code": "رمز القسيمة",
+    "Used At": "تاريخ الاستخدام",
+    "Coupons": "الكوبونات",
+    "Code": "الرمز",
+    "Uses Per Customer": "عدد الاستخدامات لكل عميل",
+    "Total Usage Limit": "الحد الأقصى للاستخدام الكلي",
+    "Per Customer": "لكل عميل",
+    "Total Limit": "الحد الكلي",
+    "Times Used": "عدد مرات الاستخدام",
+    "Active From": "نشط من",
+    "Active Until": "نشط حتى",
+    "Active Coupons": "الكوبونات النشطة",
+    "Unlimited": "غير محدود",
+    "discounts.filters.is_active_help": "تفعيل أو تعطيل الخصم. هذا الخيار لا يتعلق بفترة البداية والنهاية.",
+    "discounts.filters.active_period_help": "تصفية الخصومات بناءً على التاريخ الحالي (تاريخ البداية والنهاية).",
+    "Enabled": "مفعل",
+    "Currently Active": "نشط حاليا",
+    "The discount will apply to products under these categories.": "سيتم تطبيق الخصم على المنتجات ضمن هذه الفئات.",
+    "Offers": "العروض",
+    "Select Products": "حدد المنتجات",
+    "Select Categories": "حدد الفئات",
+    "Basic Information": "المعلومات الأساسية",
+    "Applies To Settings": "إعدادات التطبيق",
+    "Discount Settings": "إعدادات الخصم",
+    "Price Calculation": "حساب السعر",
+    "Validity": "الصلاحية",
+    "discounts.fields.usage_limit_help": "الحد الأقصى لعدد مرات استخدام هذا الخصم.",
+    "Discount Type": "نوع الخصم",
+    "Applies To": "يُطبق على",
+    "Value": "القيمة",
+    "Original Price (for preview)": "السعر الأصلي (للعرض فقط)",
+    "Minimum Order Value": "الحد الأدنى للطلب",
+    "Starts At": "تبدأ في",
+    "Ends At": "تنتهي في",
+    "Usage Limit": "حد الاستخدام",
+    "Requires Coupon": "يتطلب كوبون",
+    "Percentage": "نسبة مئوية",
+    "Fixed Amount": "قيمة ثابتة",
+    "Free Shipping": "شحن مجاني",
+    "Cart": "السلة",
+    "Collection": "مجموعة",
+    "Hide for (days) when closed with \"Don't show again\"": "إخفاء لعدد (أيام) عند اختيار \"عدم الإظهار مرة أخرى\"",
+    "Popup Order": "ترتيب البوب أب",
+    "Interval Between Displays (minutes)": "الفاصل بين مرات العرض (بالدقائق)",
+    "Display Rules": "قواعد العرض",
+    "Page Rules": "قواعد الصفحات",
+    "dont_show_again_days_label": "إخفاء لعدد (أيام) عند اختيار \"عدم الإظهار مرة أخرى\"",
+    "popup_order_label": "ترتيب البوب أب",
+    "show_interval_minutes_label": "الفاصل بين مرات العرض (بالدقائق)",
+    "display_rules_label": "قواعد العرض",
+    "specific_pages_label": "قواعد الصفحات",
+    "image_path_helper": "ارفع الصورة التي ستظهر داخل البوب أب.",
+    "title_helper": "العنوان الرئيسي للبوب أب؛ يجذب انتباه المستخدم.",
+    "description_helper": "النص أو الرسالة التي ستظهر داخل البوب أب.",
+    "cta_text_helper": "نص الزر، مثل 'اعرف المزيد' أو 'احصل على العرض'.",
+    "cta_link_helper": "الرابط الذي يتم توجيه المستخدم إليه عند الضغط على الزر.",
+    "delay_seconds_helper": "كم ثانية بعد تحميل الصفحة يظهر البوب أب.",
+    "duration_seconds_helper": "مدة ظهور البوب أب قبل أن يختفي (0 = يبقى حتى يغلقه المستخدم).",
+    "dont_show_again_days_helper": "عدد الأيام التي لا يظهر فيها البوب أب بعد اختيار 'عدم الإظهار مرة أخرى'.",
+    "popup_order_helper": "كلما كان الرقم أقل، يظهر البوب أب قبل غيره في نفس الصفحة.",
+    "show_interval_minutes_helper": "أقل مدة بين عرض بوب أب وآخر لنفس المستخدم.",
+    "display_rules_helper": "تحكم في الصفحات التي يظهر فيها هذا البوب أب.",
+    "specific_pages_helper": "اختر الصفحات من القائمة المنسدلة. يتم تحميل الروابط المتاحة تلقائيًا، ويمكنك البحث لتسهيل العثور على الصفحة المطلوبة.",
+    "email_needed_helper": "يتطلب من المستخدم إدخال بريده الإلكتروني للتفاعل مع البوب أب.",
+    "is_active_helper": "تفعيل أو تعطيل البوب أب. البوب أب المعطل لا يظهر أبداً.",
+    "Display Duration": "مدة العرض",
+    "All Pages": "جميع الصفحات",
+    "Pages group": "مجموعة صفحات",
+    "Popups": "النوافذ المنبثقة",
+    "Popup": "نافذة منبثقة",
+    "Content Management": "إدارة المحتوى",
+    "Delay Seconds": "ثواني التأخير",
+    "Email needed": "البريد الإلكتروني مطلوب؟",
+    "Specific Pages": "الصفحات المحددة",
+    "blocked_phones.navigation_label": "الأرقام المحظورة",
+    "blocked_phones.single": "رقم محظور",
+    "blocked_phones.plural": "الأرقام المحظورة",
+    "blocked_phones.phone_number": "رقم الهاتف",
+    "This phone number is not allowed.": "رقم الهاتف هذا محظور ولا يمكن استخدامه.",
+    "blocked_phones.note": "ملاحظة",
+    "blocked_phones.created_at": "تاريخ الإضافة",
+    "Color and size information": "معلومات الألوان و المقاسات",
+    "Product Availability (Colors, Sizes and Quantities)": "توفر المنتج (الألوان والأحجام والكميات)",
+
+    "Product Information": "معلومات المنتج",
+    "Back": "رجوع",
+    "Total Quantity": "الكمية الإجمالية",
+    "This phone number is not allowed to create an account": "لا يسمح باستخدام هذا الرقم الهاتفي لإنشاء حساب",
+    "contact.success_message": "تم إرسال رسالتك بنجاح.",
+    "contact_message_notification.admin.title": "رسالة تواصل جديدة",
+    "contact_message_notification.admin.body": "قام :name بإرسال رسالة تواصل جديدة.",
+    "contact_message_notification.admin.view_button": "عرض",
+    "contact_message_notification.user.title": "تم إرسال الرسالة",
+    "contact_message_notification.user.body": "تم إرسال رسالتك إلى الإدارة. يمكنك رؤيتها من الرابط التالي.",
+    "contact_message_notification.user.view_button": "عرض رسالتي",
+    "navigation.Groups.settings": "الإعدادات",
+    "navigation.Labels.contact_settings": "إعدادات التواصل",
+    "Sender Information": "معلومات المرسل",
+    "Landing Page Settings": "إعدادات صفحة اللاندنج",
+    "Message Details": "تفاصيل الرسالة",
+    "From Account": "من حساب",
+"Reason": "السبب",
+    "ContactMessage.Subject": "رسالة تواصل جديدة",
+    "ContactMessage.Greeting": "مرحباً!",
+    "ContactMessage.Intro": "تم إرسال رسالة تواصل جديدة:",
+    "ContactMessage.Name": "**الاسم:**",
+    "ContactMessage.Email": "**البريد الإلكتروني:**",
+    "ContactMessage.Phone": "**رقم الهاتف:**",
+    "ContactMessage.SubjectLabel": "**الموضوع:**",
+    "ContactMessage.Message": "**الرسالة:**",
+    "ContactMessage.IP": "عنوان IP:",
+    "ContactMessage.NotAvailable": "غير متوفر",
+
+    "Country.FromPrefix": "من الدولة:",
+    "Country.SenderFrom": "مرسل من",
+    "Country.Unknown": "دولة غير معروفة",
+
+    "models.contact_setting.singular": "إعداد تواصل",
+    "models.contact_setting.plural": "إعدادات التواصل",
+    "models.contact_setting.label": "إعداد",
+    "models.contact_setting.plural_model": "الإعدادات",
+
+    "fields.key": "المفتاح",
+    "fields.value": "القيمة",
+
+    "navigation.Groups.communication": "الاتصالات",
+    "navigation.Labels.contact_messages": "رسائل التواصل",
+
+    "models.contact_message.singular": "رسالة تواصل",
+    "models.contact_message.plural": "رسائل التواصل",
+    "models.contact_message.label": "الرسالة",
+    "models.contact_message.plural_model": "الرسائل",
+
+    "fields.name": "الاسم",
+    "fields.email": "البريد الإلكتروني",
+    "fields.subject": "الموضوع",
+    "fields.message": "الرسالة",
+    "fields.ip_address": "عنوان IP",
+    "fields.sender_country": "بلد المرسل",
+
+    "messages.sender_from": "هذا المرسل من",
+    "messages.country_unknown": "تعذر تحديد البلد.",
+
+    "actions.view": "عرض",
+    "Team": "الفريق",
+    "CTA Text": "نص CTA",
+    "CTA Link": "رابط CTA",
+    "Add the text and link for the Call To Action (CTA) section.": "أضف النص والرابط لقسم النداء إلى الإجراء (CTA).",
+    "Team Members (English)": "أعضاء الفريق (الإنجليزية)",
+    "Add team members in English. Each member should have a name and an image.": "أضف أعضاء الفريق باللغة الإنجليزية. يجب أن يحتوي كل عضو على اسم وصورة.",
+    "Name": "الاسم",
+    "Team Members (Arabic)": "أعضاء الفريق (العربية)",
+    "Add team members in Arabic. Structure should mirror the English team, but use Arabic names.": "أضف أعضاء الفريق باللغة العربية. يجب أن يتطابق الهيكل مع الفريق باللغة الإنجليزية، ولكن استخدم الأسماء العربية.",
+    "about_us.navigation_label": "من نحن",
+    "about_us.model_label": "محتوى من نحن",
+    "about_us.navigation_group": "إدارة المحتوى",
+
+    "about_us.tabs.header": "العناوين الرئيسية",
+    "about_us.tabs.about": "محتوى من نحن",
+    "about_us.tabs.accordion": "الأقسام المنزلقة",
+    "about_us.tabs.team": "فريق العمل",
+    "about_us.tabs.testimonial": "آراء العملاء",
+
+    "Enter call-to-action text": "أدخل نص الحث على الإجراء",
+    "Enter call-to-action URL": "أدخل رابط الحث على الإجراء",
+
+    "about_us.fields.header_title": "عنوان الصفحة الرئيسي",
+    "about_us.fields.about_title": "عنوان قسم من نحن",
+    "about_us.fields.team_title": "عنوان قسم الفريق",
+    "about_us.fields.testimonial_title": "عنوان قسم آراء العملاء",
+    "about_us.fields.breadcrumb_home": "نص مسار التنقل للصفحة الرئيسية",
+    "about_us.fields.breadcrumb_current": "نص مسار التنقل للصفحة الحالية",
+    "Join Our Team": "انضم إلى فريقنا",
+    "about_us.fields.about_image": "صورة قسم من نحن",
+    "about_us.fields.about_description_1": "الوصف الأول",
+    "about_us.fields.about_description_2": "الوصف الثاني",
+    "about_us.fields.accordion_title": "عنوان القسم المنزلق",
+    "about_us.fields.accordion_content": "محتوى القسم المنزلق",
+    "about_us.fields.team_member_name": "اسم العضو",
+    "about_us.fields.team_member_image": "صورة العضو",
+    "about_us.fields.testimonial_content": "نص الرأي",
+    "about_us.fields.testimonial_name": "اسم العميل",
+    "about_us.fields.testimonial_role": "منصب العميل",
+    "about_us.fields.testimonial_image": "صورة العميل",
+    "about_us.fields.updated_at": "آخر تحديث",
+
+    "about_us.accordion_section": "القسم المنزلق :number",
+    "(and :count more error)": "(و :count خطأ إضافي)",
+    "(and :count more errors)": "(و :count خطأ إضافي)|(و :count أخطاء إضافية)|(و :count أخطاء إضافية)",
+    "A decryption key is required.": "مطلوب مفتاح فك التشفير.",
+    "All rights reserved.": "جميع الحقوق محفوظة.",
+    "Encrypted environment file already exists.": "ملف البيئة المشفر موجود بالفعل.",
+    "Encrypted environment file not found.": "لم يتم العثور على ملف البيئة المشفرة.",
+    "Environment file already exists.": "ملف البيئة موجود بالفعل.",
+    "Environment file not found.": "لم يتم العثور على ملف البيئة.",
+    "messages.login_to_review": "يجب عليك تسجيل الدخول لترك مراجعة.",
+    "messages.login_here": "تسجيل الدخول هنا",
+    "order_confirmation": "تأكيد الطلب",
+    "Go to Website Homepage": "الذهاب إلى الصفحة الرئيسية لواجهة الموقع",
+    "Save changes": "حفظ التغييرات",
+    "product.available_countries": "الدول المتاحة",
+    "Menu Banners": "لافتات القائمة",
+    "env.general": "الإعدادات العامة",
+    "Sales Chart 1": "رسم بياني للمبيعات ١",
+    "Sales Chart 2": "رسم بياني للمبيعات ٢",
+    "Sales Chart Comparison": "مقارنة رسوم بيانية للمبيعات",
+    "env.geoip": "خدمة تحديد الموقع GeoIP",
+    "env.jt_express": "واجهة برمجة التطبيقات لـ JT Express",
+    "env.analytics": "التحليلات",
+    "env.mail": "إعدادات البريد الإلكتروني",
+
+    "env.APP_NAME.label": "اسم الموقع الإلكتروني",
+    "env.APP_NAME.helper": "الاسم العام الظاهر في جميع أنحاء الموقع الإلكتروني.",
+
+    "env.APP_LOCALE.label": "اللغة الافتراضية",
+    "env.APP_LOCALE.helper": "اللغة الافتراضية للموقع الإلكتروني.",
+    "Server Settings": "إعدادات السيرفر",
+
+    "env.GEOIP_IPGEOLOCATION_KEY.label": "مفتاح GeoIP API",
+    "env.GEOIP_IPGEOLOCATION_KEY.helper": "مفتاح API المستخدم لتحديد موقع المستخدم.",
+
+    "env.warning.title": "⚠️ تنبيه مهم",
+    "env.warning.body": "أنت على وشك تعديل إعدادات مهمة في النظام. هذه القيم تؤثر على كيفية عمل الموقع. التغيير الخاطئ قد يؤدي إلى توقف الموقع عن العمل. لا تقم بأي تعديل إلا إذا كنت متأكدًا أو اطلب المساعدة أولاً.",
+
+    "env.GEOIP_SERVICE.label": "مزود خدمة GeoIP",
+    "env.GEOIP_SERVICE.helper": "اسم الخدمة المستخدمة لتحديد الموقع عن طريق IP.",
+
+    "env.JT_EXPRESS_BASE_URL.label": "الرابط الأساسي",
+    "env.JT_EXPRESS_BASE_URL.helper": "نقطة الاتصال الرئيسية لتكامل API الخاص بـ JT Express.",
+
+    "env.JT_EXPRESS_API_ACCOUNT.label": "حساب API",
+    "env.JT_EXPRESS_API_ACCOUNT.helper": "رقم حسابك المسجل في JT Express API.",
+
+    "env.JT_EXPRESS_PRIVATE_KEY.label": "المفتاح السري",
+    "env.JT_EXPRESS_PRIVATE_KEY.helper": "المفتاح السري المستخدم للمصادقة على طلبات API.",
+
+    "env.JT_EXPRESS_CUSTOMER_CODE.label": "رمز العميل",
+    "env.JT_EXPRESS_CUSTOMER_CODE.helper": "الرمز الفريد المخصص لشركتك من قبل JT Express.",
+
+    "env.JT_EXPRESS_PASSWORD.label": "كلمة مرور API",
+    "env.JT_EXPRESS_PASSWORD.helper": "كلمة المرور المستخدمة للوصول إلى خدمات JT Express.",
+
+    "env.ANALYTICS_PROPERTY_ID.label": "معرّف الخاصية في التحليلات",
+    "env.ANALYTICS_PROPERTY_ID.helper": "معرّف الخاصية المرتبط بحساب Google Analytics الخاص بك.",
+
+    "env.ANALYTICS_SERVICE_ACCOUNT_JSON.label": "مسار حساب الخدمة",
+    "env.ANALYTICS_SERVICE_ACCOUNT_JSON.helper": "المسار الكامل لملف JSON لحساب الخدمة في Google Analytics.",
+
+    "env.MAIL_MAILER.label": "طريقة الإرسال",
+    "env.MAIL_MAILER.helper": "نوع السائق المستخدم للبريد مثل (smtp).",
+
+    "env.MAIL_HOST.label": "خادم البريد",
+    "env.MAIL_HOST.helper": "اسم المضيف لخادم SMTP الخاص بك.",
+
+    "env.MAIL_PORT.label": "منفذ البريد",
+    "env.MAIL_PORT.helper": "رقم المنفذ المستخدم للاتصال بخادم البريد (مثل 587).",
+
+    "env.APP_LOCALE.options.en": "الإنجليزية",
+    "env.APP_LOCALE.options.ar": "العربية",
+
+    "env.MAIL_USERNAME.label": "اسم المستخدم",
+    "env.MAIL_USERNAME.helper": "اسم المستخدم المستخدم للمصادقة SMTP.",
+
+    "env.MAIL_PASSWORD.label": "كلمة مرور البريد",
+    "env.MAIL_PASSWORD.helper": "كلمة المرور المستخدمة لتوثيق حساب البريد.",
+
+    "env.MAIL_ENCRYPTION.label": "طريقة التشفير",
+    "env.MAIL_ENCRYPTION.helper": "بروتوكول الأمان المستخدم في إرسال البريد (مثل tls أو ssl).",
+
+    "env.MAIL_FROM_ADDRESS.label": "عنوان الإرسال",
+    "env.MAIL_FROM_ADDRESS.helper": "عنوان البريد الإلكتروني الذي سيظهر كمرسل.",
+"policies": "السياسات",
+    "env.MAIL_FROM_NAME.label": "اسم المرسل",
+    "env.MAIL_FROM_NAME.helper": "الاسم الذي سيظهر في الرسائل المرسلة.",
+    "My Env": "إعدادات السيرفر",
+    "policy.terms_of_service": "شروط الخدمة",
+    "policy.terms_of_service_en": "شروط الخدمة (بالإنجليزية)",
+    "Website Settings": "إعدادات الموقع",
+    "policy.terms_of_service_ar": "شروط الخدمة (بالعربية)",
+    "Title": "العنوان",
+    "Subtitle": "العنوان الفرعي",
+    "Discount": "الخصم",
+    "Category": "فئة",
+    "policy.about_us": "من نحن",
+    "policy.about_us_en": "من نحن (بالإنجليزية)",
+    "policy.about_us_ar": "من نحن (بالعربية)",
+"Apply Filter": "تطبيق الفلتر",
+    "policy.contact_us": "اتصل بنا",
+    "Product Analysis: ": "تحليل المنتج: ",
+    "policy.contact_us_en": "اتصل بنا (بالإنجليزية)",
+    "policy.contact_us_ar": "اتصل بنا (بالعربية)",
+    "Orders Chart": "مخطط لتوضيح التغيرات في الطلبات",
+    "labels": "العناوبن",
+    "Total Ordered": "إجمالي الطلبات",
+    "Unique Sizes": "المقاسات الفريدة",
+    "Color Variants": "متغيرات الألوان",
+    "Sizes with Quantities": "الأحجام مع الكميات",
+    "There are no different colors or sizes.": "لا يوجد ألوان أو أحجام مختلفة.",
+    "Variants Information": "خيارات المنتج",
+    "Minimum Stock Level": "الحد الأدنى لمستوى المخزون",
+    "Alert when product quantity is equal or below this value": "تنبيه عندما تكون كمية المنتج مساوية أو أقل من هذه القيمة",
+    "Countries": "الدول",
+    "Detailed Analysis": "تحليل مفصل",
+    "filter1_desc": "يتم تطبيق هذا الفلتر على جميع الإحصائيات ومخطط المبيعات الرئيسي. سيتم استخدام النطاق الزمني المحدد لحساب المؤشرات الرئيسية وعرض اتجاهات المبيعات للفترة المختارة.",
+    "filter2_desc": "استخدم هذا الفلتر فقط إذا كنت ترغب في مقارنة المبيعات بين فترتين زمنيتين مختلفتين. سيتم تطبيق النطاق الزمني المحدد على مخطط المبيعات 2 لمقارنته بمخطط المبيعات 1.",
+    "Open": "أفتح",
+    "Header Message (English)": "رسالة العنوان الجانبي (بالإنجليزية)",
+    "Header Message (Arabic)": "رسالة العنوان الجانبي (بالعربية)",
+    "Start date for Sales Chart 2": "تاريخ البدء لمخطط المبيعات 2",
+    "End date for Sales Chart 2": "تاريخ الانتهاء لمخطط المبيعات 2",
+    "Sales Chart 2 (for comparison)": "مخطط المبيعات 2 (للمقارنة)",
+    "Top Notice": "إشعار علوي",
+    "Top Notices": "الإشعارات العلوية",
+    "Total Sold": "إجمالي المبيعات",
+    "Position": "المركز",
+    "Total Spent": "إجمالي الإنفاق",
+    "Start date": "تاريخ البدء",
+    "End date": "تاريخ الانتهاء",
+    "Top Products": " أبرز المنتجات",
+    "Geographical Distribution": "التوزيع الجغرافي",
+    "By Country": "حسب الدولة",
+    "Top": "أعلى",
+    "Qty": "الكمية",
+    "Share (%)": "النسبة (%)",
+    "By Governorate": "حسب المحافظة",
+    "By City": "حسب المدينة",
+    "Analysis": "التحليلات",
+    "Sales Over Time": "المبيعات على مدار الوقت",
+    "Default Country": "البلد الافتراضي",
+    "Enable or disable shipping type selection on checkout": "تفعبل أو تعطيل اختيار نوع الشحن عند الخروج.",
+    "days": "أيام",
+    "Order Status": "حالة الطلب",
+    "statuses": "حالات",
+    "Total Units": "الكمية",
+    "Orders": "الطلبات",
+    "Google Analytics": "تحليلات جوجل",
+    "Website Analysis": "تحليلات الموقع الإلكتروني",
+    "Last Orders": "الطلبات الأخيرة",
+    "Size Distribution": "توزيع الحجم",
+    "Users Chart": "مخطط لتوضيح التغيرات في المستخدمين",
+    "charts.quantity_sold": "الكمية المباعة",
+    "charts.date": "التاريخ",
+    "charts.quantity": "الكمية",
+    "charts.status": "الحالة",
+    "Top Customers": "أبرز العملاء",
+    "Total Orders": "إجمالي الطلبات",
+    "Content (English)": "المحتوى (بالإنجليزية)",
+    "Content (Arabic)": "المحتوى (بالعربية)",
+    "CTA Text (English)": "نص الدعوة (بالإنجليزية)",
+    "CTA Text (Arabic)": "نص الدعوة (بالعربية)",
+    "Complementary Products": "المنتجات التكميلية",
+    "CTA URL": "رابط الدعوة",
+    "Color Distribution": "توزيع الألوان",
+    "CTA Text 2 (English)": "نص الدعوة 2 (بالإنجليزية)",
+    "Slider Content": "محتوى السلايدر",
+    "Center Section": "القسم الأوسط",
+    "Center Main Heading": "العنوان الرئيسي للوسط",
+    "Center Button Text": "نص زر الوسط",
+    "Center Button URL": "رابط زر الوسط",
+    "Last Section": "القسم قبل الأخير",
+    "Last 1 Heading": "العنوان قبل الأخير 1",
+    "Last 1 Subheading": "العنوان الفرعي قبل الأخير 1",
+    "Last 1 Button Text": "نص زر قبل الأخير 1",
+    "Last 1 Button URL": "رابط زر قبل الأخير 1",
+    "No Records Found": "لم يتم العثور على سجلات",
+    "There are no items to display.": "لا توجد عناصر لعرضها.",
+    "Last 2 Heading": "العنوان قبل الأخير 2",
+    "Last 2 Subheading": "العنوان الفرعي قبل الأخير 2",
+    "My orders": "طلباتي",
+    "Recent Transactions": "أحدث المعاملات",
+    "List": "القائمة",
+    "Order Number": "رقم الطلب",
+    "No orders were found matching the given tracking number.": "لم يتم العثور على أي طلبات تطابق رقم التتبع المحدد.",
+    "Order Tracking": "تتبع الطلب",
+    "Please enter a tracking number.": "الرجاء إدخال رقم التتبع الخاص بالطلب",
+    "Your order has been placed successfully! You will receive a confirmation email shortly.": "تم إتمام طلبك بنجاح! ستصلك رسالة تأكيد قريبًا.",
+    "Last 2 Button Text": "نص زر قبل الأخير 2",
+    "Last 2 Button URL": "رابط زر قبل الأخير 2",
+    "Latest Section": "القسم الأخير",
+    "Starting At": "يبدأ من",
+    "Latest Heading": "العنوان الأخير",
+    "Latest Button Text": "نص زر الأخير",
+    "Latest Button URL": "رابط زر الأخير",
+    "CTA Text 2 (Arabic)": "نص الدعوة 2 (بالعربية)",
+    "This email is already in use by another user": "هذا البريد الإلكتروني قيد الاستخدام بالفعل من قبل مستخدم آخر.",
+    "CTA URL 2": "رابط الدعوة 2",
+    "Limited Time Text (English)": "نص محدود الوقت (بالإنجليزية)",
+    "Limited Time Text (Arabic)": "نص محدود الوقت (بالعربية)",
+    "The tracking number will be available once the order is shipped.": "رقم التتبع متاح عند شحن الطلب.",
+    "Is Active": "مفعل",
+    "product.select_all": "تحديد الكل",
+    "product.deselect_all": "إلغاء تحديد الكل",
+    "Website Name": "اسم الموقع",
+    "My Wishlist": "قائمتي المفضلة",
+    "Stock Status": "حالة المخزون",
+    "Primary Address": "العنوان الأساسي",
+    "Secondary Phone": "الهاتف الثانوي",
+    "View Order": "عرض الطلب",
+    "Remove Product": "إزالة المنتج",
+    "landing_page_order.quantity": "الكمية",
+    "Landing Page Orders": "طلبات اللاندنج بيدج",
+    "Second Phone Number": "رقم الهاتف الثاني",
+    "Contact Phone Number": "رقم هاتف جهة الأتصال",
+    "User Phone Number": "رقم هاتف المستخدم",
+    "Tracking Number": "رقم تتبع الطلب",
+    "Second Phone": "رقم الهاتف الثاني",
+    "Addresses": "العناوين",
+    "You must be logged in to add items to the cart.": "يجب عليك تسجيل الدخول لإضافة العناصر إلى السلة.",
+    "Invalid quantity.": "كمية غير صالحة.",
+    "Not enough stock available!": "لا يوجد مخزون كافٍ!",
+    "Product added to cart successfully!": "تمت إضافة المنتج إلى السلة بنجاح!",
+    "Profile Settings": "إعدادات الملف الشخصي",
+    "In stock": "متوفر في المخزون",
+    "Out of stock": "غير متوفر",
+    "Quick View": "عرض سريع",
+    "Your wishlist is empty.": "قائمة المفضلة الخاصة بك فارغة.",
+    "product.availability": "التوفر",
+    "Is free shipping cost?": "هل تكلفة الشحن مجانية؟",
+    "Accept Invitation": "قبول الدعوة",
+    "Create your account and join now!": "قم بإنشاء حسابك وانضم الآن!",
+    "Enable Shipping Locations": "تفعيل مواقع الشحن",
+    "order_complete": "اكتمال الطلب",
+    "Number": "رقم",
+    "Contact Name": "اسم جهة الاتصال",
+    "General Settings": "الإعدادات العامة",
+        "filters.created_from": "تم إنشاؤه من",
+        "filters.created_until": "تم إنشاؤها ل",
+        "filters.indicator_from": "الطلب من :date",
+        "filters.indicator_until": "الطلب حتى :date",
+    "Website & Contact Information": "الموقع الإلكتروني ومعلومات الاتصال",
+    "Update website name and contact info": "تحديث اسم الموقع ومعلومات الاتصال",
+    "Manage general settings for your store.": "إدارة الإعدادات العامة لمتجرك.",
+    "Enter the applicable tax percentage for purchases": "أدخل نسبة الضريبة المطبقة على المشتريات.",
+    "Select the default currency for transactions.": "حدد العملة الافتراضية للمعاملات.",
+    "Enable Shipping Types": "تفعيل أنواع الشحن",
+    "Enable or disable shipping type selection on checkout.": "تفعيل أو تعطيل اختيار نوع الشحن عند الدفع.",
+    "Cancelled": "ملغي",
+    "Status": "الحالة",
+    "Shipping Type": "نوع الشحن",
+    "Main Heading": "العنوان الرئيسي",
+    "Spring / Summer Season": "موسم الربيع / الصيف",
+    "Discount Text": "نص الخصم",
+    "Up to": "حتى",
+    "Discount Value": "قيمة الخصم",
+    "50% off": "خصم 50%",
+    "Starting Price": "السعر المبدئي",
+    "Currency Symbol": "رمز العملة",
+    "Button Text": "نص الزر",
+    "Shop Now": "تسوق الآن",
+    "Button URL": "رابط الزر",
+    "Background Image": "صورة الخلفية",
+
+    "Sales Comparison": "مقارنة المبيعات",
+    "Growth Rate": "معدل النمو",
+    "Previous Period": "الفترة السابقة",
+    "vs previous period": "مقارنة بالفترة السابقة",
+    "N/A": "غير متاح",
+
+    "Invitation For Join Us": "دعوة للانضمام إلينا",
+    "You're Invited!": "أنت مدعو!",
+    "We are excited to invite you to explore our extensive e-commerce platform, where shopping meets convenience. Join us and access a wide range of products anytime, anywhere!": "يسعدنا دعوتك لاستكشاف منصتنا التجارية الواسعة، حيث يجتمع التسوق مع الراحة. انضم إلينا واحصل على مجموعة واسعة من المنتجات في أي وقت وفي أي مكان!",
+    "Why Join?": "لماذا تنضم إلينا؟",
+    "Access thousands of products in various categories.": "الوصول إلى آلاف المنتجات في مختلف الفئات.",
+    "Enjoy a seamless shopping experience with our user-friendly interface.": "استمتع بتجربة تسوق سلسة من خلال واجهتنا سهلة الاستخدام.",
+    "Stay updated with the latest trends and exclusive offers.": "ابقَ على اطلاع بأحدث الاتجاهات والعروض الحصرية.",
+    "Click the button below to start your journey with us:": "اضغط على الزر أدناه لبدء رحلتك معنا:",
+    "Join Now": "انضم الآن",
+    "We look forward to having you with us!": "نتطلع لانضمامك إلينا!",
+    "Layer Image": "صورة الطبقة",
+    "Thumbnail Image": "الصورة المصغرة",
+    "Enable or disable shipping locations selection on checkout.": "تفعيل أو تعطيل تكلفة شحن الأماكن عند الدفع.",
+    "Favicon (English & Arabic)":"أيقونة المفضلة (الإنجليزية والعربية)",
+    "Payment Method": "طريقة الدفع",
+    "order": "طلب",
+    "Pages Settings Management": "إدارة إعدادات الصفحات",
+    "Home page settings": "إعدادات الصفحة الرئيسية",
+    "Payment Management": "إدارة الدفع",
+    "Slider Images": "صور السلايدر",
+    "Slider 1 Background Image": "صورة خلفية السلايدر 1",
+    "Slider 2 Background Image": "صورة خلفية السلايدر 2",
+    "Center Image": "الصورة المركزية",
+    "Last Section Images": "صور القسم الأخير",
+    "Last First Image": "الصورة الأولى للقسم الأخير",
+    "Last Second Image": "الصورة الثانية للقسم الأخير",
+    "Session ID": "معرف الجلسة",
+    "Email": "البريد الإلكتروني",
+    "Updated At": "تاريخ التحديث",
+    "Landing Page ID": "معرف الصفحة المقصودة",
+    "Not Available": "غير متاح",
+    "Coupon ID": "معرّف الكوبون",
+    "Tax Percentage": "نسبة الضريبة",
+    "Created At": "تاريخ الإضافة",
+    "Created From": "من تاريخ",
+    "Created Until": "إلى تاريخ",
+    "Order from": "الطلب من",
+    "Order until": "الطلب حتى",
+    "Tax Amount": "قيمة الضريبة",
+    "Subtotal": "المجموع الفرعي",
+    "Payment Methods": "طرق الدفع",
+    "Active": "نشط",
+    "Delete Selected": "حذف المحدد",
+    "order_created_successfully": "تم إنشاء الطلب بنجاح",
+    "order_confirmation_message": "تم تقديم طلبك بنجاح. تم إرسال بريد إلكتروني للتأكيد إلى عنوان بريدك الإلكتروني.",
+    "go_to_home": "الذهاب إلى الصفحة الرئيسية",
+    "reviewed_products.title": "المنتجات التي تم تقييمها",
+    "reviewed_products.navigation_label": "تقييمات المنتجات",
+    "reviewed_products.navigation_group": "تجربة المستخدم",
+    "order_success_message": "تم تقديم الطلب بنجاح! تم إرسال بريد إلكتروني للتأكيد.",
+    "order_error_message": "حدث خطأ ما: :error",
+    "no_recent_order": "ليس لديك أي طلب جديد.",
+    "reviewed_products.model_label": "مراجعة منتج",
+    "reviewed_products.plural_label": "تقييمات المنتجات",
+    "Preparing": "قيد التحضير",
+    "user_id": "المستخدم",
+    "contact_id": "جهة الاتصال",
+    "shipping_type_id": "نوع الشحن",
+    "payment_method_id": "طريقة الدفع",
+    "thank_you": "شكراً لطلبك! 🎉",
+    "order_id": "رقم الطلب",
+    "total_amount": "المبلغ الإجمالي",
+    "payment_method": "طريقة الدفع",
+    "order_details": "تفاصيل الطلب",
+    "quantity": "الكمية",
+    "price": "السعر",
+    "size": "المقاس",
+    "color": "اللون",
+    "order_status": "🚚 حالة الطلب",
+    "shipping_now": "الطلب قيد الشحن الآن.",
+    "customer_service": "📞 لخدمة العملاء، يرجى التواصل معنا عبر البريد الإلكتروني.",
+    "footer_message": "📍 شكراً لاختيارك التسوق معنا! 💖",
+
+    "coupon_id": "القسيمة",
+    "shipping_cost": "تكلفة الشحن",
+    "tax_percentage": "نسبة الضريبة",
+    "tax_amount": "مبلغ الضريبة",
+    "subtotal": "المجموع الفرعي",
+    "total": "الإجمالي",
+    "status": "الحالة",
+    "Cancel": "إلغاء",
+    "notes": "ملاحظات",
+    "Shipping": "مؤكد",
+    "Delayed": "متأخر",
+    "Refund": "مسترد",
+    "Random Product": "منتج عشوائي",
+    "special_offers": "عروض المنتج الخاصة!",
+    "best_deals": "احصل على أفضل الصفقات على باقاتنا المتميزة.",
+    "buy_x_get_y": "اشترِ :x واحصل على :y مجانًا",
+    "discount_price": "سعر الخصم: :price",
+    "get_now": "احصل على هذه الباقة الآن",
+    "Special Bundle Offers!": "العروض المميزة للمنتج!",
+    "Get the best value deals on our premium bundles.": "احصل على أفضل العروض على باقاتنا المتميزة.",
+    "Discount Price: :price": "السعر المخفض: :price",
+    "Buy :x and get :y free": "اشترِ :x واحصل على :y مجانًا",
+    "Get this bundle now": "احصل على هذه الباقة الآن",
+    "Quantity: 1": "الكمية: 1",
+    "Add to Cart": "أضف إلى السلة",
+    "select_color": "اختر اللون",
+    "choose_color": "-- اختر اللون --",
+    "select_size": "اختر الحجم",
+    "choose_size": "-- اختر الحجم --",
+    "add_to_cart": "أضف إلى السلة",
+    "view_cart": "عرض السلة (:count)",
+    "cart_error": "حدث خطأ أثناء الإضافة إلى السلة.",
+    "success_message": "تمت إضافة العنصر إلى السلة بنجاح.",
+    "Completed": "المكتملة",
+    "reviewed_products.table_header": "قائمة تقييمات المنتجات",
+    "reviewed_products.heading": "تقييمات المنتجات (آراء المستخدمين)",
+    "reviewed_products.label": "مراجعة منتج",
+    "reviewed_products.plural_model_label": "تقييمات المنتجات (آراء المستخدمين)",
+    "dark_logo_en": "شعار المظهر الداكن (إنجليزي)",
+    "dark_logo_ar": "شعار المظهر الداكن (عربي)",
+    "Product / Bundle": "منتج / مجموعة",
+    "Your cart is empty": "سلة التسوق فارغة",
+    "CART TOTALS": "إجمالي السلة",
+    "Shipping to": "الشحن إلى",
+    "Select Governorate": "اختر المحافظة",
+    "Completed %": "المكتملة ٪",
+    "Select City": "اختر المدينة",
+    "Shipping Cost": "تكلفة الشحن",
+    "Governorates": "المحافظات",
+    "Cities": "المدن",
+    "Tax": "الضريبة",
+    "Total": "الإجمالي",
+    "Proceed to Checkout": "الانتقال إلى الدفع",
+    "Website Information": "معلومات الموقع",
+    "Update website name and currency and tax percentage": "تحديث اسم الموقع والعملة و نسبة الضريبة",
+    "Website Name (English)": "اسم الموقع (بالإنجليزية)",
+    "Website Name (Arabic)": "اسم الموقع (بالعربية)",
+    "bundles.select_one_product" : "يمكنك اختيار منتج واحد فقط لهذا النوع من العروض. تأكد من اختيار المنتج الذي تقوم بتعديله حاليًا.",
+    "Logos": "الشعارات",
+    "actions.track_order": "تتبع الطلب",
+    "actions.check_order": "تحقق من الطلب",
+    "actions.get_order_status": "احصل على حالة الطلب",
+    "Order Items": "عناصر الطلب",
+    "Price per Unit": "السعر لكل وحدة",
+    "Customer": "العميل",
+    "Contact": "جهة الأتصال",
+    "Country": "الدولة",
+    "Governorate": "المحافظة",
+    "City": "المدينة",
+    "Select a governorate first": "يرجى اختيار المحافظة أولاً",
+    "Coupon": "قسيمة الخصم",
+    "Billing Information": "معلومات الفوترة",
+    "Order Details": "تفاصيل الطلب",
+    "Shipping Information": "معلومات الشحن",
+    "actions.get_trajectory": "احصل على المسار",
+    "actions.cancel_order": "إلغاء الطلب",
+    "Upload logos for different languages": "تحميل الشعارات للغات المختلفة",
+    "Logo (English)": "الشعار (بالإنجليزية)",
+    "shopping_cart": "سلة التسوق",
+    "checkout": "إتمام الشراء",
+    "Logo (Arabic)": "الشعار (بالعربية)",
+    "Dark Logo (English)": "الشعار الداكن (بالإنجليزية)",
+    "Dark Logo (Arabic)": "الشعار الداكن (بالعربية)",
+    "Favicon": "الأيقونة المفضلة",
+    "Upload website favicon": "تحميل الأيقونة المفضلة للموقع",
+    "Favicon (English)": "الأيقونة المفضلة (بالإنجليزية)",
+    "Favicon (Arabic)": "الأيقونة المفضلة (بالعربية)",
+"All" : "الجميع",
+    "Permissions count": "عدد الصلاحبات",
+    "errors": "أخطاء",
+    "Forbidden": "محظور",
+    "Go to page :page": "الإنتقال إلى الصفحة :page",
+    "Hello!": "أهلاً بك!",
+    "If you did not create an account, no further action is required.": "إذا لم تقم بإنشاء حساب ، فلا يلزم اتخاذ أي إجراء آخر.",
+    "If you did not request a password reset, no further action is required.": "إذا لم تقم بطلب استعادة كلمة المرور، لا تحتاج القيام بأي إجراء.",
+    "If you're having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:": "إذا كنت تواجه مشكلة في النقر على الزر \":actionText \"، يمكنك نسخ عنوان URL أدناه\n وألصقه في متصفح الويب:",
+    "Invalid filename.": "اسم الملف غير صالح.",
+    "Invalid JSON was returned from the route.": "تم إرجاع JSON غير صالح من المسار.",
+    "length": "الطول",
+    "Location": "موقع",
+    "Login": "تسجيل الدخول",
+    "Logout": "تسجيل الخروج",
+    "Not Found": "غير متوفر",
+    "of": "من",
+    "Page Expired": "الصفحة منتهية الصلاحية",
+    "Pagination Navigation": "التنقل بين الصفحات",
+    "Payment Required": "مطلوب الدفع",
+    "Size Guide Image" : "صورة دليل المقاسات",
+    "View User": "عرض المستخدم",
+    "Edit User": "تعديل المستخدم",
+    "Please click the button below to verify your email address.": "يرجى النقر على الزر أدناه للتحقق من عنوان بريدك الإلكتروني.",
+    "Regards,": "مع التحية،",
+    "Register": "تسجيل",
+    "Reset Password": "استعادة كلمة المرور",
+    "Password" : "كلمة المرور",
+    "Reset Password Notification": "تنبيه استعادة كلمة المرور",
+    "Upload avatar image": "تحميل صورة الملف الشخصي",
+    "Leave blank if you do not wish to change your current password": "اتركه فارغًا إذا كنت لا ترغب في تغيير كلمة المرور الحالية",
+    "Confirm Password": "تأكيد كلمة المرور",
+    "results": "نتيجة",
+    "Server Error": "خطأ في الإستضافة",
+    "Service Unavailable": "الخدمة غير متوفرة",
+    "Notes": "الملاحظات",
+    "Showing": "عرض",
+    "Creation Date Range": "نطاق تاريخ الإنشاء",
+    "Creation date from": "تاريخ الإنشاء من",
+    "Creation date until": "تاريخ الإنشاء حتى",
+    "Creation date: from :date_from to :date_until": "تاريخ الإنشاء: من :date_from إلى :date_until",
+    "Creation date: from :date_from": "تاريخ الإنشاء: من :date_from",
+    "Creation date: until :date_until": "تاريخ الإنشاء: حتى :date_until",
+    "The given data was invalid.": "البيانات المدخلة غير صالحة.",
+    "The response is not a streamed response.": "الاستجابة ليست استجابة متدفقة.",
+    "contact_info": "معلومات الاتصال",
+    "contact_info_description": "تحديث تفاصيل الاتصال الخاصة بك.",
+    "phone": "رقم الهاتف",
+    "email": "عنوان البريد الإلكتروني",
+    "social_media": "روابط وسائل التواصل الاجتماعي",
+    "social_media_description": "إدارة حسابات وسائل التواصل الاجتماعي الخاصة بك.",
+    "facebook": "فيسبوك",
+    "youtube": "يوتيوب",
+    "instagram": "إنستجرام",
+    "x": "إكس (تويتر)",
+    "snapchat": "سناب شات",
+    "Call us now": "اتصل بنا الآن",
+    "tiktok": "تيك توك",
+    "The response is not a view.": "الاستجابة ليست صفحة عرض.",
+"Customer Name": "اسم العميل",
+    "Preferred Language": "اللغة المفضلة",
+    "English": "الإنجليزية",
+    "Arabic": "العربية",
+    "product": {
+        "actions": {
+            "view_details": "عرض التفاصيل",
+            "rate": "تقييم المنتج"
+        },
+        "rating": {
+            "thank_you": "شكرًا لك على التقييم!",
+            "saved": "تم حفظ تقييمك بـ :rating نجوم.",
+            "modal_heading": "كيف تقيم المنتج \":product\"؟",
+            "confirm": "تأكيد",
+            "your_rating": "تقييمك"
+        }
+    },
+    "Select Product": "اختر اسم المنتج",
+    "Select User": "اختر اسم المستخدم",
+    "User Name": "اسم المستحدم",
+    "Product Image" : "صورة المنتج",
+    "navigation.products_management": "إدارة المنتجات",
+
+    "labels.label": "العلامات",
+    "labels.plural_label": "العلامات",
+
+    "fields.title": "العلامة",
+    "fields.color": "اللون",
+
+    "fields.text_title": "نص العلامة",
+    "fields.text_color": "لون نص العلامة",
+    "fields.text_color_code": "رمز لون نص العلامة",
+    "fields.background_color": "لون الخلفية",
+
+
+    "tabs.special_prices": "تفضيلات البلاد",
+
+    "messages.select_country_or_group": "يجب عليك اختيار إما دولة أو مجموعة دول، ولكن ليس كلاهما.",
+    "country_or_group_info": "دولة أو مجموعة دول",
+
+    "fields.select_country": "اختر الدولة",
+    "fields.select_country_group": "اختر مجموعة الدول",
+    "fields.special_price": "السعر الخاص",
+    "fields.currency": "العملة",
+    "fields.background_color_code": "رمز لون الخلفية",
+    "fields.created_at": "تاريخ الإنشاء",
+    "fields.updated_at": "تاريخ التحديث",
+
+    "actions.edit": "تحرير",
+
+    "Approve": "موافقة",
+    "Reject": "رفض",
+    "Approve Selected": "موافقة على المحدد",
+    "Reject Selected": "رفض المحدد",
+    "Mark as Pending": "تحديد كـ قيد الانتظار",
+    "Pending": "قيد الانتظار",
+    "actions.delete": "حذف",
+    "actions.bulk_delete": "حذف بالجملة",
+    "This action is unauthorized.": "هذا الإجراء غير مصرح به.",
+    "This password reset link will expire in :count minutes.": "ستنتهي صلاحية رابط استعادة كلمة المرور خلال :count دقيقة.",
+    "to": "إلى",
+    "Toggle navigation": "إظهار/إخفاء القائمة",
+    "Too Many Requests": "طلبات كثيرة جدًا",
+    "comments.user": "المستخدم",
+    "comments.comment": "التعليق",
+    "comments.status": "الحالة",
+    "comments.created_at": "تاريخ الإنشاء",
+    "product_ratings.status": "الحالة",
+    "Unauthorized": "غير مصرّح",
+    "Verify Email Address": "التحقق من عنوان البريد الإلكتروني",
+    "Whoops!": "عذراً!",
+    "You are receiving this email because we received a password reset request for your account.": "لقد استلمت هذا الإيميل لأننا استقبلنا طلباً لاستعادة كلمة مرور حسابك.",
+    "Product Tabs": "علامات تبويب المنتج",
+
+    "product_ratings.product": "المنتج",
+    "product_ratings.user": "المستخدم",
+    "product_ratings.rating": "التقييم",
+    "product_ratings.created_at": "تاريخ الإنشاء",
+    "products_reviews.description": "هذه قائمة بجميع تقييمات المستخدمين على المنتجات.",
+    "user_experience": "تجربة المستخدمين",
+    "ratings": "التقييمات",
+    "comments": "التعليقات",
+    "User": "User",
+    "Comment": "Comment",
+    "product_ratings.status_pending": "قيد الانتظار",
+    "product_ratings.status_approved": "موافق عليه",
+    "product_ratings.status_rejected": "مرفوض",
+
+    "product_ratings.actions.approve": "الموافقة",
+    "product_ratings.actions.reject": "الرفض",
+    "General Info": "معلومات عامة",
+    "Product Name": "اسم المنتج",
+    "Description": "الوصف",
+    "Slug": "الرابط الدائم",
+    "Stock & Pricing": "المخزون والتسعير",
+
+    "comments.add": "إضافة تعليق",
+    "comments.empty": "لا توجد تعليقات بعد.",
+    "comments.placeholder": "أضف تعليقاً...",
+
+    "notifications.created": "تم إضافة التعليق.",
+    "notifications.deleted": "تم حذف التعليق.",
+
+    "modal.heading": "التعليقات",
+
+    "comments.delete.tooltip": "حذف التعليق",
+    "transaction": "العمليات",
+    "Price": "السعر",
+    "Has Discount": "هل هناك خصم",
+    "roles.super_admin": "مدير النظام الأول",
+    "roles.admin": "مدير النظام",
+    "roles.client": "عميل",
+    "After Discount Price": "السعر بعد الخصم",
+    "Wishlists": "المنتجات المفضلة",
+    "status.pending": "قيد الانتظار",
+    "status.approved": "موافق عليه",
+    "status.rejected": "مرفوض",
+    "Discount Start": "بداية الخصم",
+    "product.actions.view_details": "عرض التفاصيل",
+    "product.actions.rate_and_review": "إعطاء التقييم والمراجعة",
+    "Add any notes (optional)": "إضافة أي ملاحظات (اختياري)",
+    "product.rating.modal_heading": "كيف تقيم المنتج \":product\"؟",
+    "product.rating.confirm": "تأكيد",
+    "product.rating.your_rating": "تقييمك",
+    "product.rating.thank_you": "شكرًا لك على التقييم!",
+    "product.rating.saved": "تم حفظ تقييمك بـ :rating نجوم.",
+    "Discount End": "نهاية الخصم",
+    "saved_products": {
+        "title": "المنتجات المفضلة",
+        "created_at": "تم الحفظ في",
+        "not_saved_yet": "لم يتم الحفظ بعد",
+        "empty_state_heading": "لم يتم العثور على منتجات مفضلة",
+        "description": "إدارة المنتجات المفضلة هنا.",
+        "filter_by_product": "تصفية حسب المنتج",
+        "filter_by_user": "تصفية حسب المستخدم"
+    },
+
+    "saved_products.title": "المنتجات المفضلة",
+    "saved_products.created_at": "تمت الإضافة إلى المفضلة في",
+    "saved_products.not_saved_yet": "لم تقم بإضافة أي منتج إلى المفضلة بعد",
+    "saved_products.empty_state_heading": "لم يتم العثور على منتجات مفضلة",
+    "saved_products.description": "مجموعة منسقة من المنتجات التي ميزتها بـ ❤\uFE0F. اجمع كل المنتجات التي تعشقها في مكان واحد لرؤيتها في أي وقت.",
+    "saved_products_admin.description": "إدارة جميع المنتجات المفضلة هنا.",
+
+    "saved_products.filter_by_product": "تصفية حسب المنتج",
+    "saved_products.filter_by_user": "تصفية حسب المستخدم",
+    "Media": "الوسائط",
+    "Product Image/Video": "صورة/فيديو المنتج",
+    "attributes.type": "نوع السمة",
+    "attributes.type.boolean": "منطقي (نعم/لا)",
+    "attributes.type.select": "اختيار (قائمة منسدلة)",
+    "attributes.type.text": "إدخال نص",
+    "Extra Images and Videos": "صور ومقاطع فيديو إضافية",
+    "Feature Image": "الصورة المميزة",
+    "Second Feature Image": "الصورة المميزة الثانية",
+    "Select Predefined Attributes": "اختر من السمات المحددة مسبقًا",
+    "Custom Attributes": "سمات مخصصة",
+    "Add Custom Attribute": "إضافة سمة مخصصة",
+    "Type": "النوع",
+    "attributes.label": "السمات",
+    "attributes.name": "اسم السمة",
+    "attributes.description": "الوصف",
+    "attributes.boolean": "منطقي (نعم/لا)",
+    "Your account is blocked now.": "لقد تم حظر حسابك الآن.",
+    "Is Active?": "هل هو نشط؟",
+
+    "title": "الإعدادات",
+    "website_name_section": "اسم الموقع",
+    "website_name_description": "هذا القسم لإعداد اسم الموقع.",
+    "website_name_en": "اسم الموقع (إنجليزي)",
+    "website_name_ar": "اسم الموقع (عربي)",
+
+    "logo_section": "الشعار",
+    "logo_description": "هذا القسم لرفع شعار الموقع.",
+    "logo_en": "شعار المظهر الفاتح (إنجليزي)",
+    "logo_ar": "شعار المظهر الفاتح (عربي)",
+
+    "favicon_section": "الأيقونة المفضلة",
+    "favicon_description": "هذا القسم لرفع الأيقونة المفضلة للموقع.",
+    "favicon_en": "الأيقونة المفضلة",
+    "favicon_ar": "الأيقونة المفضلة (عربي)",
+    "Delete Selected Users": "حذف المستخدمين المحددين",
+    "user not wrote any comment": "لم يكتب المستخدم أي تعليق",
+    "Action Denied": "تم رفض العملية",
+    "You cannot delete users with the Super Admin role.": "لا يمكنك حذف المستخدمين الذين لديهم دور المشرف العام.",
+    "Users Deleted": "تم حذف المستخدمين",
+    ":count users have been deleted.": "تم حذف {count} مستخدم.",
+    "You cannot block users with the Super Admin role.": "لا يمكنك حظر المستخدمين الذين لديهم دور المشرف العام.",
+    "Users Blocked": "تم حظر المستخدمين",
+    ":count users have been blocked.": "تم حظر {count} مستخدم.",
+    "category.title_banner_text": "نص عنوان البانر",
+    "category.title_banner_color": "لون عنوان البانر",
+    "category.cta_banner_text": "نص زر الدعوة",
+    "category.cta_banner_color": "لون زر الدعوة",
+    "Settings": "الإعدادات",
+    "category.title_banner": "عنوان البانر",
+    "category.cta_banner": "بانر الحث على اتخاذ إجراء",
+    "attributes.default_value.boolean": "القيمة الافتراضية (للمنطقي)",
+    "attributes.default_value.text": "القيمة الافتراضية (للنص)",
+    "category.cta_banner_text_color": "لون نص البانر CTA",
+    "category.cta_banner_background_color": "لون خلفية البانر CTA",
+
+    "attributes.values": "قيم السمة (لنمط الاختيار)",
+    "attributes.values.add": "إضافة خيار",
+    "attributes.custom": "سمات مخصصة",
+    "attributes.custom.add": "إضافة سمة مخصصة",
+    "attributes.select": "اختيار (قائمة منسدلة)",
+    "attributes.text": "إدخال نص",
+    "attributes.add_option": "إضافة خيار",
+    "attributes.created_at": "تاريخ الإنشاء",
+    "created_at": "تاريخ الإنضمام",
+    "products.management": "إدارة المنتجات",
+    "Activate Selected": "تفعيل المحدد",
+    "Default sorting": "الفرز الافتراضي",
+    "Sort by popularity": "الفرز حسب الشعبية",
+    "Sort by average rating": "الفرز حسب التقييم",
+    "Sort by newness": "الفرز حسب الأحدث",
+    "Sort by price: low to high": "الفرز حسب السعر: الأقل إلى الأعلى",
+    "Sort by price: high to low": "الفرز حسب السعر: الأعلى إلى الأقل",
+    "Size": "الحجم",
+    "Min": "الأدنى",
+    "Max": "الأعلى",
+    "All Sizes": "جميع الأحجام",
+    "All Colors": "جميع الألوان",
+    "No products found": "لم يتم العثور على منتجات",
+    "Block Selected" : "حظر المحدد",
+    "Activate": "تفعيل",
+    "Block" : "حظر",
+    "shipping_type.navigation_label": "أنواع الشحن",
+    "shipping_type.model_label": "نوع الشحن",
+    "shipping_type.plural_label": "أنواع الشحن",
+    "country_name": "الدولة",
+    "updated_at": "تاريخ التحديث",
+    "governorate": "المحافظة",
+    "governorates": "المحافظات",
+    "cities": "المدن",
+    "governorate_name": "اسم المحافظة",
+    "country": "الدولة",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "delete_bulk": "حذف المحدد",
+    "shipping_type.name": "الاسم",
+    "shipping_type.shipping_cost": "تكلفة الشحن",
+    "shipping_type.shipping_estimate_time": "وقت التوصيل المتوقع (بالأيام)",
+    "shipping_type.status": "الحالة",
+    "shipping_type.active": "نشط",
+    "shipping_type.inactive": "غير نشط",
+    "Shipping Management": "إدارة الشحن",
+    "navigation_label": "المناطق",
+    "model_label": "منطقة",
+    "shipping_zone.name": "المنطقة",
+    "custom.terms_and_conditions": "بالمتابعة، فإنك توافق على {terms} و {privacy}.",
+    "custom.terms_link": "الشروط والأحكام",
+    "custom.privacy_link": "سياسة الخصوصية",
+    "plural_model_label": "المناطق",
+    "shipping_cost.navigation_label": " تكاليف الشحن المختلفة",
+    "shipping_cost.model_label": "تكلفة الشحن",
+    "shipping_cost.plural_label": "تكاليف الشحن",
+    "shipping_cost.product": "المنتج",
+    "shipping_cost.shipping_type": "نوع الشحن",
+    "shipping_cost.city": "المدينة",
+    "shipping_cost.governorate": "المحافظة",
+    "shipping_cost.shipping_zone": "منطقة الشحن",
+    "shipping_cost.country": "الدولة",
+    "shipping_cost.country_group": "مجموعة الدول",
+    "shipping_cost.cost": "التكلفة",
+    "shipping_cost.shipping_estimate_time": "الوقت المقدر للشحن",
+    "shipping_cost.created_at": "تاريخ الإنشاء",
+    "shipping_cost.updated_at": "تاريخ التحديث",
+    "shipping_type.all": "الكل",
+    "Image": "صورة",
+    "Video": "فيديو",
+    "Alt Text": "النص البديل",
+    "SEO": "تحسين محركات البحث",
+    "bundles.label": "العروض",
+    "bundles.navigation.label": "العروض",
+    "bundles.navigation.group": "إدارة العروض",
+    "bundles.model.label": "العرض",
+
+    "bundles.model.plural_label": "العروض",
+    "bundles.model.singular_label": "عرض",
+    "bundles.form.select_bundles": "اختر العروض",
+    "bundles.form.bundle_name": "اسم العرض",
+    "bundles.form.bundle_type": "نوع العرض",
+    "bundles.form.fixed_price": "سعر ثابت",
+    "bundles.form.discount_percentage": "نسبة الخصم",
+    "bundles.form.buy_x_get_y": "اشترِ X واحصل على Y",
+    "bundles.form.discount_price": "السعر بعد الخصم",
+    "bundles.form.discount_percentage_value": "نسبة الخصم",
+    "bundles.form.buy_x": "شراء X",
+    "bundles.form.get_y": "احصل على Y",
+    "bundles.form.products_in_bundle": "المنتجات في العرض",
+    "bundles.form.offers": "العروض",
+    "products.offers": "عروض المنتج",
+    "Meta Title": "عنوان الميتا",
+    "Meta Description": "وصف الميتا",
+    "Meta Keywords": "كلمات الميتا المفتاحية",
+    "Meta Robots": "ميتا روبوتس",
+    "Additional Info": "معلومات إضافية",
+    "orders_for_location": "هذه الطلبات قام بها عملاء من :location.",
+    "related_orders": "Related Orders",
+    "Log out": "تسجيل خروج",
+    "Views": "المشاهدات",
+    "Sales": "المبيعات",
+    "Rating": "التقييم",
+    "Product" : "اسم المنتج",
+    "transaction.purchase": "شراء",
+    "transaction.sale": "بيع",
+    "transaction.restock": "إعادة تخزين",
+    "Is Visible?": "هل مرئي ؟",
+    "comments.actions.approve": "الموافقة",
+    "No discount available now" : "لا يوجد خصم متاح الآن",
+    "Small description": "وصف مختصر",
+    "comments.actions.reject": "رفض",
+    "Quantity" : "الكمية",
+    "Rating Count": "عدد التقييمات",
+    "Is Published?": "هل هو متاح للرؤية؟",
+    "Verified": "تم التحقق منه",
+    "Is Featured?": "هل هو مميز؟",
+    "color.label": "الألوان",
+    "color.name": "الاسم",
+    "sizes.label": "الاحجام",
+    "SKU": "كود المخزون",
+    "Main Image": "الصورة الرئيسية",
+    "Features": "الخصائص و الأنواع",
+    "_category": "الفئة",
+    "Please select a category": "يرجى اختيار فئة",
+
+    "name": "الاسم",
+    "code": "الكود",
+    "colors.label": "الألوان",
+    "category": {
+        "parent": "القسم الرئيسي"
+    },
+    "Please select a main category": "يرجى اختيار قسم رئيسي",
+    "A category cannot be its own main.": "لا يمكن للقسم أن يكون رئيسًا لنفسه.",
+    "Parent Category": "القسم الرئيسي",
+    "is_active": "نشط؟",
+    "color.code": "كود اللون",
+    "color.is_active": "نشط",
+    "color.created_at": "تاريخ الإنشاء",
+    "color.updated_at": "تاريخ التحديث",
+    "currency": "العملة المالية",
+    "Currency": "العملة المالية",
+    "currencies": "العملات المالية",
+    "Stock Management": "إدارة المحزون",
+    "Back to previous page": "العودة إلى الصفحة السابقة",
+    "Stock": "المخزون",
+    "Timestamps Details": "تفاصيل الطوابع الزمنية",
+    "Creation Date": "تاريخ الإضافة",
+    "Last Modified At": "آخر تعديل في",
+    "Settings Management": "إدارة الإعدادات",
+    "Global Settings": "الإعدادات العامة",
+    "Deleted At": "تم الحذف في",
+    "Purchase": "شراء",
+    "Sale": "بيع",
+    "Restock": "إعادة تخزين",
+    "image": "الصورة",
+    "Sizes": "الأحجام",
+    "product_analysis": {
+        "product_id": "معرف المنتج",
+        "total_ordered": "إجمالي الطلبات",
+        "unique_sizes": "مقاسات فريدة",
+        "unique_colors": "ألوان فريدة",
+        "countries": "الدول",
+        "size_distribution": "توزيع المقاسات",
+        "total": "الإجمالي",
+        "size": "المقاس",
+        "quantity": "الكمية",
+        "color_distribution": "توزيع الألوان",
+        "color": "اللون",
+        "geographical_distribution": "التوزيع الجغرافي",
+        "by_country": "حسب الدولة",
+        "country": "الدولة",
+        "qty": "الكمية",
+        "by_governorate": "حسب المحافظة",
+        "governorate": "المحافظة",
+        "by_city": "حسب المدينة",
+        "city": "المدينة",
+        "sales_over_time": "المبيعات عبر الزمن",
+        "daily_sales": "المبيعات اليومية",
+        "order_status": "حالة الطلب",
+        "status_distribution": "توزيع الحالات",
+        "quantity_sold": "الكمية المباعة"
+    },
+    "Shipping cost worldwide": "تكلفة الشحن في جميع أنحاء العالم",
+    "Shipping estimate time worldwide": " وقت التوصيل في جميع أنحاء العالم",
+    "Colors": "الألوان",
+    "colors": "ألوان",
+    "Top Color-Size Combinations": "أفضل مجموعات الألوان والأحجام",
+    "combinations": "مجموعات",
+    "label": "العنوان النصي",
+    "Attributes": "السمات",
+    "Attribute Name": "اسم السمة",
+    "Attribute Value": "قيمة السمة",
+    "id" : "المعرّف",
+    "countries" : "دول العالم",
+    "Special Prices": "أسعار خاصة",
+    "You must select either a Country or a Country Group, but not both.": "يجب عليك اختيار إما دولة أو مجموعة دول، وليس كليهما.",
+    "Select Country": "اختر الدولة",
+    "Select Country Group": "اختر مجموعة الدول",
+    "Special Price": "السعر الخاص",
+    "Avatar": "الصورة الرمزية",
+    "profile.contact_details": "تفاصيل الاتصال",
+    "profile.contact_description": "قم بتحديث رقم الهاتف والعنوان واللغة المفضلة",
+    "Save": "حفظ",
+    "profile.save": "حفظ",
+    "Users Management" : "إدارة المستخدمين",
+    "User ID": "رقم المستخدم",
+    "Products Management" : "إدارة المنتجات",
+    "Products Attributes Management" : "إدارة خصائص المنتجات",
+    "Countries Management" : "إدارة قائمة الدول",
+    "Shipping & Countries" : "الشحن والبلدان",
+    "ID": "المعرف",
+    "Email address": "عنوان البريد الإلكتروني",
+    "profile.phone": "رقم الهاتف",
+    "profile.address": "العنوان",
+    "profile.update_success": "تم تحديث بيانات الاتصال بنجاح",
+    "Phone": "الهاتف",
+    "No phone number saved": "لم يتم حفظ رقم الهاتف",
+    "email.unique": "هذا البريد الإلكتروني مرتبط بالفعل بمستخدم آخر.",
+    "roles.label": "الأدوار",
+    "roles.helper": "يمكنك تحديد دور أو أكثر. إذا تركت الحقل فارغًا، سيتم تعيين دور \"مستخدم لوحة التحكم\" افتراضيًا.",
+    "notification.invited_success": "تمت دعوة المستخدم بنجاح!",
+    "User roles": "أدوار المستخدم",
+    "No role now": "لا يوجد دور حاليًا",
+    "Creation date": "تاريخ الإنشاء",
+    "View": "عرض",
+    "Sales Chart": "مخطط لتوضيح التغيرات في المبيعات",
+    "Edit": "تعديل",
+    "Delete": "حذف",
+    "Actions": "الإجراءات",
+    "Phone number": "رقم الهاتف",
+    "Is active": "نشط",
+    "View user orders": "عرض طلبات المستخدم",
+    "User Orders": "طلبات المستخدم",
+    "Manage user orders": "إدارة طلبات المستخدم",
+    "Last modified at": "آخر تعديل في",
+    "Current Period" : "الفترة الحالية",
+    "Comparison Period" : "فترة المقارنة",
+    "No verified yet": "لم يتم التحقق منه بعد",
+    "Period 1" : "الفترة الأولى",
+    "Period 2" : "الفترة الثانية",
+    "roles": "الدور",
+    "The selected country has already been added.": "تمت إضافة الدولة المحددة بالفعل.",
+    "The selected country group has already been added.": "تمت إضافة مجموعة الدول المحددة بالفعل.",
+    "You cannot select both a Country and a Country Group at the same time.": "لا يمكنك تحديد دولة ومجموعة دول في نفس الوقت.",
+    "You must select either a Country or a Country Group.": "يجب عليك اختيار إما دولة أو مجموعة دول.",
+    "orders.label": "طلباته",
+    "bundles.form.heroicon_o_bolt": "رمز البرق",
+    "bundles.form.columns": "الأعمدة",
+    "bundles.form.column_span_full": "عرض العمود بالكامل",
+    "bundles.form.multiple": "متعدد",
+    "bundles.form.relationship": "العلاقة",
+    "bundles.form.preload": "تحميل مسبق",
+    "bundles.form.create_option_form": "إنشاء نموذج خيار",
+    "bundles.form.hidden_main_product_id": "إخفاء معرف المنتج الرئيسي",
+    "bundles.form.default": "افتراضي",
+    "bundles.form.required": "إجباري",
+    "bundles.form.live": "تحديث مباشر",
+    "bundles.form.numeric": "رقمي",
+    "bundles.form.visible": "مرئي",
+    "bundles.form.products": "المنتجات",
+
+    "bundles.title": "العروض",
+    "bundles.select": "اختر العروض",
+    "bundles.name": "الأسم في واجهة الموقع",
+    "bundles.name_for_admin": "الأسم في لوحة التحكم",
+    "bundles.type": "نوع العرض",
+    "bundles.type.fixed_price": "سعر ثابت",
+    "bundles.type.discount_percentage": "نسبة الخصم",
+    "bundles.type.buy_x_get_y": "اشترِ X واحصل على Y",
+    "bundles.general_information": "المعلومات العامة",
+    "Color": "اللون",
+    "Image_" : "الصورة",
+    "bundles.discount_price": "السعر بعد الخصم",
+    "bundles.discount_percentage": "نسبة الخصم",
+    "bundles.buy_x": "شراء X",
+    "bundles.get_y_free": "احصل على Y",
+    "bundles.products": "المنتجات",
+    "bundles.landingPages": "صفحات الهبوط",
+    "bundles.special_prices": "تفضيلات البلاد لعروض المنتج",
+    "bundles.special_price": "تفضيلات البلاد",
+    "bundles.after_discount_price": "السعر بعد الخصم",
+"Update": "تحديث",
+
+    "bundles.fixed_price": "سعر ثابت",
+    "bundles.buy_x_get_y": "اشترِ X واحصل على Y"
+}

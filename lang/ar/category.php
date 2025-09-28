@@ -1,0 +1,31 @@
+<?php
+
+return [
+    'id' => 'المعرّف',
+    'name' => 'الاسم',
+    'description' => 'الوصف',
+    'slug' => 'المُعرّف الفريد',
+    'image' => 'الصورة',
+    'meta_title' => 'عنوان الميتا',
+    'meta_description' => 'وصف الميتا',
+    'meta_keywords' => 'كلمات الميتا الرئيسية',
+    'meta_robots' => 'ميتا روبوتس',
+    'is_published' => 'منشور',
+    'created_at' => 'تاريخ الإنشاء',
+    'updated_at' => 'تاريخ التعديل',
+    'actions' => 'الإجراءات',
+    'view' => 'عرض',
+    'edit' => 'تعديل',
+    'delete' => 'حذف',
+    'restore' => 'استعادة',
+    'force_delete' => 'حذف نهائي',
+    'bulk_actions' => 'إجراءات جماعية',
+    'creation_date' => 'تاريخ الإنشاء',
+    'last_modified_at' => 'آخر تعديل',
+    'nav_group_name' => 'إدارة التصنيفات',
+    'label' => 'التصنيفات',
+    'model_label' => 'التصنيف',
+    'parent' => ' التصنيف الرئيسي',
+    'cat_name' => 'اسم التصنيف',
+    'cta_banner_url' => 'رابط الضغط علي الزر'
+];

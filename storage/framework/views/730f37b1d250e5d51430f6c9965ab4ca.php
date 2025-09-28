@@ -1,0 +1,2 @@
+<p class="text-gray-700 p-4 dark:text-gray-200"><?php echo e(__('Please enter a search term to get started.')); ?></p>
+<?php /**PATH /home/mo/code/laravel/o2-mart-back/vendor/charrafimed/global-search-modal/src/../resources/views/components/search/empty-query-text.blade.php ENDPATH**/ ?>

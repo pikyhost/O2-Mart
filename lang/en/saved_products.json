@@ -1,0 +1,9 @@
+{
+    "title": "Saved Products",
+    "created_at": "Saved At",
+    "not_saved_yet": "Not saved yet",
+    "empty_state_heading": "No saved products found",
+    "description": "Manage your saved products here.",
+    "filter_by_product": "Filter by Product",
+    "filter_by_user": "Filter by User"
+}

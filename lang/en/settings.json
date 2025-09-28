@@ -1,0 +1,29 @@
+{
+    "title": "Settings",
+    "website_name_section": "Website Name",
+    "website_name_description": "This section is for setting the website name.",
+    "website_name_en": "Website Name (English)",
+    "website_name_ar": "Website Name (Arabic)",
+
+    "logo_section": "Logo",
+    "logo_description": "This section is for uploading the website logo.",
+    "logo_en": "Website Logo (English)",
+    "logo_ar": "Website Logo (Arabic)",
+
+    "favicon_section": "Favicon",
+    "favicon_description": "This section is for uploading the website favicon.",
+    "favicon_en": "Favicon (English)",
+    "favicon_ar": "Favicon (Arabic)",
+    "contact_info": "Contact Information",
+    "contact_info_description": "Update your contact details.",
+    "phone": "Phone Number",
+    "email": "Email Address",
+    "social_media": "Social Media Links",
+    "social_media_description": "Manage your social media accounts.",
+    "facebook": "Facebook",
+    "youtube": "YouTube",
+    "instagram": "Instagram",
+    "x": "X (Twitter)",
+    "snapchat": "Snapchat",
+    "tiktok": "TikTok"
+}

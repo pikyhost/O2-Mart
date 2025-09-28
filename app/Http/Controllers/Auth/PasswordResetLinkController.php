@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
+
+class PasswordResetLinkController extends Controller
+{
+    /**
+     * Handle an incoming password reset link request.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        // Normalize email: trim whitespace and convert to lowercase
+        $email = strtolower(trim($request->email));
+        
+        // Check if user exists with normalized email
+        $user = User::whereRaw('LOWER(TRIM(email)) = ?', [$email])->first();
+        
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'email' => [__('passwords.user')],
+            ]);
+        }
+
+        // Use the actual email from database for password reset
+        $status = Password::sendResetLink([
+            'email' => $user->email
+        ]);
+
+        if ($status != Password::RESET_LINK_SENT) {
+            throw ValidationException::withMessages([
+                'email' => [__($status)],
+            ]);
+        }
+
+        return response()->json(['status' => __($status)]);
+    }
+}
