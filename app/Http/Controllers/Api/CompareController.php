@@ -184,12 +184,8 @@ class CompareController extends Controller
             case 'tyre':
                 $basePrice = $p->price_vat_inclusive ?? null;
                 $discountedPrice = $p->discounted_price ?? null;
-                
-                // Multiply by 4 if it's a set of 4
-                if ($p->is_set_of_4) {
-                    $basePrice = $basePrice ? $basePrice * 4 : null;
-                    $discountedPrice = $discountedPrice ? $discountedPrice * 4 : null;
-                }
+                $setOf4Price = $basePrice ? $basePrice * 4 : null;
+                $setOf4DiscountedPrice = $discountedPrice ? $discountedPrice * 4 : null;
                 
                 return [
                     'brand'       => optional($p->tyreBrand)->name,
@@ -209,6 +205,8 @@ class CompareController extends Controller
                     'price_including_vat' => $basePrice,
                     'discount_percentage' => $p->discount_percentage ?? null,
                     'discounted_price'    => $discountedPrice,
+                    'set_of_4_price'      => $setOf4Price,
+                    'set_of_4_discounted_price' => $setOf4DiscountedPrice,
 
                     'slug'        => $p->slug,
                     'alt_text'    => $p->alt_text ?? null,

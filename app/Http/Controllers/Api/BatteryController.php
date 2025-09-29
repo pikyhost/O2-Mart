@@ -178,11 +178,41 @@ public function index(Request $request)
             'year' => 'required|integer',
         ]);
 
-        $batteries = Battery::whereHas('attributes', function ($query) use ($request) {
+        $batteries = Battery::with([
+            'attributes',
+            'batteryBrand',
+            'capacity',
+            'dimension',
+            'batteryCountry',
+            'category',
+        ])->whereHas('attributes', function ($query) use ($request) {
             $query->whereHas('make', fn($q) => $q->where('name', $request->make))
                   ->whereHas('model', fn($q) => $q->where('name', $request->model))
                   ->where('model_year', $request->year);
-        })->get();
+        })->withAvg(['reviews as average_rating' => function ($q) {
+            $q->where('is_approved', true);
+        }], 'rating')->get();
+
+        $batteries->transform(function ($battery) {
+            return array_merge(
+                $battery->toArray(),
+                [
+                    'feature_image' => $battery->battery_feature_image_url,
+                    'secondary_image' => $battery->battery_secondary_image_url,
+                    'gallery_images' => $battery->battery_gallery_urls,
+                    'average_rating' => round($battery->average_rating ?? 5, 2),
+                    'battery_brand' => $battery->batteryBrand
+                    ? array_merge(
+                        $battery->batteryBrand->only(['id', 'value']),
+                        ['logo_url' => $battery->batteryBrand->logo_url]
+                    )
+                    : null,
+                    'meta_title'       => $battery->meta_title,
+                    'meta_description' => $battery->meta_description,
+                    'alt_text'         => $battery->alt_text,
+                ]
+            );
+        });
 
         return response()->json([
             'status' => 'success',

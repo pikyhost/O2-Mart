@@ -394,9 +394,18 @@ class TyreController extends Controller
             ->groupBy('car_make_id')
             ->map(function ($group) {
                 $make = $group->first()->make;
+                
+                if (!$make) {
+                    return null;
+                }
 
                 $modelsGrouped = $group->groupBy('car_model_id')->map(function ($modelsGroup) {
                     $model = $modelsGroup->first()->model;
+                    
+                    if (!$model) {
+                        return null;
+                    }
+                    
                     $yearsGrouped = $modelsGroup->groupBy('model_year')->map(function ($yearGroup, $year) {
                         $trims = $yearGroup->pluck('trim')->filter()->unique()->values();
                         return [
@@ -410,14 +419,14 @@ class TyreController extends Controller
                         'name' => $model->name,
                         'years' => $yearsGrouped,
                     ];
-                })->values();
+                })->filter()->values();
 
                 return [
                     'id' => $make->id,
                     'name' => $make->name,
                     'models' => $modelsGrouped,
                 ];
-            })->values();
+            })->filter()->values();
 
         return response()->json([
             'status' => 'success',
