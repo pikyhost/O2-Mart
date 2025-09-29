@@ -61,7 +61,6 @@ class ProductReviewResource extends Resource
                 'battery'   => 'Battery',
                 'rim'       => 'Rim',
             ])
-            ->required()
             ->live()->reactive()
             ->dehydrated(false) // مش هيتخزن؛ هنحوّله في CreateAction
             ->afterStateHydrated(function (Set $set, ?\App\Models\ProductReview $record) use ($classMap) {
@@ -73,7 +72,6 @@ class ProductReviewResource extends Resource
 
         Select::make('product_id')
             ->label('Product')
-            ->required()
             ->searchable()
             ->preload()
             ->options(function (Get $get) use ($classMap, $labelColumnMap) {

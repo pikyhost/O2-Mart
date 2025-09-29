@@ -44,6 +44,15 @@ class FaqResource extends Resource
                                 ->options([
                                     'general' => 'General Question',
                                     'payment' => 'Payment & Gift Card',
+                                    'products_services' => 'Products & Services',
+                                    'returns_missing_parts' => 'Returns & Missing Parts',
+                                    'security_privacy' => 'Security & Privacy',
+                                    'registration_account' => 'Registration & Account',
+                                    'customer_support' => 'Customer Support',
+                                    'warranty' => 'Warranty',
+                                    'shipping' => 'Shipping',
+                                    'returns_refunds' => 'Returns & Refunds',
+                                    'how_to_order' => 'How to Order',
                                 ])
                                 ->required()
                                 ->label('Category'),
