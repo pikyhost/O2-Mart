@@ -188,37 +188,24 @@ class CompareController extends Controller
                 $setOf4DiscountedPrice = $discountedPrice ? $discountedPrice * 4 : null;
                 
                 return [
-                    'category'   => null, // Tyres don't have categories like rims
-                    'brand'      => optional($p->tyreBrand)->name,
-                    'brand_logo' => optional($p->tyreBrand)->logo_url,
-                    'model'      => optional($p->tyreModel)->name,
-                    'size'       => optional($p->tyreSize)->size,
-                    'country'    => optional($p->tyreCountry)->name,
-                    'attribute'  => optional($p->tyreAttribute)->name,
+                    'brand'       => optional($p->tyreBrand)->name,
+                    'brand_logo'  => optional($p->tyreBrand)->logo_url,
+                    'model'       => optional($p->tyreModel)->name,
+                    'size'        => optional($p->tyreSize)->size,
+                    'country'     => optional($p->tyreCountry)->name,
+                    'attribute'   => optional($p->tyreAttribute)->name,
                     
-                    'sku'            => $p->sku ?? null,
-                    'bolt_pattern'   => null, // Tyres don't have bolt patterns
-                    'centre_caps'    => null, // Tyres don't have centre caps
-                    'item_code'      => $p->item_code ?? null,
-                    'warranty'       => $p->warranty ?? null,
-                    'wheel_attribute' => optional($p->tyreAttribute)->name,
-                    'weight_kg'      => $p->weight_kg ?? null,
-                    'set_of_4'       => $setOf4Price,
-                    'offsets'        => null, // Tyres don't have offsets
-                    
-                    'colour'     => null, // Tyres don't have colours like rims
-                    'condition'  => $p->condition ?? null,
-                    'specification' => $p->specification ?? null,
+                    'warranty'        => $p->warranty ?? null,
                     'width'           => $p->width ?? null,
                     'height'          => $p->height ?? null,
                     'wheel_diameter'  => $p->wheel_diameter ?? null,
                     'production_year' => $p->production_year ?? null,
+                    'weight'          => $p->weight_kg ?? null,
 
                     'price_including_vat' => $basePrice,
                     'discount_percentage' => $p->discount_percentage ?? null,
                     'discounted_price'    => $discountedPrice,
-                    'set_of_4_price'      => $setOf4Price,
-                    'set_of_4_discounted_price' => $setOf4DiscountedPrice,
+                    'set_of_4'           => $setOf4Price,
 
                     'slug'        => $p->slug,
                     'alt_text'    => $p->alt_text ?? null,

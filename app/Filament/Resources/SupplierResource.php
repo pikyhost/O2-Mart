@@ -53,7 +53,7 @@ class SupplierResource extends Resource
                 Tables\Columns\TextColumn::make('name')->label('Name'),
                 Tables\Columns\TextColumn::make('phone')->label('Phone Number'),
                 Tables\Columns\TextColumn::make('store_name')->label('Store Name'),
-                Tables\Columns\IconColumn::make('is_active')->label('Is Active')->boolean(),
+                Tables\Columns\IconColumn::make('is_active')->label('Contacted')->boolean(),
                 Tables\Columns\TextColumn::make('created_at'),
                 Tables\Columns\TextColumn::make('updated_at'),
             ])
