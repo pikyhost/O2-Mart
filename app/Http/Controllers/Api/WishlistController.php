@@ -59,6 +59,7 @@ class WishlistController extends Controller
             }
 
             if ($buyable instanceof Tyre) {
+                $item['country'] = $buyable->tyreCountry?->name;
                 $item['year'] = $buyable->year_of_production;
                 $item['is_set_of_4'] = $buyable->is_set_of_4 ? $price : 0;
                 $item['set_of_4'] = (bool) $buyable->is_set_of_4;
