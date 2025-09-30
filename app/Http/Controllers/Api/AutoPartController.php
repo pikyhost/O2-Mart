@@ -207,10 +207,10 @@ class AutoPartController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => [
-                'categories' => Category::with('children')->whereNull('parent_id')->get(),
-                'brands' => AutoPartBrand::all(),
-                'countries' => AutoPartCountry::all(),
-                'viscosity_grades' => ViscosityGrade::all(),
+                'categories' => Category::with('children')->whereNull('parent_id')->whereHas('autoParts')->get(),
+                'brands' => AutoPartBrand::select('id', 'name')->whereHas('autoParts')->get(),
+                'countries' => AutoPartCountry::select('id', 'name')->whereHas('autoParts')->get(),
+                'viscosity_grades' => ViscosityGrade::select('id', 'name')->whereHas('autoParts')->get(),
             ]
         ]);
     }

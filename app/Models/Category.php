@@ -71,4 +71,9 @@ class Category extends Model
     {
         return $this->hasMany(Rim::class, 'category_id');
     }
+
+    public function autoParts()
+    {
+        return $this->hasMany(AutoPart::class, 'category_id');
+    }
 }

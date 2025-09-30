@@ -21,5 +21,10 @@ class AutoPartBrand extends Model implements HasMedia
     {
         return $this->getFirstMediaUrl('logo') ?: null;
     }
+
+    public function autoParts()
+    {
+        return $this->hasMany(AutoPart::class, 'auto_part_brand_id');
+    }
 }
 
