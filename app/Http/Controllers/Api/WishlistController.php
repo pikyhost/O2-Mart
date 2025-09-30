@@ -50,7 +50,7 @@ class WishlistController extends Controller
 
             if ($buyable instanceof AutoPart) {
                 $item['country'] = $buyable->autoPartCountry?->name;
-                $item['size'] = $buyable->size;
+                $item['size'] = $buyable->weight;
             }
 
             if ($buyable instanceof Battery) {
