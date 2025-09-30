@@ -435,21 +435,56 @@ class TyreController extends Controller
     }
 
 
-    public function filters()
+    public function filters(Request $request)
     {
+        $query = Tyre::query();
+        
+        if ($request->filled('brand')) {
+            $brands = is_array($request->brand) ? $request->brand : [$request->brand];
+            $query->whereIn('tyre_brand_id', $brands);
+        }
+        
+        if ($request->filled('model')) {
+            $models = is_array($request->model) ? $request->model : [$request->model];
+            $query->whereIn('tyre_model_id', $models);
+        }
+        
+        if ($request->filled('country')) {
+            $countries = is_array($request->country) ? $request->country : [$request->country];
+            $query->whereIn('tyre_country_id', $countries);
+        }
+        
+        if ($request->filled('width')) {
+            $widths = is_array($request->width) ? $request->width : [$request->width];
+            $query->whereIn('width', $widths);
+        }
+        
+        if ($request->filled('height')) {
+            $heights = is_array($request->height) ? $request->height : [$request->height];
+            $query->whereIn('height', $heights);
+        }
+        
+        $filteredTyreIds = $query->pluck('id');
+        
         return response()->json([
             'status' => 'success',
-            'data' => [
-                'brands' => \App\Models\TyreBrand::select('id', 'name')->get(),
-                'widths' => Tyre::select('width')->distinct()->pluck('width')->filter()->values(),
-                'heights' => Tyre::select('height')->distinct()->pluck('height')->filter()->values(),
-                'wheel_diameters' => Tyre::select('wheel_diameter')->distinct()->pluck('wheel_diameter')->filter()->values(),
-                'models' => \App\Models\TyreModel::select('id', 'name')->get(),
-                'load_indexes' => Tyre::select('load_index')->distinct()->pluck('load_index')->filter()->values(),
-                'speed_ratings' => Tyre::select('speed_rating')->distinct()->pluck('speed_rating')->filter()->values(),
-                'production_years' => Tyre::select('production_year')->distinct()->pluck('production_year')->filter()->values(),
-                'countries' => \App\Models\TyreCountry::select('id', 'name')->get(),
-                'warranties' => Tyre::select('warranty')->distinct()->pluck('warranty')->filter()->values(),
+            'filters' => [
+                'widths' => Tyre::whereIn('id', $filteredTyreIds)->select('width')->distinct()->whereNotNull('width')->pluck('width')->filter()->values(),
+                'heights' => Tyre::whereIn('id', $filteredTyreIds)->select('height')->distinct()->whereNotNull('height')->pluck('height')->filter()->values(),
+                'wheel_diameters' => Tyre::whereIn('id', $filteredTyreIds)->select('wheel_diameter')->distinct()->whereNotNull('wheel_diameter')->pluck('wheel_diameter')->filter()->values(),
+                'load_indexes' => Tyre::whereIn('id', $filteredTyreIds)->select('load_index')->distinct()->whereNotNull('load_index')->pluck('load_index')->filter()->values(),
+                'speed_ratings' => Tyre::whereIn('id', $filteredTyreIds)->select('speed_rating')->distinct()->whereNotNull('speed_rating')->pluck('speed_rating')->filter()->values(),
+                'production_years' => Tyre::whereIn('id', $filteredTyreIds)->select('production_year')->distinct()->whereNotNull('production_year')->pluck('production_year')->filter()->values(),
+                'warranties' => Tyre::whereIn('id', $filteredTyreIds)->select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter()->values(),
+                'brands' => TyreBrand::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
+                    $q->whereIn('id', $filteredTyreIds);
+                })->get(),
+                'models' => TyreModel::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
+                    $q->whereIn('id', $filteredTyreIds);
+                })->get(),
+                'countries' => TyreCountry::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
+                    $q->whereIn('id', $filteredTyreIds);
+                })->get(),
             ],
         ]);
     }
