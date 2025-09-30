@@ -18,7 +18,7 @@ class RimAttributeImporter extends Importer
         return [
             ImportColumn::make('Car Make')->requiredMapping()->rules(['required', 'string']),
             ImportColumn::make('Car Model')->requiredMapping()->rules(['required', 'string']),
-            ImportColumn::make('Model Year')->requiredMapping()->rules(['required', 'integer', 'min:1990', 'max:' . date('Y')]),
+            ImportColumn::make('Model Year')->requiredMapping()->rules(['required', 'integer']),
             ImportColumn::make('Attribute Name')->requiredMapping()->rules(['required', 'string']),
         ];
     }
