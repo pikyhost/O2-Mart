@@ -51,14 +51,24 @@ class CouponController extends Controller
             return response()->json(['message' => 'Invalid or expired coupon.'], 400);
         }
 
-        $subtotal = $cart->items->sum(fn($item) => $item->price_per_unit * $item->quantity);
+        // Calculate items total and subtotal (same as cart menu logic)
+        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
+        $itemsTotal = $cart->items->sum(fn($item) => $item->price_per_unit * $item->quantity);
+        $vatAmount = $itemsTotal * $vatPercent;
+        $subtotal = $itemsTotal - $vatAmount;
         
-        // Calculate installation fees for items with mobile van installation
+        // Calculate installation fees
         $installationFee = CartService::calculateInstallationFee($cart);
         
-        // Discount applies ONLY to subtotal (NO installation, NO shipping)
+        // Calculate shipping (only for delivery_only items)
+        $hasDeliveryOnly = $cart->items->contains('shipping_option', 'delivery_only');
+        $shippingCost = 0;
+        if ($hasDeliveryOnly && $cart->area_id) {
+            $shippingCost = $shipping['total'] ?? 0;
+        }
+        
+        // Discount applies ONLY to subtotal
         $discountableAmount = $subtotal;
-        $shippingCost = $shipping['total'] ?? 0;
         
         if ($coupon->min_order_amount && $discountableAmount < $coupon->min_order_amount) {
             return response()->json(['message' => 'Minimum order amount required: ' . $coupon->min_order_amount], 400);
@@ -84,20 +94,22 @@ class CouponController extends Controller
             case 'free_shipping':
                 $discount = 0;
                 $shippingCost = 0;
-                $total = $subtotal + $installationFee + $shippingCost;
                 break;
             case 'discount_amount':
                 $discount = min($coupon->value, $discountableAmount);
-                $total = max(0, $discountableAmount - $discount) + $installationFee + $shippingCost;
                 break;
             case 'discount_percentage':
                 $discount = round($discountableAmount * ($coupon->value / 100), 2);
-                $total = max(0, $discountableAmount - $discount) + $installationFee + $shippingCost;
                 break;
             default:
-                $total = $discountableAmount + $installationFee + $shippingCost;
+                $discount = 0;
                 break;
         }
+        
+        // Total = SubTotal + Shipping + Installation + VAT - Discount
+        $totalBeforeVat = max(0, $subtotal - $discount) + $shippingCost + $installationFee;
+        $vat = round($totalBeforeVat * $vatPercent, 2);
+        $total = $totalBeforeVat + $vat;
 
         $cart->update([
             'applied_coupon' => $coupon->code,
@@ -114,9 +126,19 @@ class CouponController extends Controller
             'type' => $coupon->type,
             'discount_value' => $coupon->value,
             'discount_applied' => $discount,
-            'shipping_cost' => $shippingCost,
-            'cart_subtotal' => $subtotal,
-            'cart_total' => $total,
+            'cart' => [
+                'items_total' => (float) $itemsTotal,
+                'subtotal' => (float) $subtotal,
+                'installation_fee' => (float) $installationFee,
+                'discount' => (float) $discount,
+                'total' => (float) $total,
+                'shipping_cost' => (float) $shippingCost,
+                'vat' => (float) $vat,
+                'checkout_total' => (float) $total,
+                'coupon_code' => $coupon->code,
+                'coupon_applied' => true,
+                'coupon_savings' => $discount,
+            ]
         ]);
     }
 
@@ -132,23 +154,27 @@ class CouponController extends Controller
             return response()->json(['message' => 'No coupon applied.'], 400);
         }
 
-        // Recalculate original totals without discount
-        $subtotal = $cart->items->sum(fn($item) => $item->price_per_unit * $item->quantity);
-        
-        // Recalculate shipping (in case it was free shipping coupon)
-        $shipping = [];
-        if ($cart->area_id) {
-            $shipping = ShippingCalculatorService::calculate($cart, 5);
-            $shippingCost = !empty($shipping['error']) ? 0 : ($shipping['total'] ?? 0);
-        } else {
-            $shippingCost = 0;
-        }
+        // Recalculate totals without discount (same as cart menu logic)
+        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
+        $itemsTotal = $cart->items->sum(fn($item) => $item->price_per_unit * $item->quantity);
+        $vatAmount = $itemsTotal * $vatPercent;
+        $subtotal = $itemsTotal - $vatAmount;
         
         // Calculate installation fees
         $installationFee = CartService::calculateInstallationFee($cart);
         
-        // Total = subtotal + installation + shipping (no discount)
-        $total = $subtotal + $installationFee + $shippingCost;
+        // Recalculate shipping (only for delivery_only items)
+        $hasDeliveryOnly = $cart->items->contains('shipping_option', 'delivery_only');
+        $shippingCost = 0;
+        if ($hasDeliveryOnly && $cart->area_id) {
+            $shipping = ShippingCalculatorService::calculate($cart, 5);
+            $shippingCost = !empty($shipping['error']) ? 0 : ($shipping['total'] ?? 0);
+        }
+        
+        // Total = SubTotal + Shipping + Installation + VAT (no discount)
+        $totalBeforeVat = $subtotal + $shippingCost + $installationFee;
+        $vat = round($totalBeforeVat * $vatPercent, 2);
+        $total = $totalBeforeVat + $vat;
 
         $cart->update([
             'applied_coupon' => null,
@@ -161,10 +187,19 @@ class CouponController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Coupon removed successfully',
-            'cart_subtotal' => $subtotal,
-            'shipping_cost' => $shippingCost,
-            'installation_fee' => $installationFee,
-            'cart_total' => $total,
+            'cart' => [
+                'items_total' => (float) $itemsTotal,
+                'subtotal' => (float) $subtotal,
+                'installation_fee' => (float) $installationFee,
+                'discount' => 0.0,
+                'total' => (float) $total,
+                'shipping_cost' => (float) $shippingCost,
+                'vat' => (float) $vat,
+                'checkout_total' => (float) $total,
+                'coupon_code' => null,
+                'coupon_applied' => false,
+                'coupon_savings' => 0.0,
+            ]
         ]);
     }
 
