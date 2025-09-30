@@ -17,7 +17,7 @@ class TyreBrand extends Model implements HasMedia
 
     public function tyres()
     {
-        return $this->hasMany(Tyre::class);
+        return $this->hasMany(Tyre::class, 'tyre_brand_id');
     }
         public function registerMediaCollections(): void
     {

@@ -13,6 +13,6 @@ class TyreCountry extends Model
 
     public function tyres()
     {
-        return $this->hasMany(Tyre::class);
+        return $this->hasMany(Tyre::class, 'tyre_country_id');
     }
 }
