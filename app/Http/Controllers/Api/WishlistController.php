@@ -194,37 +194,24 @@ class WishlistController extends Controller
      */
     private function resolveImage($buyable): ?string
     {
-        if (method_exists($buyable, 'getFeatureImageUrl')) {
-            $url = $buyable->getFeatureImageUrl();
-            if (!empty($url)) return $url;
+        // Handle Rim images specifically
+        if ($buyable instanceof Rim) {
+            return $buyable->rim_feature_image_url;
         }
 
-        $methodCandidates = [
-            'getAutoPartSecondaryImageUrl',
-            'getAutoPartFeatureImageUrl',
-            'getTyreFeatureImageUrlAttribute',
-            'getFeatureImageUrlAttribute',
-            'getRimFeatureImageUrl',
-        ];
-
-        foreach ($methodCandidates as $method) {
-            if (method_exists($buyable, $method)) {
-                $url = $buyable->{$method}();
-                if (!empty($url)) return $url;
-            }
+        // Handle Tyre images
+        if ($buyable instanceof Tyre) {
+            return $buyable->tyre_feature_image_url;
         }
 
-        if ($buyable instanceof AutoPart && !empty($buyable->photo_link)) {
-            return asset('storage/' . $buyable->photo_link);
+        // Handle Battery images
+        if ($buyable instanceof Battery) {
+            return $buyable->battery_feature_image_url;
         }
 
-
-        if ($buyable instanceof HasMedia) {
-            $url = $buyable->getFirstMediaUrl('feature');
-            if (!empty($url)) return $url;
-
-            $url = $buyable->getFirstMediaUrl();
-            if (!empty($url)) return $url;
+        // Handle AutoPart images
+        if ($buyable instanceof AutoPart) {
+            return $buyable->auto_part_feature_image_url ?? ($buyable->photo_link ? asset('storage/' . $buyable->photo_link) : null);
         }
 
         return null;
