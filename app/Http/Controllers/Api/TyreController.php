@@ -450,6 +450,7 @@ class TyreController extends Controller
                 'brands' => TyreBrand::select('id', 'name')->whereHas('tyres')->get(),
                 'models' => TyreModel::select('id', 'name')->whereHas('tyres')->get(),
                 'countries' => TyreCountry::select('id', 'name')->whereHas('tyres')->get(),
+                'sizes' => \App\Models\TyreSize::select('id', 'size')->whereHas('tyres')->get(),
             ],
         ]);
     }
