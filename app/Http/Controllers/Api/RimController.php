@@ -215,13 +215,13 @@ class RimController extends Controller
         return response()->json([
             'status' => 'success',
             'filters' => [
-                'colours' => Rim::query()->select('colour')->distinct()->pluck('colour'),
-                'conditions' => Rim::query()->select('condition')->distinct()->pluck('condition'),
-                'bolt_patterns' => Rim::query()->select('bolt_pattern')->distinct()->pluck('bolt_pattern'),
-                'offsets' => Rim::query()->select('offsets')->distinct()->pluck('offsets'),
-                'warranties' => Rim::query()->select('warranty')->distinct()->pluck('warranty'),
-                'brands' => RimBrand::select('id', 'name')->get(),
-                'countries' => RimCountry::select('id', 'name')->get(),
+                'colours' => Rim::query()->select('colour')->distinct()->whereNotNull('colour')->pluck('colour')->filter(),
+                'conditions' => Rim::query()->select('condition')->distinct()->whereNotNull('condition')->pluck('condition')->filter(),
+                'bolt_patterns' => Rim::query()->select('bolt_pattern')->distinct()->whereNotNull('bolt_pattern')->pluck('bolt_pattern')->filter(),
+                'offsets' => Rim::query()->select('offsets')->distinct()->whereNotNull('offsets')->pluck('offsets')->filter(),
+                'warranties' => Rim::query()->select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter(),
+                'brands' => RimBrand::select('id', 'name')->whereHas('rims')->get(),
+                'countries' => RimCountry::select('id', 'name')->whereHas('rims')->get(),
             ],
         ]);
     }
