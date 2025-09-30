@@ -59,15 +59,20 @@ class CartService
             $cart->update(['area_id' => 3]);
         }
 
-        // Simple calculation: if buy_3_get_1_free and quantity >= 4, pay for quantity - 1
-        $subtotal = 0;
+        // Calculate items total (same as cart menu)
+        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
+        $itemsTotal = 0;
         foreach ($cart->items as $item) {
             if ($item->buyable && $item->buyable->buy_3_get_1_free && $item->quantity >= 4) {
-                $subtotal += $item->price_per_unit * ($item->quantity - 1);
+                $itemsTotal += $item->price_per_unit * ($item->quantity - 1);
             } else {
-                $subtotal += $item->price_per_unit * $item->quantity;
+                $itemsTotal += $item->price_per_unit * $item->quantity;
             }
         }
+        
+        // Subtotal = items total - VAT (same as cart menu)
+        $vatAmount = $itemsTotal * $vatPercent;
+        $subtotal = $itemsTotal - $vatAmount;
 
         // 🟢 Installation Fees (only for with_installation, not installation_center)
         $installationGroups = [];
@@ -80,18 +85,23 @@ class CartService
         $installationFeeValue = \App\Models\ShippingSetting::first()?->installation_fee ?? 200;
         $installationFee = count($installationGroups) * $installationFeeValue;
 
-        // 🟢 Shipping Cost (without VAT)
-        $monthlyShipments = auth()->check() ? (auth()->user()->shipment_count ?? 20) : 5;
-        $shipping = ShippingCalculatorService::calculate($cart, $monthlyShipments);
-        $shippingCost = !empty($shipping['error']) ? 0 : ($shipping['total'] ?? 0);
-        $breakdown = !empty($shipping['error']) ? [] : ($shipping['breakdown'] ?? []);
+        // 🟢 Shipping Cost (only for delivery_only option)
+        $shippingCost = 0;
+        $breakdown = [];
+        $hasDeliveryOnly = $cart->items->contains('shipping_option', 'delivery_only');
+        
+        if ($hasDeliveryOnly) {
+            $monthlyShipments = auth()->check() ? (auth()->user()->shipment_count ?? 20) : 5;
+            $shipping = ShippingCalculatorService::calculate($cart, $monthlyShipments);
+            $shippingCost = !empty($shipping['error']) ? 0 : ($shipping['total'] ?? 0);
+            $breakdown = !empty($shipping['error']) ? [] : ($shipping['breakdown'] ?? []);
+        }
 
         // 🟢 Calculate discountable amount (subtotal ONLY, exclude installation)
         $discountableAmount = $subtotal;
         
         // 🟢 Recalculate discount if coupon is applied
         $discount = 0;
-        $originalShippingCost = $shippingCost;
         if ($cart->applied_coupon) {
             $coupon = \App\Models\Coupon::where('code', $cart->applied_coupon)->first();
             if ($coupon) {
@@ -118,15 +128,10 @@ class CartService
             $cart->update(['discount_amount' => $discount]);
         }
         
-        // 🟢 Total = (subtotal - discount) + installation + shipping
-        $totalAfterDiscount = $discountableAfterDiscount + $installationFee + $shippingCost;
-        
-        // 🟢 VAT = total after discount
-        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
-        $vat = round($totalAfterDiscount * $vatPercent, 2);
-
-        // 🟢 Final Total with VAT
-        $total = $totalAfterDiscount + $vat;
+        // 🟢 Total = SubTotal + Shipping + Installation + VAT amount
+        $totalBeforeVat = $discountableAfterDiscount + $shippingCost + $installationFee;
+        $vat = round($totalBeforeVat * $vatPercent, 2);
+        $total = $totalBeforeVat + $vat;
 
         $deliveryOnly = [];
         $withInstallation = [];
