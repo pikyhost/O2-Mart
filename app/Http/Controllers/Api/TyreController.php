@@ -324,58 +324,58 @@ class TyreController extends Controller
 
     public function brands()
     {
-        return response()->json(['status' => 'success', 'data' => TyreBrand::select('id', 'name')->get()]);
+        return response()->json(['status' => 'success', 'data' => TyreBrand::select('id', 'name')->whereHas('tyres')->get()]);
     }
 
     public function widths()
     {
-        $data = Tyre::select('width')->distinct()->pluck('width')->filter()->values();
+        $data = Tyre::select('width')->distinct()->whereNotNull('width')->pluck('width')->filter()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function heights()
     {
-        $data = Tyre::select('height')->distinct()->pluck('height')->filter()->values();
+        $data = Tyre::select('height')->distinct()->whereNotNull('height')->pluck('height')->filter()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function wheelDiameters()
     {
-        $data = Tyre::select('wheel_diameter')->distinct()->pluck('wheel_diameter')->filter()->values();
+        $data = Tyre::select('wheel_diameter')->distinct()->whereNotNull('wheel_diameter')->pluck('wheel_diameter')->filter()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function models()
     {
-        return response()->json(['status' => 'success', 'data' => TyreModel::select('id', 'name')->get()]);
+        return response()->json(['status' => 'success', 'data' => TyreModel::select('id', 'name')->whereHas('tyres')->get()]);
     }
 
     public function loadIndexes()
     {
-        $data = Tyre::select('load_index')->distinct()->pluck('load_index')->filter()->values();
+        $data = Tyre::select('load_index')->distinct()->whereNotNull('load_index')->pluck('load_index')->filter()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function speedRatings()
     {
-        $data = Tyre::select('speed_rating')->distinct()->pluck('speed_rating')->filter()->values();
+        $data = Tyre::select('speed_rating')->distinct()->whereNotNull('speed_rating')->pluck('speed_rating')->filter()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function productionYears()
     {
-        $data = Tyre::select('production_year')->distinct()->pluck('production_year')->filter()->values();
+        $data = Tyre::select('production_year')->distinct()->whereNotNull('production_year')->pluck('production_year')->filter()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function countries()
     {
-        return response()->json(['status' => 'success', 'data' => TyreCountry::select('id', 'name')->get()]);
+        return response()->json(['status' => 'success', 'data' => TyreCountry::select('id', 'name')->whereHas('tyres')->get()]);
     }
 
     public function warranties()
     {
-        $data = Tyre::select('warranty')->distinct()->pluck('warranty')->filter()->values();
+        $data = Tyre::select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
