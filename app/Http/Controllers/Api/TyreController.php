@@ -68,7 +68,10 @@ class TyreController extends Controller
         if ($request->filled('width')) $query->where('width', $request->width);
         if ($request->filled('height')) $query->where('height', $request->height);
         if ($request->filled('tyre_size_id')) $query->where('tyre_size_id', $request->tyre_size_id);
-        if ($request->filled('brand')) $query->where('tyre_brand_id', $request->brand);
+        if ($request->filled('brand')) {
+            $brands = is_array($request->brand) ? $request->brand : [$request->brand];
+            $query->whereIn('tyre_brand_id', $brands);
+        }
         if ($request->filled('wheel_diameter')) $query->where('wheel_diameter', $request->wheel_diameter);
         if ($request->filled('model')) $query->where('tyre_model_id', $request->model);
         if ($request->filled('load_index')) $query->where('load_index', $request->load_index);
