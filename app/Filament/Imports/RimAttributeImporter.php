@@ -26,9 +26,14 @@ class RimAttributeImporter extends Importer
     public function resolveRecord(): ?RimAttribute
     {
         $make = CarMake::firstOrCreate(['name' => trim($this->data['Car Make'])]);
+        $modelName = trim($this->data['Car Model']);
         $model = CarModel::firstOrCreate([
-            'name' => trim($this->data['Car Model']),
+            'name' => $modelName,
             'car_make_id' => $make->id,
+        ], [
+            'name' => $modelName,
+            'car_make_id' => $make->id,
+            'slug' => \Illuminate\Support\Str::slug($modelName),
         ]);
 
         return RimAttribute::firstOrNew([
