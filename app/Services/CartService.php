@@ -74,16 +74,13 @@ class CartService
         $vatAmount = $itemsTotal * $vatPercent;
         $subtotal = $itemsTotal - $vatAmount;
 
-        // 🟢 Installation Fees (only for with_installation, not installation_center)
-        $installationGroups = [];
-        foreach ($cart->items as $item) {
-            if ($item->shipping_option === 'with_installation') {
-                $key = $item->mobile_van_id . '_' . $item->installation_date;
-                $installationGroups[$key] = true;
-            }
+        // 🟢 Installation Fees (only once if any item has with_installation)
+        $installationFee = 0;
+        $hasInstallation = $cart->items->contains('shipping_option', 'with_installation');
+        if ($hasInstallation) {
+            $installationFeeValue = \App\Models\ShippingSetting::first()?->installation_fee ?? 200;
+            $installationFee = $installationFeeValue;
         }
-        $installationFeeValue = \App\Models\ShippingSetting::first()?->installation_fee ?? 200;
-        $installationFee = count($installationGroups) * $installationFeeValue;
 
         // 🟢 Shipping Cost (only for delivery_only option)
         $shippingCost = 0;
@@ -193,17 +190,13 @@ class CartService
 
     public static function calculateInstallationFee(Cart $cart): float
     {
-        $installationGroups = [];
-
-        foreach ($cart->items as $item) {
-            if ($item->shipping_option === 'with_installation') {
-                $key = $item->mobile_van_id . '_' . $item->installation_date;
-                $installationGroups[$key] = true;
-            }
+        $hasInstallation = $cart->items->contains('shipping_option', 'with_installation');
+        
+        if ($hasInstallation) {
+            return \App\Models\ShippingSetting::first()?->installation_fee ?? 200;
         }
-
-        $installationFee = \App\Models\ShippingSetting::first()?->installation_fee ?? 200;
-        return count($installationGroups) * $installationFee;
+        
+        return 0;
     }
 
     /**
