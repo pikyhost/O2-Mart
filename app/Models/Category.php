@@ -66,4 +66,9 @@ class Category extends Model
             ->withPivot('is_primary')
             ->withTimestamps();
     }
+
+    public function rims()
+    {
+        return $this->hasMany(Rim::class, 'category_id');
+    }
 }

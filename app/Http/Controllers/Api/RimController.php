@@ -7,6 +7,8 @@ use App\Models\Rim;
 use App\Models\RimAttribute;
 use App\Models\RimBrand;
 use App\Models\RimCountry;
+use App\Models\RimSize;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -222,6 +224,8 @@ class RimController extends Controller
                 'warranties' => Rim::query()->select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter(),
                 'brands' => RimBrand::select('id', 'name')->whereHas('rims')->get(),
                 'countries' => RimCountry::select('id', 'name')->whereHas('rims')->get(),
+                'sizes' => RimSize::select('id', 'size')->whereHas('rims')->get(),
+                'categories' => Category::select('id', 'name')->whereHas('rims')->get(),
             ],
         ]);
     }
