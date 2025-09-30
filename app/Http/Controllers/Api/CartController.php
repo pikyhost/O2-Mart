@@ -803,7 +803,7 @@ class CartController extends Controller
             ];
         }
 
-        $vatAmount = $total * $vatPercent / 100;
+        $vatAmount = $total * $vatPercent;
         $subtotal = $total - $vatAmount;
 
         return response()->json([
