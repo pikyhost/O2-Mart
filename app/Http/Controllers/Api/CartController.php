@@ -382,35 +382,46 @@ class CartController extends Controller
             return response()->json(['message' => 'Cart is empty'], 404);
         }
 
+        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         $cartTotal = 0;
 
         foreach ($cart->items as $item) {
             if (!$item->buyable) {
-                // Skip items with missing buyable (orphaned cart items)
                 continue;
             }
-            
-            // Just use the stored values without recalculation
-            $cartTotal += $item->subtotal;
+            $cartTotal += $item->quantity * $item->price_per_unit;
         }
 
-        // Calculate total with discount applied only to subtotal and installation
+        // Calculate installation fee only for items with "with_installation" shipping option
+        $installationFee = 0;
+        $shippingSetting = \App\Models\ShippingSetting::first();
+        if ($shippingSetting) {
+            foreach ($cart->items as $item) {
+                if ($item->shipping_option === 'with_installation') {
+                    $installationFee += $shippingSetting->installation_fee ?? 0;
+                }
+            }
+        }
+
         $discount = $cart->discount_amount ?? 0;
         $shippingCost = $cart->shipping_cost ?? 0;
-        $installationFee = CartService::calculateInstallationFee($cart);
-        $discountableAmount = $cartTotal + $installationFee;
         
-        // For cart page: total = items + installation - discount (NO shipping, NO VAT)
-        $cartPageTotal = max(0, $discountableAmount - $discount);
+        // Cart page total = items total + installation fees
+        $cartPageTotal = $cartTotal + $installationFee;
+        $discountableAmount = $cartPageTotal;
+        $cartPageTotalAfterDiscount = max(0, $discountableAmount - $discount);
         
-        // For checkout: total = cart total + shipping + VAT
-        $checkoutTotal = $cartPageTotal + $shippingCost;
+        // Checkout total = cart total + shipping
+        $checkoutTotal = $cartPageTotalAfterDiscount + $shippingCost;
         
-        $cart->subtotal = $cartTotal;
+        // Subtotal = total - VAT (same as menu)
+        $vatAmount = $cartTotal * $vatPercent;
+        $subtotal = $cartTotal - $vatAmount;
+        
+        $cart->subtotal = $subtotal;
         $cart->total = $checkoutTotal;
         $cart->save();
 
-        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         $vat = round($checkoutTotal * $vatPercent, 2);
 
         return response()->json([
@@ -445,10 +456,10 @@ class CartController extends Controller
                     return $itemData;
                 }),
                 'items_total'         => (float) $cartTotal,
-                'subtotal'            => (float) $cartTotal,
+                'subtotal'            => (float) $subtotal,
                 'installation_fee'    => (float) $installationFee,
                 'discount'            => (float) $discount,
-                'total'               => (float) $cartPageTotal,
+                'total'               => (float) $cartPageTotalAfterDiscount,
                 'shipping_cost'       => (float) $shippingCost,
                 'vat'                 => (float) $vat,
                 'checkout_total'      => (float) round($checkoutTotal + $vat, 2),
