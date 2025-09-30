@@ -787,29 +787,29 @@ class CartController extends Controller
 
         $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         $items = [];
-        $subtotal = 0;
+        $total = 0;
 
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
 
-            $total = $item->quantity * $item->price_per_unit;
-            $subtotal += $total;
+            $itemTotal = $item->quantity * $item->price_per_unit;
+            $total += $itemTotal;
 
             $items[] = [
                 'name' => $this->resolveName($item->buyable),
                 'price_per_unit' => (float) $item->price_per_unit,
                 'quantity' => $item->quantity,
-                'total' => (float) $total,
+                'total' => (float) $itemTotal,
             ];
         }
 
-        $vatAmount = $subtotal * $vatPercent;
-        $finalTotal = $subtotal + $vatAmount;
+        $vatAmount = $total * $vatPercent / 100;
+        $subtotal = $total - $vatAmount;
 
         return response()->json([
             'items' => $items,
             'subtotal' => (float) $subtotal,
-            'total' => (float) $finalTotal
+            'total' => (float) $total
         ]);
     }
 
