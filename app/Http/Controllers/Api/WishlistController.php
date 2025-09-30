@@ -39,8 +39,27 @@ class WishlistController extends Controller
                 'brand' => $brand,
             ];
 
-            // Add set of 4 keys for tyres and rims
-            if ($buyable instanceof Tyre || $buyable instanceof Rim) {
+            // Add specific fields based on product type
+            if ($buyable instanceof Rim) {
+                $item['country'] = $buyable->rimCountry?->name;
+                $item['year_of_production'] = $buyable->year_of_production;
+                $item['condition'] = $buyable->condition;
+                $item['is_set_of_4'] = $buyable->is_set_of_4 ? $price : 0;
+                $item['set_of_4'] = (bool) $buyable->is_set_of_4;
+            }
+
+            if ($buyable instanceof AutoPart) {
+                $item['country'] = $buyable->autoPartCountry?->name;
+                $item['size'] = $buyable->size;
+            }
+
+            if ($buyable instanceof Battery) {
+                $item['country'] = $buyable->batteryCountry?->name;
+                $item['size'] = $buyable->batteryDimension?->name ?? $buyable->size;
+            }
+
+            if ($buyable instanceof Tyre) {
+                $item['year'] = $buyable->year_of_production;
                 $item['is_set_of_4'] = $buyable->is_set_of_4 ? $price : 0;
                 $item['set_of_4'] = (bool) $buyable->is_set_of_4;
             }
