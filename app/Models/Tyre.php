@@ -71,22 +71,22 @@ class Tyre extends Model implements HasMedia
 
     public function tyreBrand()
     {
-        return $this->belongsTo(TyreBrand::class);
+        return $this->belongsTo(TyreBrand::class, 'tyre_brand_id');
     }
 
     public function tyreModel()
     {
-        return $this->belongsTo(TyreModel::class);
+        return $this->belongsTo(TyreModel::class, 'tyre_model_id');
     }
 
     public function tyreSize()
     {
-        return $this->belongsTo(TyreSize::class);
+        return $this->belongsTo(TyreSize::class, 'tyre_size_id');
     }
 
     public function tyreCountry()
     {
-        return $this->belongsTo(TyreCountry::class);
+        return $this->belongsTo(TyreCountry::class, 'tyre_country_id');
     }
 
     /**
