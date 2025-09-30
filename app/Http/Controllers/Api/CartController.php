@@ -392,14 +392,13 @@ class CartController extends Controller
             $cartTotal += $item->quantity * $item->price_per_unit;
         }
 
-        // Calculate installation fee only for items with "with_installation" shipping option
+        // Calculate installation fee only once if any item has "with_installation" shipping option
         $installationFee = 0;
         $shippingSetting = \App\Models\ShippingSetting::first();
         if ($shippingSetting) {
-            foreach ($cart->items as $item) {
-                if ($item->shipping_option === 'with_installation') {
-                    $installationFee += $shippingSetting->installation_fee ?? 0;
-                }
+            $hasInstallation = $cart->items->contains('shipping_option', 'with_installation');
+            if ($hasInstallation) {
+                $installationFee = $shippingSetting->installation_fee ?? 0;
             }
         }
 
