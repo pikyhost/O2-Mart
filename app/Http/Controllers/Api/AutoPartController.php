@@ -208,7 +208,7 @@ class AutoPartController extends Controller
             'status' => 'success',
             'data' => [
                 'categories' => Category::with('children')->whereNull('parent_id')->get(),
-                'brands' => AutoPartBrand::all(),
+                'brands' => AutoPartBrand::withCount('autoParts')->get(),
                 'countries' => AutoPartCountry::all(),
                 'viscosity_grades' => ViscosityGrade::all(),
             ]
