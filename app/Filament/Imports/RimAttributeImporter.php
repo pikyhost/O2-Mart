@@ -55,6 +55,12 @@ class RimAttributeImporter extends Importer
         ]);
     }
 
+    public function fillRecord(): void
+    {
+        // Don't call parent::fillRecord() to prevent CSV columns from being filled
+        // All data is handled in resolveRecord()
+    }
+
     public static function getCompletedNotificationBody(Import $import): string
     {
         $body = 'Rim Attributes imported successfully: ' . number_format($import->successful_rows) . ' rows.';
