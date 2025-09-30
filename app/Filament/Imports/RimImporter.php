@@ -17,7 +17,7 @@ class RimImporter extends BaseUpsertImporter
     use ImportHelpers;
 
     protected static ?string $model = Rim::class;
-    protected static array $uniqueBy = ['sku'];
+    protected static array $uniqueBy = ['name'];
     
     protected array $rimAttributesToSync = [];
 
@@ -40,7 +40,7 @@ class RimImporter extends BaseUpsertImporter
             ImportColumn::make('centre_caps'),
             ImportColumn::make('is_set_of_4'),
             ImportColumn::make('item_code'),
-            ImportColumn::make('sku')->requiredMapping()->rules(['required']),
+            ImportColumn::make('sku')->rules(['nullable']),
             ImportColumn::make('warranty'),
             ImportColumn::make('weight')->rules(['nullable', 'numeric']),
             ImportColumn::make('regular_price')->rules(['nullable', 'numeric']),

@@ -16,23 +16,23 @@ use Illuminate\Support\Facades\Log;
 //    ->withoutOverlapping()
 //    ->appendOutputTo(storage_path('logs/schedule.log'));
 
-Artisan::command('queue:process', function () {
-    $this->info('Starting queue worker...');
+// Artisan::command('queue:process', function () {
+//     $this->info('Starting queue worker...');
 
-    Artisan::call('queue:work', [
-        '--stop-when-empty' => true,
-        '--tries' => 3,
-    ]);
+//     Artisan::call('queue:work', [
+//         '--stop-when-empty' => true,
+//         '--tries' => 3,
+//     ]);
 
-    $this->info('Queue worker finished!');
-})->purpose('Process the queue until empty');
+//     $this->info('Queue worker finished!');
+// })->purpose('Process the queue until empty');
 
-Artisan::command('queue:start', function () {
-    $this->info('Starting continuous queue worker...');
+// Artisan::command('queue:start', function () {
+//     $this->info('Starting continuous queue worker...');
     
-    exec('/usr/bin/php83 /home/tohf/public_html/o2mart/artisan queue:work --tries=3 --timeout=90 > /dev/null 2>&1 &');
+//     exec('/usr/bin/php83 /home/tohf/public_html/o2mart/artisan queue:work --tries=3 --timeout=90 > /dev/null 2>&1 &');
     
-    $this->info('Queue worker started in background!');
-})->purpose('Start continuous queue worker for production');
+//     $this->info('Queue worker started in background!');
+// })->purpose('Start continuous queue worker for production');
 
-// info done.
+// // info done.
