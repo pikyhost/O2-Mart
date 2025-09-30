@@ -796,10 +796,12 @@ class CartController extends Controller
             $total += $itemTotal;
 
             $items[] = [
+                'id' => $item->buyable->id,
                 'name' => $this->resolveName($item->buyable),
                 'price_per_unit' => (float) $item->price_per_unit,
                 'quantity' => $item->quantity,
                 'total' => (float) $itemTotal,
+                'image' => $this->resolveImage($item->buyable),
             ];
         }
 
