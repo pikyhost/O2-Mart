@@ -14,14 +14,20 @@ class RimSizeImporter extends Importer
     public static function getColumns(): array
     {
         return [
-            ImportColumn::make('size')->label('Rim Size'),
+            ImportColumn::make('size')->label('Rim Size')->rules(['required']),
         ];
     }
 
     public function resolveRecord(): ?RimSize
     {
+        $size = $this->data['size'] ?? null;
+        
+        if (empty($size)) {
+            return null;
+        }
+        
         return RimSize::firstOrNew([
-            'size' => $this->data['size'],
+            'size' => $size,
         ]);
     }
 
