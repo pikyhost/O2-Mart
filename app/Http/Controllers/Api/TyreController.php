@@ -471,23 +471,23 @@ class TyreController extends Controller
         
         return response()->json([
             'status' => 'success',
-            'filters' => [
-                'widths' => Tyre::whereIn('id', $filteredTyreIds)->select('width')->distinct()->whereNotNull('width')->pluck('width')->filter()->values(),
-                'heights' => Tyre::whereIn('id', $filteredTyreIds)->select('height')->distinct()->whereNotNull('height')->pluck('height')->filter()->values(),
-                'wheel_diameters' => Tyre::whereIn('id', $filteredTyreIds)->select('wheel_diameter')->distinct()->whereNotNull('wheel_diameter')->pluck('wheel_diameter')->filter()->values(),
-                'load_indexes' => Tyre::whereIn('id', $filteredTyreIds)->select('load_index')->distinct()->whereNotNull('load_index')->pluck('load_index')->filter()->values(),
-                'speed_ratings' => Tyre::whereIn('id', $filteredTyreIds)->select('speed_rating')->distinct()->whereNotNull('speed_rating')->pluck('speed_rating')->filter()->values(),
-                'production_years' => Tyre::whereIn('id', $filteredTyreIds)->select('production_year')->distinct()->whereNotNull('production_year')->pluck('production_year')->filter()->values(),
-                'warranties' => Tyre::whereIn('id', $filteredTyreIds)->select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter()->values(),
+            'data' => [
                 'brands' => TyreBrand::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
                     $q->whereIn('id', $filteredTyreIds);
                 })->get(),
+                'widths' => Tyre::whereIn('id', $filteredTyreIds)->select('width')->distinct()->whereNotNull('width')->pluck('width')->filter()->values(),
+                'heights' => Tyre::whereIn('id', $filteredTyreIds)->select('height')->distinct()->whereNotNull('height')->pluck('height')->filter()->values(),
+                'wheel_diameters' => Tyre::whereIn('id', $filteredTyreIds)->select('wheel_diameter')->distinct()->whereNotNull('wheel_diameter')->pluck('wheel_diameter')->filter()->values(),
                 'models' => TyreModel::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
                     $q->whereIn('id', $filteredTyreIds);
                 })->get(),
+                'load_indexes' => Tyre::whereIn('id', $filteredTyreIds)->select('load_index')->distinct()->whereNotNull('load_index')->pluck('load_index')->filter()->values(),
+                'speed_ratings' => Tyre::whereIn('id', $filteredTyreIds)->select('speed_rating')->distinct()->whereNotNull('speed_rating')->pluck('speed_rating')->filter()->values(),
+                'production_years' => Tyre::whereIn('id', $filteredTyreIds)->select('production_year')->distinct()->whereNotNull('production_year')->pluck('production_year')->filter()->values(),
                 'countries' => TyreCountry::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
                     $q->whereIn('id', $filteredTyreIds);
                 })->get(),
+                'warranties' => Tyre::whereIn('id', $filteredTyreIds)->select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter()->values(),
             ],
         ]);
     }
