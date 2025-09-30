@@ -773,6 +773,46 @@ class CartController extends Controller
         return null;
     }
 
+    public function getCartMenu()
+    {
+        $cart = CartService::getCurrentCart()->load('items.buyable');
+
+        if (!$cart || $cart->items->isEmpty()) {
+            return response()->json([
+                'items' => [],
+                'subtotal' => 0,
+                'total' => 0
+            ]);
+        }
+
+        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
+        $items = [];
+        $subtotal = 0;
+
+        foreach ($cart->items as $item) {
+            if (!$item->buyable) continue;
+
+            $total = $item->quantity * $item->price_per_unit;
+            $subtotal += $total;
+
+            $items[] = [
+                'name' => $this->resolveName($item->buyable),
+                'price_per_unit' => (float) $item->price_per_unit,
+                'quantity' => $item->quantity,
+                'total' => (float) $total,
+            ];
+        }
+
+        $vatAmount = $subtotal * $vatPercent;
+        $finalTotal = $subtotal + $vatAmount;
+
+        return response()->json([
+            'items' => $items,
+            'subtotal' => (float) $subtotal,
+            'total' => (float) $finalTotal
+        ]);
+    }
+
     public function addTyreGroup(Request $request)
     {
         if ($request->has('cart_payload')) {

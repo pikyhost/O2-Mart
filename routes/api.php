@@ -248,6 +248,7 @@ Route::get('/{type}/years', [VehicleController::class, 'getCompatibleYears']);
 });
 
 Route::middleware(CheckAuthOrSession::class)->group(function () {
+Route::get('/cart-menu', [CartController::class, 'getCartMenu']);
 Route::get('/cart', [CartController::class, 'getCart']);
 Route::post('/cart/add', [CartController::class, 'add']);
 Route::post('/cart/add-tyre-group', [CartController::class, 'addTyreGroup']);
@@ -423,3 +424,30 @@ https://mk3bel.o2mart.net/api/cart/update-area
 */
 
 // "shipping_cost": 21.53, from where this return ??
+
+/*
+
+1- total = quantity * price (pricing includeing the vat already)
+2 - subtotal = total * vat_percentage / 100
+
+3- at cart page subtotal of product same = subtotal and same 
+and the summary = sum of the itmes subtotal
+
+4- at cart page total = each item price * quantiy + shipping option (shipping setting installation fees)
+5- couppon discount = appliy at total direct
+
+6 - at checkout page  subtoal = cart page subtoal = cart menu subtotal
+7 - shipping at checkout is 0 when the shipping option is installation center
+shiping at checkout 0 when the option is with delivery with insatllation or 
+installation center
+
+but the first option  = calculation cost + city cost
+
+
+
+endpoint of frot pages:
+1 - /cart-menu  new for cart men 
+2- cart pate is /cart
+3 - checkout page is /cart/summary
+
+*/
