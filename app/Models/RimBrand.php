@@ -21,4 +21,9 @@ class RimBrand extends Model implements HasMedia
     {
         return $this->getFirstMediaUrl('logo') ?: null;
     }
+
+    public function rims()
+    {
+        return $this->hasMany(Rim::class, 'rim_brand_id');
+    }
 }
