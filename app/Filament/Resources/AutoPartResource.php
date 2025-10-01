@@ -29,6 +29,7 @@ use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Table;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Illuminate\Support\Str;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 
 class AutoPartResource extends Resource
@@ -236,23 +237,17 @@ class AutoPartResource extends Resource
                             ->icon('heroicon-o-photo')
                             ->schema([
                                Section::make('Primary Image')->schema([
-                                   TextInput::make('photo_link')
-                                       ->label(__('Feature Image URL'))
-                                       ->url()
-                                       ->nullable()
-                                       ->helperText('Enter image URL or upload below'),
-                                   
-                                   FileUpload::make('photo_upload')
-                                       ->label(__('Upload Feature Image'))
+                                   FileUpload::make('photo_link')
+                                       ->label(__('Feature Image'))
                                        ->image()
                                        ->maxSize(5120)
                                        ->directory('auto-parts')
+                                       ->imageEditor()
                                        ->nullable()
-                                       ->afterStateUpdated(function ($state, callable $set) {
-                                           if ($state) {
-                                               $set('photo_link', asset('storage/' . $state));
-                                           }
-                                       }),
+                                       ->getUploadedFileNameForStorageUsing(
+                                           fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
+                                               ->prepend('auto-part-'),
+                                       ),
 
                                    TextInput::make('photo_alt_text')
                                        ->label(__('Feature Image Alt Text'))
