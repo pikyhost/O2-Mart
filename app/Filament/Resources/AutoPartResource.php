@@ -69,18 +69,33 @@ class AutoPartResource extends Resource
                                     ->unique(ignoreRecord: true)
                                     ->maxLength(100),
 
-                                SelectTree::make('category_id')
-                                    ->placeholder('Select Category')
-                                    ->label('Category')
-                                    ->required()
+                                Select::make('parent_category_id')
+                                    ->label('Parent Category')
+                                    ->options(fn () => \App\Models\Category::whereNull('parent_id')->pluck('name', 'id'))
                                     ->searchable()
-                                    ->enableBranchNode()
-                                    ->relationship('category', 'name', 'parent_id')
-                                    ->afterStateHydrated(function (SelectTree $component, $state, $record) {
-                                        if ($record && $record->category_id) {
-                                            $component->state($record->category_id);
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, callable $set, $record) {
+                                        $set('category_id', null);
+                                        if ($record && $record->category && $record->category->parent_id != $state) {
+                                            $set('category_id', null);
                                         }
-                                    }),
+                                    })
+                                    ->afterStateHydrated(function (Select $component, $record) {
+                                        if ($record && $record->category && $record->category->parent_id) {
+                                            $component->state($record->category->parent_id);
+                                        }
+                                    })
+                                    ->dehydrated(false),
+
+                                Select::make('category_id')
+                                    ->label('Sub Category')
+                                    ->options(function (callable $get) {
+                                        $parentId = $get('parent_category_id');
+                                        return $parentId ? \App\Models\Category::where('parent_id', $parentId)->pluck('name', 'id') : [];
+                                    })
+                                    ->searchable()
+                                    ->required()
+                                    ->disabled(fn (callable $get) => !$get('parent_category_id')),
 
 
 //                                Select::make('parent_category_id')
