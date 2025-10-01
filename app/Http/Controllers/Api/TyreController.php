@@ -389,7 +389,7 @@ class TyreController extends Controller
 
     public function compatibleCarMakes()
     {
-        $attributes = \App\Models\TyreAttribute::with(['make', 'model', 'tyres'])->get();
+        $attributes = \App\Models\TyreAttribute::with(['make', 'model'])->get();
 
         if ($attributes->isEmpty()) {
             return response()->json([
@@ -398,8 +398,7 @@ class TyreController extends Controller
             ], 404);
         }
 
-        $grouped = $attributes->filter(fn($attr) => $attr->tyres->isNotEmpty())
-            ->groupBy('car_make_id')
+        $grouped = $attributes->groupBy('car_make_id')
             ->map(function ($group) {
                 $make = $group->first()->make;
                 
@@ -414,18 +413,12 @@ class TyreController extends Controller
                         return null;
                     }
                     
-                    $yearsGrouped = $modelsGroup->groupBy('model_year')->map(function ($yearGroup, $year) {
-                        $trims = $yearGroup->pluck('trim')->filter()->unique()->values();
-                        return [
-                            'year' => $year,
-                            'trims' => $trims,
-                        ];
-                    })->values();
+                    $years = $modelsGroup->pluck('model_year')->unique()->sort()->values();
 
                     return [
                         'id' => $model->id,
                         'name' => $model->name,
-                        'years' => $yearsGrouped,
+                        'years' => $years,
                     ];
                 })->filter()->values();
 
