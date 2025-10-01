@@ -70,9 +70,13 @@ class CartService
             }
         }
         
-        // Subtotal = items total - VAT (same as cart menu)
-        $vatAmount = $itemsTotal * $vatPercent;
-        $subtotal = $itemsTotal - $vatAmount;
+        // Subtotal = sum of item subtotals (without VAT) - same as cart endpoints
+        $subtotal = 0;
+        foreach ($cart->items as $item) {
+            if (!$item->buyable) continue;
+            $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
+            $subtotal += $item->quantity * $priceWithoutVat;
+        }
 
         // 🟢 Installation Fees (only once if any item has with_installation)
         $installationFee = 0;
