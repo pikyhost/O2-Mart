@@ -159,13 +159,17 @@ class CartService
             $buyable = $item->buyable;
             $type = $item->shipping_option ?? 'delivery_only';
 
+            // Calculate item subtotal without VAT (same as cart)
+            $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
+            $itemSubtotal = $item->quantity * $priceWithoutVat;
+            
             $entry = [
                 'name' => $buyable->name
                     ?? ($buyable->product_name ?? null)
                     ?? ($buyable->title ?? ''),
                 'quantity' => $item->quantity,
                 'price' => floatval($item->price_per_unit),
-                'subtotal' => $item->subtotal,
+                'subtotal' => number_format($itemSubtotal, 2),
             ];
 
             if ($type === 'with_installation') {
