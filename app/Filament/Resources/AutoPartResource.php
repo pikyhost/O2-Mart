@@ -243,7 +243,9 @@ class AutoPartResource extends Resource
                                        ->avatar()
                                        ->maxSize(5120)
                                        ->directory('auto-parts')
-                                       ->nullable(),
+                                       ->nullable()
+                                       ->formatStateUsing(fn ($state) => $state ? [$state] : null)
+                                       ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state[0] ?? null : $state),
 
                                    TextInput::make('photo_alt_text')
                                        ->label(__('Feature Image Alt Text'))
