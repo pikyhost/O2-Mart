@@ -84,9 +84,18 @@ class BatteryImporter extends BaseUpsertImporter
     {
         parent::fillRecord();
 
-        $this->record->slug = \Illuminate\Support\Str::slug(
+        $baseSlug = \Illuminate\Support\Str::slug(
             preg_replace('/\s+/', ' ', trim($this->record->slug ?? $this->record->name ?? ''))
         );
+        
+        // Ensure unique slug by checking existing records
+        $slug = $baseSlug;
+        $counter = 1;
+        while (\App\Models\Battery::where('slug', $slug)->where('id', '!=', $this->record->id ?? 0)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        $this->record->slug = $slug;
 
         $regular = (float)($this->data['regular_price'] ?? 0);
         $discount = (float)($this->data['discount_percentage'] ?? 0);
