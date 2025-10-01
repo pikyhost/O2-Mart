@@ -132,8 +132,12 @@ class CartService
             $cart->update(['discount_amount' => $discount]);
         }
         
-        // 🟢 Calculate menu total and subtotal (same as cart-menu endpoint)
-        $menuTotal = $itemsTotal; // This includes VAT already
+        // 🟢 Get actual cart-menu values
+        $menuTotal = 0;
+        foreach ($cart->items as $item) {
+            if (!$item->buyable) continue;
+            $menuTotal += $item->quantity * $item->price_per_unit; // Including VAT
+        }
         $menuVatAmount = $menuTotal * $vatPercent;
         $menuSubtotal = $menuTotal - $menuVatAmount;
         
