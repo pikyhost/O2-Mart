@@ -88,7 +88,7 @@ class BatteryResource extends Resource
                                             ->unique(ignoreRecord: true),
                                         TextInput::make('sku')
                                             ->label('SKU')
-                                            ->required()
+                                            ->nullable()
                                             ->unique(ignoreRecord: true),
                                         // SelectTree::make('category_id')
                                         //     ->placeholder('Select Category')
@@ -182,6 +182,17 @@ class BatteryResource extends Resource
                                         Select::make('battery_country_id')
                                             ->label('Battery Country')
                                             ->relationship('batteryCountry', 'name')
+                                            ->searchable()
+                                            ->preload()
+                                            ->nullable()
+                                            ->createOptionForm([
+                                                TextInput::make('name')->label('Country Name')->required(),
+                                                TextInput::make('code')->label('Country Code')->nullable(),
+                                            ]),
+
+                                        Select::make('country_id')
+                                            ->label('Country')
+                                            ->relationship('country', 'name')
                                             ->searchable()
                                             ->preload()
                                             ->nullable()
@@ -387,6 +398,9 @@ class BatteryResource extends Resource
                     ->label('Dimension'),
 
                 TextColumn::make('batteryCountry.name')
+                    ->label('Battery Country'),
+
+                TextColumn::make('country.name')
                     ->label('Country'),
 
                 TextColumn::make('weight')
