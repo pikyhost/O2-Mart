@@ -119,10 +119,8 @@ class BatteryImporter extends BaseUpsertImporter
             $this->record->item_code = null;
         }
 
-        // Handle warranty - set default if empty
-        if (empty($this->record->warranty)) {
-            $this->record->warranty = '12 months';
-        }
+        // Handle warranty - keep as imported (allow null/empty)
+        // No default warranty assignment
 
         // Handle relationships
         $this->whenFilled('battery_brand', function ($val) {
