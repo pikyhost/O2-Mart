@@ -88,14 +88,23 @@ class BatteryImporter extends BaseUpsertImporter
             preg_replace('/\s+/', ' ', trim($this->record->slug ?? $this->record->name ?? ''))
         );
 
-        $regular  = (float)($this->data['regular_price'] ?? 0);
+        $regular = (float)($this->data['regular_price'] ?? 0);
         $discount = (float)($this->data['discount_percentage'] ?? 0);
+        $importedDiscounted = $this->data['discounted_price'] ?? null;
         
-        // Only calculate discounted price if both price and discount are provided
-        if ($regular > 0 && $discount > 0) {
+        // Set regular price
+        if ($regular > 0) {
+            $this->record->regular_price = $regular;
+        }
+        
+        // Use imported discounted price if provided, otherwise calculate if discount exists
+        if (!empty($importedDiscounted)) {
+            // Use the imported discounted price as-is
+            $this->record->discounted_price = (float)$importedDiscounted;
+        } elseif ($regular > 0 && $discount > 0) {
+            // Calculate discounted price only if no imported price and discount exists
             $this->record->discounted_price = round($regular - ($regular * ($discount / 100)), 2);
         }
-        // Don't auto-set discounted_price to regular price - only save what's imported
 
         if (($this->data['item_code'] ?? null) === '?') {
             $this->record->item_code = null;

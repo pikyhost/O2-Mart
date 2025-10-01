@@ -442,32 +442,39 @@ class TyreController extends Controller
     {
         $query = Tyre::query();
         
+        $hasFilters = false;
+        
         if ($request->filled('brand')) {
             $brands = is_array($request->brand) ? $request->brand : [$request->brand];
             $query->whereIn('tyre_brand_id', $brands);
+            $hasFilters = true;
         }
         
         if ($request->filled('model')) {
             $models = is_array($request->model) ? $request->model : [$request->model];
             $query->whereIn('tyre_model_id', $models);
+            $hasFilters = true;
         }
         
         if ($request->filled('country')) {
             $countries = is_array($request->country) ? $request->country : [$request->country];
             $query->whereIn('tyre_country_id', $countries);
+            $hasFilters = true;
         }
         
         if ($request->filled('width')) {
             $widths = is_array($request->width) ? $request->width : [$request->width];
             $query->whereIn('width', $widths);
+            $hasFilters = true;
         }
         
         if ($request->filled('height')) {
             $heights = is_array($request->height) ? $request->height : [$request->height];
             $query->whereIn('height', $heights);
+            $hasFilters = true;
         }
         
-        $filteredTyreIds = $query->pluck('id');
+        $filteredTyreIds = $hasFilters ? $query->pluck('id') : Tyre::pluck('id');
         
         return response()->json([
             'status' => 'success',
