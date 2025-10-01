@@ -663,13 +663,13 @@ class TyreController extends Controller
         $attributes = $query->get(['tyre_attribute','rare_attribute','tyre_oem'])
             ->map(function ($attr) {
                 return [
-                    'main'  => $attr->tyre_attribute,
-                    'rare'  => $attr->rare_attribute,
-                    'is_oe' => (bool)$attr->tyre_oem,
+                    'main'  => $attr->tyre_attribute ?? '',
+                    'rare'  => $attr->rare_attribute ?? '',
+                    'is_oe' => (bool)($attr->tyre_oem ?? false),
                 ];
             })
             ->unique(function ($item) {
-                return $item['main'] .'-'. $item['rare'];
+                return ($item['main'] ?? '') .'-'. ($item['rare'] ?? '');
             })
             ->values();
 
@@ -680,10 +680,10 @@ class TyreController extends Controller
         return response()->json([
             'status' => 'success',
             'selected' => [
-                'make' => $make ? $make->name : null,
-                'model' => $model ? $model->name : null,
-                'year' => $request->year,
-                'trim' => $request->trim
+                'make' => $make ? $make->name : '',
+                'model' => $model ? $model->name : '',
+                'year' => $request->year ?? '',
+                'trim' => $request->trim ?? ''
             ],
             'data'   => $attributes
         ]);
