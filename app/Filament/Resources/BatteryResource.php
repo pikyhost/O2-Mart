@@ -419,7 +419,9 @@ class BatteryResource extends Resource
                     ->label('Weight (KG)'),
 
                 TextColumn::make('warranty')
-                    ->label('Warranty'),
+                    ->label('Warranty')
+                    ->searchable()
+                    ->sortable(),
 
                 // Tables\Columns\TextColumn::make('category.parent.name')
                 //     ->label('Parent Category')
