@@ -244,11 +244,12 @@ class AutoPartResource extends Resource
                                        ->directory('auto-parts')
                                        ->nullable()
                                        ->imagePreviewHeight('150')
-                                       ->loadStateFromRelationshipsUsing(function (FileUpload $component, $state, $record) {
-                                           if ($record && $record->photo_link && filter_var($record->photo_link, FILTER_VALIDATE_URL)) {
-                                               $component->state([$record->photo_link]);
+                                       ->afterStateHydrated(function (FileUpload $component, $state) {
+                                           if ($state && filter_var($state, FILTER_VALIDATE_URL)) {
+                                               $component->state([$state]);
                                            }
-                                       }),
+                                       })
+                                       ->dehydrateStateUsing(fn ($state) => is_array($state) ? ($state[0] ?? null) : $state),
 
                                    TextInput::make('photo_alt_text')
                                        ->label(__('Feature Image Alt Text'))
