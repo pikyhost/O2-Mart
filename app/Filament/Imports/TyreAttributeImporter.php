@@ -21,6 +21,7 @@ class TyreAttributeImporter extends Importer
             ImportColumn::make('Model Year')->requiredMapping(),
             ImportColumn::make('Trim'),
             ImportColumn::make('Tyre Attribute'),
+            ImportColumn::make('Rare Attribute'),
             ImportColumn::make('Tyre OEM'),
         ];
     }
@@ -54,6 +55,7 @@ class TyreAttributeImporter extends Importer
             'car_model_id'   => $carModel->id,
             'model_year'     => trim($this->data['Model Year']),
             'tyre_attribute' => $this->data['Tyre Attribute'] ?? '',
+            'rare_attribute' => $this->data['Rare Attribute'] ?? '',
             'tyre_oem'       => !empty($this->data['Tyre OEM']) && strtolower(trim($this->data['Tyre OEM'])) === 'yes',
         ]);
     }
