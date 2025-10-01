@@ -195,15 +195,15 @@ class RimController extends Controller
         Log::info('Filtering Rims with: ', $request->all());
 
         $request->validate([
-            'make' => 'required|string',
-            'model' => 'required|string',
+            'make_id' => 'required|integer',
+            'model_id' => 'required|integer',
             'year' => 'required|integer',
         ]);
 
         $rims = Rim::whereHas('attributes', function ($query) use ($request) {
-            $query->whereHas('make', fn($q) => $q->where('name', $request->make))
-                ->whereHas('model', fn($q) => $q->where('name', $request->model))
-                ->where('model_year', $request->year);
+            $query->where('car_make_id', $request->make_id)
+                  ->where('car_model_id', $request->model_id)
+                  ->where('model_year', $request->year);
         })->get();
 
         return response()->json([
