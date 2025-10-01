@@ -460,6 +460,19 @@ class TyreController extends Controller
             $hasFilters = true;
         }
         
+        if ($request->filled(['make_id', 'model_id', 'year'])) {
+            $query->whereHas('tyreAttribute', function ($q) use ($request) {
+                $q->where('car_make_id', $request->make_id)
+                  ->where('car_model_id', $request->model_id)
+                  ->where('model_year', $request->year);
+                  
+                if ($request->filled('trim')) {
+                    $q->where('trim', $request->trim);
+                }
+            });
+            $hasFilters = true;
+        }
+        
         if ($request->filled('width')) {
             $widths = is_array($request->width) ? $request->width : [$request->width];
             $query->whereIn('width', $widths);
