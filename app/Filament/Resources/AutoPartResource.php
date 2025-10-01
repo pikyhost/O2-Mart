@@ -257,12 +257,13 @@ class AutoPartResource extends Resource
                             ->icon('heroicon-o-photo')
                             ->schema([
                                Section::make('Primary Image')->schema([
-                                   FileUpload::make('photo_link')
+                                   FileUpload::make('new_photo_upload')
                                        ->label(__('Feature Image'))
                                        ->image()
                                        ->maxSize(5120)
                                        ->directory('auto-parts')
                                        ->nullable()
+                                       ->dehydrated(false)
                                        ->helperText(fn ($record) => $record && $record->photo_link ? 
                                            new \Illuminate\Support\HtmlString('<img src="' . $record->photo_link . '" class="mt-2 h-20 w-20 object-cover rounded border" />') : 
                                            null
@@ -557,6 +558,13 @@ public static function mutateFormDataBeforeSave(array $data): array
 public static function mutateFormDataBeforeUpdate(array $data): array
 {
     $data['discounted_price'] = self::calculateDiscountedPrice($data);
+    
+    // Handle photo upload - only update if new file uploaded
+    if (isset($data['new_photo_upload']) && $data['new_photo_upload']) {
+        $data['photo_link'] = asset('storage/' . $data['new_photo_upload']);
+    }
+    unset($data['new_photo_upload']);
+    
     return $data;
 }
 
