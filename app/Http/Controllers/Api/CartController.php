@@ -417,7 +417,7 @@ class CartController extends Controller
         $subtotal = 0;
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
-            $priceWithoutVat = $item->price_per_unit / (1 + $vatPercent);
+            $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
             $subtotal += $item->quantity * $priceWithoutVat;
         }
         
@@ -435,7 +435,7 @@ class CartController extends Controller
                     $buyable = $item->buyable;
 
                     // Calculate item price and subtotal without VAT
-                    $priceWithoutVat = $item->price_per_unit / (1 + $vatPercent);
+                    $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
                     $itemSubtotal = $item->quantity * $priceWithoutVat;
                     
                     $itemData = [
