@@ -90,11 +90,17 @@ class HomeController extends Controller
 
 private function processInlineMarkdown($text)
 {
+    // Links [text](url)
+    $text = preg_replace('/\[([^\]]+)\]\(([^\)]+)\)/', '<a href="$2" target="_blank">$1</a>', $text);
+    
     // Bold
     $text = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $text);
     
     // Italic
     $text = preg_replace('/\*(.*?)\*/', '<em>$1</em>', $text);
+    
+    // Code inline
+    $text = preg_replace('/`([^`]+)`/', '<code>$1</code>', $text);
     
     // Already preserve any existing HTML spans (colored text)
     // These should pass through unchanged
@@ -183,6 +189,30 @@ private function processInlineMarkdown($text)
             ]
         ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
-}
 
-//finally solved the editor
+    public function aboutUs(): JsonResponse
+    {
+        $aboutUs = \App\Models\AboutUs::first();
+        
+        if (!$aboutUs) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'About us content not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'title' => $aboutUs->title,
+                'content' => $this->processMarkdown($aboutUs->content),
+                'image' => $this->getImageUrl($aboutUs->image),
+                'seo' => [
+                    'meta_title' => $aboutUs->meta_title,
+                    'meta_description' => $aboutUs->meta_description,
+                    'alt_text' => $aboutUs->alt_text,
+                ],
+            ]
+        ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+}
