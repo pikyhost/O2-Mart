@@ -68,8 +68,8 @@ class TyreController extends Controller
         if ($request->filled('width')) $query->where('width', $request->width);
         if ($request->filled('height')) $query->where('height', $request->height);
         if ($request->filled('tyre_size_id')) $query->where('tyre_size_id', $request->tyre_size_id);
-        if ($request->filled('brand')) {
-            $brands = is_array($request->brand) ? $request->brand : [$request->brand];
+        if ($request->filled('brand_id')) {
+            $brands = is_array($request->brand_id) ? $request->brand_id : [$request->brand_id];
             $query->whereIn('tyre_brand_id', $brands);
         }
         if ($request->filled('wheel_diameter')) $query->where('wheel_diameter', $request->wheel_diameter);
@@ -444,8 +444,8 @@ class TyreController extends Controller
         
         $hasFilters = false;
         
-        if ($request->filled('brand')) {
-            $brands = is_array($request->brand) ? $request->brand : [$request->brand];
+        if ($request->filled('brand_id')) {
+            $brands = is_array($request->brand_id) ? $request->brand_id : [$request->brand_id];
             $query->whereIn('tyre_brand_id', $brands);
             $hasFilters = true;
         }
