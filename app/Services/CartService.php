@@ -141,6 +141,9 @@ class CartService
         $menuVatAmount = $menuTotal * $vatPercent;
         $menuSubtotal = $menuTotal - $menuVatAmount;
         
+        // Use menu subtotal as the main subtotal
+        $subtotal = $menuSubtotal;
+        
         // 🟢 VAT = cart-menu total - cart-menu subtotal
         $vat = $menuTotal - $menuSubtotal;
         
@@ -189,7 +192,7 @@ class CartService
             'with_installation' => $withInstallation,
             'installation_center' => $installationCenter,
             'totals' => [
-                'items_subtotal' => $subtotal,
+                'items_subtotal' => (float) $subtotal,
                 'shipping' => $shippingCost,
                 'installation' => $installationFee,
                 'discount' => $discount,
