@@ -431,9 +431,8 @@ class CartController extends Controller
                     $buyable = $item->buyable;
 
                     // Calculate item subtotal without VAT (same as cart menu)
-                    $itemTotal = $item->quantity * $item->price_per_unit;
-                    $itemVatAmount = $itemTotal * $vatPercent;
-                    $itemSubtotal = $itemTotal - $itemVatAmount;
+                    $priceWithoutVat = $item->price_per_unit / (1 + $vatPercent);
+                    $itemSubtotal = $item->quantity * $priceWithoutVat;
                     
                     $itemData = [
                         'type' => class_basename($item->buyable_type),
