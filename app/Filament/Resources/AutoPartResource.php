@@ -236,11 +236,23 @@ class AutoPartResource extends Resource
                             ->icon('heroicon-o-photo')
                             ->schema([
                                Section::make('Primary Image')->schema([
-                                   FileUpload::make('photo_link')
-                                       ->label(__('Feature Image'))
-                                       ->required()
+                                   TextInput::make('photo_link')
+                                       ->label(__('Feature Image URL'))
+                                       ->url()
+                                       ->nullable()
+                                       ->helperText('Enter image URL or upload below'),
+                                   
+                                   FileUpload::make('photo_upload')
+                                       ->label(__('Upload Feature Image'))
                                        ->image()
-                                       ->maxSize(5120),
+                                       ->maxSize(5120)
+                                       ->directory('auto-parts')
+                                       ->nullable()
+                                       ->afterStateUpdated(function ($state, callable $set) {
+                                           if ($state) {
+                                               $set('photo_link', asset('storage/' . $state));
+                                           }
+                                       }),
 
                                    TextInput::make('photo_alt_text')
                                        ->label(__('Feature Image Alt Text'))
