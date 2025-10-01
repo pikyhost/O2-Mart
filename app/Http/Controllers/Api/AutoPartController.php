@@ -211,10 +211,15 @@ class AutoPartController extends Controller
 
     public function filters()
     {
+        // Get categories that have AutoParts (including subcategories)
+        $categoryIds = AutoPart::whereNotNull('category_id')->distinct()->pluck('category_id');
+        $parentIds = Category::whereIn('id', $categoryIds)->whereNotNull('parent_id')->pluck('parent_id');
+        $allCategoryIds = $categoryIds->merge($parentIds)->unique();
+        
         return response()->json([
             'status' => 'success',
             'data' => [
-                'categories' => Category::with('children')->whereNull('parent_id')->whereHas('autoParts')->get(),
+                'categories' => Category::with('children')->whereIn('id', $allCategoryIds)->whereNull('parent_id')->get(),
                 'brands' => AutoPartBrand::select('id', 'name')->whereHas('autoParts')->get(),
                 'countries' => AutoPartCountry::select('id', 'name')->whereHas('autoParts')->get(),
                 'viscosity_grades' => ViscosityGrade::select('id', 'name')->whereHas('autoParts')->get(),
