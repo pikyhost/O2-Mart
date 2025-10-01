@@ -132,14 +132,16 @@ class CartService
             $cart->update(['discount_amount' => $discount]);
         }
         
-        // 🟢 Calculate menu total and VAT (same as cart menu logic)
+        // 🟢 Calculate menu total and subtotal (same as cart-menu endpoint)
         $menuTotal = $itemsTotal; // This includes VAT already
-        $menuVat = $menuTotal * $vatPercent;
-        $menuSubtotal = $menuTotal - $menuVat;
+        $menuVatAmount = $menuTotal * $vatPercent;
+        $menuSubtotal = $menuTotal - $menuVatAmount;
+        
+        // 🟢 VAT = cart-menu total - cart-menu subtotal
+        $vat = $menuTotal - $menuSubtotal;
         
         // 🟢 Total = SubTotal + Shipping + Installation + VAT amount
         $totalBeforeVat = $discountableAfterDiscount + $shippingCost + $installationFee;
-        $vat = $menuVat; // Use menu VAT calculation
         $total = $totalBeforeVat + $vat;
 
         $deliveryOnly = [];
