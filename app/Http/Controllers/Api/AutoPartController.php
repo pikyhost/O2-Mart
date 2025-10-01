@@ -103,8 +103,12 @@ class AutoPartController extends Controller
             ? round(($approvedReviews->avg('rating') ?? 5), 2)
             : round(($item->average_rating ?? 5), 2);
 
+        $itemArray = $item->toArray();
+        // Remove null brand_id and country_id fields
+        unset($itemArray['brand_id'], $itemArray['country_id']);
+        
         $base = array_merge(
-            $item->toArray(),
+            $itemArray,
             [
                 'photo_link'        => $photoLink,
                 'average_rating'    => $average,
@@ -113,6 +117,9 @@ class AutoPartController extends Controller
                         $item->autoPartBrand->only(['id', 'name']),
                         ['logo_url' => $item->autoPartBrand->logo_url]
                     )
+                    : null,
+                'auto_part_country' => $item->autoPartCountry
+                    ? $item->autoPartCountry->only(['id', 'name'])
                     : null,
                 'meta_title'        => $item->meta_title,
                 'meta_description'  => $item->meta_description,
