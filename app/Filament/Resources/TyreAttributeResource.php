@@ -58,19 +58,34 @@ class TyreAttributeResource extends Resource
                         range($model->year_from, $model->year_to)
                     );
                 })
+                ->afterStateHydrated(function (Select $component, $record) {
+                    if ($record) {
+                        $component->state($record->model_year);
+                    }
+                })
                 ->required(),
 
                 ]),
 
                 Grid::make(2)->schema([
                     TextInput::make('trim')
-                        ->label('Trim'),
+                        ->label('Trim')
+                        ->afterStateHydrated(function (TextInput $component, $record) {
+                            if ($record) {
+                                $component->state($record->trim);
+                            }
+                        }),
 
                     TextInput::make('tyre_attribute')
                         ->label('Tyre Attribute'),
                     TextInput::make('rare_attribute')
                         ->label('Rare Attribute')
-                        ->nullable(),
+                        ->nullable()
+                        ->afterStateHydrated(function (TextInput $component, $record) {
+                            if ($record) {
+                                $component->state($record->rare_attribute);
+                            }
+                        }),
     
                     Checkbox::make('tyre_oem')
                         ->label('Tyre OEM')
