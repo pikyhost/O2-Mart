@@ -77,7 +77,12 @@ class TyreController extends Controller
         if ($request->filled('load_index')) $query->where('load_index', $request->load_index);
         if ($request->filled('speed_rating')) $query->where('speed_rating', $request->speed_rating);
         if ($request->filled('production_year')) $query->where('production_year', $request->production_year);
-        if ($request->filled('country')) $query->where('tyre_country_id', $request->country);
+        if ($request->filled('tyre_country_id')) $query->where('tyre_country_id', $request->tyre_country_id);
+        if ($request->filled('car_model_id')) {
+            $query->whereHas('tyreAttribute', function ($q) use ($request) {
+                $q->where('car_model_id', $request->car_model_id);
+            });
+        }
         if ($request->filled('warranty')) $query->where('warranty', $request->warranty);
 
         $query->withAvg(['reviews as average_rating' => function ($q) {
@@ -456,8 +461,8 @@ class TyreController extends Controller
             $hasFilters = true;
         }
         
-        if ($request->filled('country')) {
-            $countries = is_array($request->country) ? $request->country : [$request->country];
+        if ($request->filled('tyre_country_id')) {
+            $countries = is_array($request->tyre_country_id) ? $request->tyre_country_id : [$request->tyre_country_id];
             $query->whereIn('tyre_country_id', $countries);
             $hasFilters = true;
         }
