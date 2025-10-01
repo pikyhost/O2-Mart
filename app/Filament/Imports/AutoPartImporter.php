@@ -24,7 +24,7 @@ class AutoPartImporter extends BaseUpsertImporter
         return [
             ImportColumn::make('name')->requiredMapping()->rules(['required', 'max:255']),
             ImportColumn::make('slug')->rules(['nullable', 'max:255']),
-            ImportColumn::make('sku')->requiredMapping()->rules(['required', 'max:255']),
+            ImportColumn::make('sku')->rules(['nullable', 'max:255']),
 
             ImportColumn::make('parent_category_name')->label('Parent Category'),
             ImportColumn::make('sub_category_name')->label('Sub Category'),

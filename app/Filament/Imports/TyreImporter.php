@@ -28,7 +28,7 @@ class TyreImporter extends Importer
         return [
             ImportColumn::make('title')->rules(['nullable']),
             ImportColumn::make('slug')->rules(['nullable']),
-            ImportColumn::make('sku')->requiredMapping()->rules(['required', 'string', 'min:1']),
+            ImportColumn::make('sku')->rules(['nullable', 'string']),
             ImportColumn::make('tyreBrand')->label('Brand'),
             ImportColumn::make('tyreModel')->label('Model'),
             ImportColumn::make('tyreCountry')->label('Country'),
@@ -111,20 +111,18 @@ class TyreImporter extends Importer
 
     public function resolveRecord(): ?Tyre
     {
-        // Skip empty rows
-        if (empty($this->data['sku'])) {
-            return null;
+        // Use title or generate unique identifier if no SKU
+        if (!empty($this->data['sku'])) {
+            return Tyre::firstOrNew(['sku' => $this->data['sku']]);
+        } elseif (!empty($this->data['title'])) {
+            return Tyre::firstOrNew(['title' => $this->data['title']]);
         }
         
-        return Tyre::firstOrNew(['sku' => $this->data['sku']]);
+        return new Tyre();
     }
 
     public function fillRecord(): void
     {
-        // Skip if no SKU
-        if (empty($this->data['sku'])) {
-            return;
-        }
         
         $this->record->fill([
             'title' => $this->data['title'] ?? null,

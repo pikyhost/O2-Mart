@@ -34,7 +34,7 @@ class BatteryImporter extends BaseUpsertImporter
             ImportColumn::make('name')->requiredMapping()->rules(['required','max:255']),
             ImportColumn::make('slug')->rules(['nullable','max:255']),
             ImportColumn::make('item_code')->rules(['nullable','max:255']),
-            ImportColumn::make('sku')->requiredMapping()->rules(['required','max:255']),
+            ImportColumn::make('sku')->rules(['nullable','max:255']),
 
             ImportColumn::make('battery_brand')->label('Battery Brand'),
             ImportColumn::make('capacity')->label('Battery Capacity'),
