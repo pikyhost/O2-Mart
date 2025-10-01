@@ -56,7 +56,10 @@ class CartService
     public static function generateCartSummary(Cart $cart): array
     {
         if (!$cart->area_id) {
-            $cart->update(['area_id' => 3]);
+            $validAreaId = \App\Models\Area::first()?->id ?? null;
+            if ($validAreaId) {
+                $cart->update(['area_id' => $validAreaId]);
+            }
         }
 
         // Calculate items total (same as cart menu)
