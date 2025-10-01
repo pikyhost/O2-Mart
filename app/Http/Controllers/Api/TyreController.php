@@ -413,12 +413,18 @@ class TyreController extends Controller
                         return null;
                     }
                     
-                    $years = $modelsGroup->pluck('model_year')->unique()->sort()->values();
+                    $yearsGrouped = $modelsGroup->groupBy('model_year')->map(function ($yearGroup, $year) {
+                        $trims = $yearGroup->pluck('trim')->filter()->unique()->values();
+                        return [
+                            'year' => $year,
+                            'trims' => $trims,
+                        ];
+                    })->values();
 
                     return [
                         'id' => $model->id,
                         'name' => $model->name,
-                        'years' => $years,
+                        'years' => $yearsGrouped,
                     ];
                 })->filter()->values();
 
