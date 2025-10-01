@@ -389,19 +389,26 @@ class BatteryResource extends Resource
 
                 TextColumn::make('batteryBrand.value')
                     ->label('Brand')
-                    ->searchable(),
+                    ->searchable()
+                    ->default('-'),
 
                 TextColumn::make('capacity.value')
-                    ->label('Capacity'),
+                    ->label('Capacity')
+                    ->default('-'),
 
                 TextColumn::make('dimension.value')
-                    ->label('Dimension'),
+                    ->label('Dimension')
+                    ->default('-'),
 
                 TextColumn::make('batteryCountry.name')
-                    ->label('Battery Country'),
+                    ->label('Battery Country')
+                    ->searchable()
+                    ->default('-'),
 
                 TextColumn::make('country.name')
-                    ->label('Country'),
+                    ->label('Country')
+                    ->searchable()
+                    ->default('-'),
 
                 TextColumn::make('weight')
                     ->label('Weight (KG)'),
