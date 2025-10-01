@@ -240,20 +240,10 @@ class AutoPartResource extends Resource
                                    FileUpload::make('photo_link')
                                        ->label(__('Feature Image'))
                                        ->image()
+                                       ->avatar()
                                        ->maxSize(5120)
                                        ->directory('auto-parts')
-                                       ->imageEditor()
-                                       ->nullable()
-                                       ->loadStateFromRelationshipsUsing(function (FileUpload $component, $state) {
-                                           if ($state && filter_var($state, FILTER_VALIDATE_URL)) {
-                                               // For existing URLs, create a temporary representation
-                                               $component->state([$state]);
-                                           }
-                                       })
-                                       ->getUploadedFileNameForStorageUsing(
-                                           fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
-                                               ->prepend('auto-part-'),
-                                       ),
+                                       ->nullable(),
 
                                    TextInput::make('photo_alt_text')
                                        ->label(__('Feature Image Alt Text'))
