@@ -49,19 +49,26 @@ class TyreAttributeResource extends Resource
 
             Select::make('model_year')
                 ->label('Model Year')
-                ->options(function (Get $get) {
+                ->options(function (Get $get, $record) {
                     $model = \App\Models\CarModel::find($get('car_model_id'));
-                    if (!$model) return [];
-
-                    return array_combine(
-                        range($model->year_from, $model->year_to),
-                        range($model->year_from, $model->year_to)
-                    );
-                })
-                ->afterStateHydrated(function (Select $component, $record) {
-                    if ($record) {
-                        $component->state($record->model_year);
+                    if (!$model && !$record) return [];
+                    
+                    // If editing, include current year even if outside model range
+                    $years = [];
+                    if ($model) {
+                        $years = array_combine(
+                            range($model->year_from, $model->year_to),
+                            range($model->year_from, $model->year_to)
+                        );
                     }
+                    
+                    // Add current record year if not in range
+                    if ($record && $record->model_year && !isset($years[$record->model_year])) {
+                        $years[$record->model_year] = $record->model_year;
+                        ksort($years);
+                    }
+                    
+                    return $years;
                 })
                 ->required(),
 
