@@ -65,7 +65,6 @@ class AutoPartResource extends Resource
 
                                 TextInput::make('sku')
                                     ->label('SKU')
-                                    ->required()
                                     ->unique(ignoreRecord: true)
                                     ->maxLength(100),
 
@@ -94,7 +93,6 @@ class AutoPartResource extends Resource
                                         return $parentId ? \App\Models\Category::where('parent_id', $parentId)->pluck('name', 'id') : [];
                                     })
                                     ->searchable()
-                                    ->required()
                                     ->disabled(fn (callable $get) => !$get('parent_category_id')),
 
 

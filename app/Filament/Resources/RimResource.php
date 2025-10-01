@@ -93,7 +93,7 @@ class RimResource extends Resource
                         Tab::make('Identification')
                             ->schema([
                                 TextInput::make('item_code')->label('Item Code'),
-                                TextInput::make('sku')->label('SKU'),
+                                TextInput::make('sku')->label('SKU')->nullable(),
                                 TextInput::make('warranty')->label('Warranty'),
                             ]),
 

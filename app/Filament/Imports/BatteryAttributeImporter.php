@@ -43,9 +43,14 @@ class BatteryAttributeImporter extends Importer
     public function fillRecord(): void
     {
         $make = CarMake::firstOrCreate(['name' => trim($this->data['Car Make'])]);
+        $modelName = trim($this->data['Car Model']);
         $model = CarModel::firstOrCreate([
-            'name' => trim($this->data['Car Model']),
+            'name' => $modelName,
             'car_make_id' => $make->id,
+        ], [
+            'name' => $modelName,
+            'car_make_id' => $make->id,
+            'slug' => \Illuminate\Support\Str::slug($modelName),
         ]);
 
         $this->record->fill([

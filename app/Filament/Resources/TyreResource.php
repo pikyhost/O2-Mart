@@ -66,7 +66,6 @@ class TyreResource extends Resource
                                     ->maxLength(255),
                                 TextInput::make('sku')
                                     ->label(__('SKU'))
-                                    ->required()
                                     ->unique(ignoreRecord: true)
                                     ->maxLength(255),
 
