@@ -430,13 +430,18 @@ class CartController extends Controller
                 'items' => $cart->items->filter(fn($item) => $item->buyable !== null)->map(function ($item) {
                     $buyable = $item->buyable;
 
+                    // Calculate item subtotal without VAT (same as cart menu)
+                    $itemTotal = $item->quantity * $item->price_per_unit;
+                    $itemVatAmount = $itemTotal * $vatPercent;
+                    $itemSubtotal = $itemTotal - $itemVatAmount;
+                    
                     $itemData = [
                         'type' => class_basename($item->buyable_type),
                         'id' => $buyable->id,
                         'name' => $this->resolveName($buyable),
                         'price_per_unit' => (float) $item->price_per_unit,
                         'quantity' => $item->quantity,
-                        'subtotal' => (float) $item->subtotal,
+                        'subtotal' => (float) $itemSubtotal,
                         'image' => $this->resolveImage($buyable),
                         'shipping_option' => $item->shipping_option,
                         'mobile_van_id' => $item->mobile_van_id,
