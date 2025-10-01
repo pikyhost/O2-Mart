@@ -237,15 +237,26 @@ class AutoPartResource extends Resource
                             ->icon('heroicon-o-photo')
                             ->schema([
                                Section::make('Primary Image')->schema([
-                                   FileUpload::make('photo_link')
+                                   SpatieMediaLibraryFileUpload::make('photo_link')
                                        ->label(__('Feature Image'))
+                                       ->collection('feature_image')
                                        ->image()
-                                       ->avatar()
                                        ->maxSize(5120)
-                                       ->directory('auto-parts')
                                        ->nullable()
-                                       ->formatStateUsing(fn ($state) => $state ? [$state] : null)
-                                       ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state[0] ?? null : $state),
+                                       ->afterStateHydrated(function (SpatieMediaLibraryFileUpload $component, $state) {
+                                           if ($state && filter_var($state, FILTER_VALIDATE_URL)) {
+                                               // For existing URLs, we'll show them in a different way
+                                               $component->state(null);
+                                           }
+                                       }),
+                                   
+                                   \Filament\Forms\Components\Placeholder::make('current_image')
+                                       ->label('Current Image')
+                                       ->content(fn ($record) => $record && $record->photo_link ? 
+                                           new \Illuminate\Support\HtmlString('<img src="' . $record->photo_link . '" class="h-20 w-20 object-cover rounded" />') : 
+                                           'No image'
+                                       )
+                                       ->visible(fn ($record) => $record && $record->photo_link),
 
                                    TextInput::make('photo_alt_text')
                                        ->label(__('Feature Image Alt Text'))
