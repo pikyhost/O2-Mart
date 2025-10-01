@@ -75,7 +75,12 @@ class AutoPartResource extends Resource
                                     ->required()
                                     ->searchable()
                                     ->enableBranchNode()
-                                    ->relationship('category', 'name', 'parent_id'),
+                                    ->relationship('category', 'name', 'parent_id')
+                                    ->afterStateHydrated(function (SelectTree $component, $state, $record) {
+                                        if ($record && $record->category_id) {
+                                            $component->state($record->category_id);
+                                        }
+                                    }),
 
 
 //                                Select::make('parent_category_id')
