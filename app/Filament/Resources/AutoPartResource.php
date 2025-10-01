@@ -243,13 +243,10 @@ class AutoPartResource extends Resource
                                        ->maxSize(5120)
                                        ->directory('auto-parts')
                                        ->nullable()
-                                       ->imagePreviewHeight('150')
-                                       ->afterStateHydrated(function (FileUpload $component, $state) {
-                                           if ($state && filter_var($state, FILTER_VALIDATE_URL)) {
-                                               $component->state([$state]);
-                                           }
-                                       })
-                                       ->dehydrateStateUsing(fn ($state) => is_array($state) ? ($state[0] ?? null) : $state),
+                                       ->helperText(fn ($record) => $record && $record->photo_link ? 
+                                           new \Illuminate\Support\HtmlString('<img src="' . $record->photo_link . '" class="mt-2 h-20 w-20 object-cover rounded border" />') : 
+                                           null
+                                       ),
 
                                    TextInput::make('photo_alt_text')
                                        ->label(__('Feature Image Alt Text'))
