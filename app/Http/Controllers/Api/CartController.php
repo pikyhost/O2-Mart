@@ -816,7 +816,7 @@ class CartController extends Controller
             $items[] = [
                 'id' => $item->buyable->id,
                 'name' => $this->resolveName($item->buyable),
-                'price_per_unit' => (float) $item->price_per_unit, // Including VAT
+                'price_per_unit' => (float) $itemTotal, // Including VAT
                 'quantity' => $item->quantity,
                 'total' => (float) $itemTotal, // Including VAT
                 'image' => $this->resolveImage($item->buyable),
