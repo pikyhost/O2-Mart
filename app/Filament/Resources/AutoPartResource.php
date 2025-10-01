@@ -255,21 +255,14 @@ class AutoPartResource extends Resource
                             ->icon('heroicon-o-photo')
                             ->schema([
                                Section::make('Primary Image')->schema([
-                                   FileUpload::make('new_photo_upload')
+                                   SpatieMediaLibraryFileUpload::make('feature_image')
                                        ->label(__('Feature Image'))
+                                       ->collection('auto_part_feature_image')
                                        ->image()
-                                       ->maxSize(5120)
-                                       ->directory('auto-parts')
-                                       ->nullable()
-                                       ->dehydrated(false)
-                                       ->helperText(fn ($record) => $record && $record->photo_link ? 
-                                           new \Illuminate\Support\HtmlString('<img src="' . $record->photo_link . '" class="mt-2 h-20 w-20 object-cover rounded border" />') : 
-                                           null
-                                       ),
+                                       ->maxSize(5120),
 
                                    TextInput::make('photo_alt_text')
                                        ->label(__('Feature Image Alt Text'))
-                                       ->required()
                                        ->maxLength(255),
                                ]),
 
@@ -348,7 +341,8 @@ class AutoPartResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')->label(__('id')),
 
-                Tables\Columns\ImageColumn::make('photo_link')
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('feature_image')
+                    ->collection('auto_part_feature_image')
                     ->toggleable(true, false)
                     ->circular()
                     ->simpleLightbox()
@@ -556,13 +550,6 @@ public static function mutateFormDataBeforeSave(array $data): array
 public static function mutateFormDataBeforeUpdate(array $data): array
 {
     $data['discounted_price'] = self::calculateDiscountedPrice($data);
-    
-    // Handle photo upload - only update if new file uploaded
-    if (isset($data['new_photo_upload']) && $data['new_photo_upload']) {
-        $data['photo_link'] = asset('storage/' . $data['new_photo_upload']);
-    }
-    unset($data['new_photo_upload']);
-    
     return $data;
 }
 

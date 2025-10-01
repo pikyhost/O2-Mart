@@ -88,9 +88,8 @@ class AutoPartController extends Controller
 
     private function transformAutoPart(AutoPart $item, bool $withReviews = false): array
     {
-        $photoLink = $item->photo_link && str_starts_with($item->photo_link, 'http')
-            ? $item->photo_link
-            : ($item->photo_link ? asset('storage/' . $item->photo_link) : null);
+        // Use media library for photo_link but keep same key name
+        $photoLink = $item->getAutoPartFeatureImageUrl();
 
         $approvedReviews = collect();
         if ($withReviews) {

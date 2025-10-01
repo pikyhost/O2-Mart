@@ -26,7 +26,6 @@ class AutoPart extends Model implements HasMedia
             'description',
             'details',
             'photo_alt_text',
-            'photo_link', 
             'weight',
             'height',
             'width',
@@ -151,6 +150,10 @@ class AutoPart extends Model implements HasMedia
             'image/gif', 'image/bmp', 'image/svg+xml', 'image/tiff',
         ];
 
+        $this->addMediaCollection('auto_part_feature_image')
+            ->singleFile()
+            ->acceptsMimeTypes($imageMimeTypes);
+
         $this->addMediaCollection('auto_part_secondary_image')
             ->singleFile()
             ->acceptsMimeTypes($imageMimeTypes);
@@ -212,6 +215,11 @@ class AutoPart extends Model implements HasMedia
     /**
      * Accessors
      */
+    public function getAutoPartFeatureImageUrl(): ?string
+    {
+        return $this->getFirstMediaUrl('auto_part_feature_image') ?: null;
+    }
+
     public function getAutoPartSecondaryImageUrl(): ?string
     {
         return $this->getFirstMediaUrl('auto_part_secondary_image') ?: null;

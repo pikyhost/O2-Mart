@@ -78,9 +78,7 @@ class AutoPartImporter extends BaseUpsertImporter
 
         $this->record->buy_3_get_1_free = $this->parseBool($this->data['buy_3_get_1_free'] ?? false);
 
-        if (!empty($this->data['photo_link'])) {
-            $this->record->photo_link = trim($this->data['photo_link']);
-        }
+        // Photo link will be handled in saveRecord via media library
 
         if (!empty($this->data['secondary_image_url'])) {
             $this->record->secondary_image_url = trim($this->data['secondary_image_url']);
@@ -128,6 +126,42 @@ class AutoPartImporter extends BaseUpsertImporter
         });
     }
 
+    public function saveRecord(): void
+    {
+        $this->record->save();
+
+        // Import feature image
+        if (!empty($this->data['photo_link'])) {
+            $url = trim($this->data['photo_link']);
+            try {
+                if (filter_var($url, FILTER_VALIDATE_URL)) {
+                    $this->record->addMediaFromUrl($url)
+                        ->toMediaCollection('auto_part_feature_image');
+                }
+            } catch (\Exception $e) {
+                \Log::error('AutoPartImporter: Failed to import feature image', [
+                    'url' => $url,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+
+        // Import secondary image
+        if (!empty($this->data['secondary_image_url'])) {
+            $url = trim($this->data['secondary_image_url']);
+            try {
+                if (filter_var($url, FILTER_VALIDATE_URL)) {
+                    $this->record->addMediaFromUrl($url)
+                        ->toMediaCollection('auto_part_secondary_image');
+                }
+            } catch (\Exception $e) {
+                \Log::error('AutoPartImporter: Failed to import secondary image', [
+                    'url' => $url,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
+    }
 
     public static function getCompletedNotificationBody(Import $import): string
     {
