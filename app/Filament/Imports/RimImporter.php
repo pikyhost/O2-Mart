@@ -96,7 +96,6 @@ class RimImporter extends BaseUpsertImporter
             $this->record->discounted_price = $this->data['discounted_price'] ?? null;
         }
         // Don't auto-set discounted_price to regular price - only save what's imported
-        $this->record->meta_title = $this->data['meta_title'] ?? null;
         $this->record->meta_description = $this->data['meta_description'] ?? null;
         
         \Log::info('RimImporter fillRecord', [
