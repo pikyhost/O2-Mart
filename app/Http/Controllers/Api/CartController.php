@@ -413,9 +413,13 @@ class CartController extends Controller
         // Checkout total = cart total + shipping
         $checkoutTotal = $cartPageTotalAfterDiscount + $shippingCost;
         
-        // Subtotal = total - VAT (same as menu)
-        $vatAmount = $cartTotal * $vatPercent;
-        $subtotal = $cartTotal - $vatAmount;
+        // Subtotal = sum of item subtotals (without VAT)
+        $subtotal = 0;
+        foreach ($cart->items as $item) {
+            if (!$item->buyable) continue;
+            $priceWithoutVat = $item->price_per_unit / (1 + $vatPercent);
+            $subtotal += $item->quantity * $priceWithoutVat;
+        }
         
         $cart->subtotal = $subtotal;
         $cart->total = $checkoutTotal;
