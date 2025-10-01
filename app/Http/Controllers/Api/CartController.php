@@ -427,7 +427,7 @@ class CartController extends Controller
             'message' => 'Cart loaded successfully',
             'session_id' => session()->getId(),
             'cart' => [
-                'items' => $cart->items->filter(fn($item) => $item->buyable !== null)->map(function ($item) {
+                'items' => $cart->items->filter(fn($item) => $item->buyable !== null)->map(function ($item) use ($vatPercent) {
                     $buyable = $item->buyable;
 
                     // Calculate item subtotal without VAT (same as cart menu)
