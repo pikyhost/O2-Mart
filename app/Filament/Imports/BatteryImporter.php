@@ -146,11 +146,16 @@ class BatteryImporter extends BaseUpsertImporter
             $this->record->battery_country_id = $bc->id;
         });
 
-        $this->whenFilled('country', function ($val) {
-            $code = \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($val, 0, 2));
-            $c = \App\Models\Country::firstOrCreate(['name' => trim($val)], ['code' => $code]);
+        // Use battery_country for country_id if country column is empty
+        if (!empty($this->data['country'])) {
+            $code = \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($this->data['country'], 0, 2));
+            $c = \App\Models\Country::firstOrCreate(['name' => trim($this->data['country'])], ['code' => $code]);
             $this->record->country_id = $c->id;
-        });
+        } elseif (!empty($this->data['battery_country'])) {
+            $code = \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($this->data['battery_country'], 0, 2));
+            $c = \App\Models\Country::firstOrCreate(['name' => trim($this->data['battery_country'])], ['code' => $code]);
+            $this->record->country_id = $c->id;
+        }
     }
 
     public function saveRecord(): void

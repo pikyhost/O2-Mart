@@ -450,4 +450,11 @@ endpoint of frot pages:
 2- cart pate is /cart
 3 - checkout page is /cart/summary
 
+
+// vat = total - subtoal at checkout page .
+// sutotao of car titem withoutvat at each product at cart 
+
+// at the cart page , that use the /api/cart
+I want to make hte subtotal of 
+
 */
