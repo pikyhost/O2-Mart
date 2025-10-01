@@ -252,7 +252,12 @@ class BatteryResource extends Resource
                                     ->relationship('attributes', 'name')
                                     ->preload()
                                     ->searchable()
-                                    ->columnSpanFull(),
+                                    ->columnSpanFull()
+                                    ->afterStateHydrated(function (Select $component, $record) {
+                                        if ($record) {
+                                            $component->state($record->attributes->pluck('id')->toArray());
+                                        }
+                                    }),
  
                             ])->columns(2),
 
