@@ -189,30 +189,6 @@ private function processInlineMarkdown($text)
             ]
         ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
-
-    public function aboutUs(): JsonResponse
-    {
-        $aboutUs = \App\Models\AboutUs::first();
-        
-        if (!$aboutUs) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'About us content not found'
-            ], 404);
-        }
-
-        return response()->json([
-            'status' => 'success',
-            'data' => [
-                'title' => $aboutUs->title,
-                'content' => $this->processMarkdown($aboutUs->content),
-                'image' => $this->getImageUrl($aboutUs->image),
-                'seo' => [
-                    'meta_title' => $aboutUs->meta_title,
-                    'meta_description' => $aboutUs->meta_description,
-                    'alt_text' => $aboutUs->alt_text,
-                ],
-            ]
-        ], 200, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    }
 }
+
+//finally solved the editorI noI not 
