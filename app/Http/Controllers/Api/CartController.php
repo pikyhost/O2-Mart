@@ -442,7 +442,7 @@ class CartController extends Controller
                         'type' => class_basename($item->buyable_type),
                         'id' => $buyable->id,
                         'name' => $this->resolveName($buyable),
-                        'price_per_unit' => (float) $priceWithoutVat,
+                        'price_per_unit' => (float) $item->price_per_unit, // Including VAT
                         'quantity' => $item->quantity,
                         'subtotal' => (float) $itemSubtotal,
                         'image' => $this->resolveImage($buyable),
