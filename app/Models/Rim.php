@@ -51,6 +51,17 @@ class Rim extends Model implements HasMedia
             ]));
     }
 
+    public function registerMediaConversions(\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
+    {
+        $this->addMediaConversion('zoom')
+            ->width(2000)
+            ->height(2000)
+            ->quality(100)
+            ->format('png')
+            ->performOnCollections('rim_feature_image')
+            ->nonQueued();
+    }
+
 
 
     public function attributes()
@@ -85,7 +96,7 @@ class Rim extends Model implements HasMedia
 
     public function getRimFeatureImageUrlAttribute(): ?string
     {
-        return $this->getFirstMediaUrl('rim_feature_image') ?: null;
+        return $this->getFirstMediaUrl('rim_feature_image', 'zoom') ?: $this->getFirstMediaUrl('rim_feature_image') ?: null;
     }
 
 
