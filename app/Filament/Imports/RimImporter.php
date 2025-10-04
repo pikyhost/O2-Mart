@@ -168,23 +168,16 @@ class RimImporter extends BaseUpsertImporter
         // Import feature image
         if (!empty($this->data['product_image_url'])) {
             $url = trim($this->data['product_image_url']);
-            \Log::info('RimImporter: Attempting to import image', ['url' => $url, 'rim_id' => $this->record->id]);
-            
             try {
-                set_time_limit(60);
-                
                 if (filter_var($url, FILTER_VALIDATE_URL)) {
-                    $media = $this->record->addMediaFromUrl($url)
-                        ->usingName(basename(parse_url($url, PHP_URL_PATH)))
-                        ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                    $this->record->addMediaFromUrl($url)
                         ->toMediaCollection('rim_feature_image');
-                        
-                    \Log::info('RimImporter: Successfully imported image', ['url' => $url, 'rim_id' => $this->record->id, 'media_id' => $media->id]);
-                } else {
-                    \Log::warning('RimImporter: Invalid image URL', ['url' => $url, 'rim_id' => $this->record->id]);
                 }
             } catch (\Exception $e) {
-                \Log::error('RimImporter: Failed to import image', ['url' => $url, 'rim_id' => $this->record->id, 'error' => $e->getMessage()]);
+                \Log::error('RimImporter: Failed to import image', [
+                    'url' => $url,
+                    'error' => $e->getMessage()
+                ]);
             }
         }
     }
