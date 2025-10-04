@@ -15,7 +15,7 @@ class Rim extends Model implements HasMedia
     use HasFactory, InteractsWithMedia, Sluggable, HasShareUrl;
 
     protected $guarded = [];
-    protected $appends = ['share_url', 'rim_feature_image_url', 'rim_secondary_image_url', 'rim_gallery_urls', 'rim_feature_image_large_url'];
+    protected $appends = ['share_url', 'rim_feature_image_url', 'rim_secondary_image_url', 'rim_gallery_urls'];
 
 
     protected function getShareType(): string
@@ -105,10 +105,7 @@ class Rim extends Model implements HasMedia
         return $this->getFirstMediaUrl('rim_feature_image') ?: null;
     }
 
-    public function getRimFeatureImageLargeUrlAttribute(): ?string
-    {
-        return $this->getFirstMediaUrl('rim_feature_image', 'large') ?: $this->getFirstMediaUrl('rim_feature_image') ?: null;
-    }
+
 
     public function getRimSecondaryImageUrlAttribute(): ?string
     {
