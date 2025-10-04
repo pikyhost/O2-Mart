@@ -18,8 +18,7 @@ class RegenerateRimImages extends Command
             foreach ($rims as $rim) {
                 $media = $rim->getFirstMedia('rim_feature_image');
                 if ($media) {
-                    $media->clearMediaConversions();
-                    $media->save();
+                    \Artisan::call('media-library:regenerate', ['--ids' => $media->id]);
                     $this->line("Regenerated: Rim ID {$rim->id}");
                 }
             }
