@@ -51,6 +51,21 @@ class Rim extends Model implements HasMedia
             ]));
     }
 
+    public function registerMediaConversions(\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(300)
+            ->height(300)
+            ->sharpen(10)
+            ->performOnCollections('rim_feature_image', 'rim_secondary_image', 'rim_gallery');
+            
+        $this->addMediaConversion('large')
+            ->width(800)
+            ->height(800)
+            ->quality(90)
+            ->performOnCollections('rim_feature_image', 'rim_secondary_image', 'rim_gallery');
+    }
+
     public function attributes()
     {
         return $this->belongsToMany(\App\Models\RimAttribute::class, 'rim_attribute_rim');

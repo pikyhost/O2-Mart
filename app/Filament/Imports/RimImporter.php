@@ -184,6 +184,9 @@ class RimImporter extends BaseUpsertImporter
                             ->usingName(basename(parse_url($url, PHP_URL_PATH)))
                             ->toMediaCollection('rim_feature_image');
                             
+                        // Force conversion processing
+                        $media->refresh();
+                            
                         unlink($tempFile);
                         \Log::info('RimImporter: Successfully imported image', ['url' => $url, 'rim_id' => $this->record->id, 'media_id' => $media->id]);
                     } else {
