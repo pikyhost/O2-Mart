@@ -157,6 +157,7 @@ class RimController extends Controller
             'data' => array_merge(
                 $rim->toArray(),
                 [
+                    'photo_link' => $rim->rim_feature_image_url ?? null,
                     'feature_image' => $rim->rim_feature_image_url ?? null,
                     'secondary_image' => $rim->rim_secondary_image_url ?? null,
                     'gallery_images' => $rim->rim_gallery_urls ?? [],
