@@ -174,9 +174,21 @@ class RimImporter extends BaseUpsertImporter
                 set_time_limit(60);
                 
                 if (filter_var($url, FILTER_VALIDATE_URL)) {
-                    $media = $this->record->addMediaFromUrl($url)
-                        ->toMediaCollection('rim_feature_image');
-                    \Log::info('RimImporter: Successfully imported image', ['url' => $url, 'rim_id' => $this->record->id, 'media_id' => $media->id]);
+                    // Download image content first
+                    $imageContent = file_get_contents($url);
+                    if ($imageContent !== false) {
+                        $tempFile = tempnam(sys_get_temp_dir(), 'rim_image_');
+                        file_put_contents($tempFile, $imageContent);
+                        
+                        $media = $this->record->addMedia($tempFile)
+                            ->usingName(basename(parse_url($url, PHP_URL_PATH)))
+                            ->toMediaCollection('rim_feature_image');
+                            
+                        unlink($tempFile);
+                        \Log::info('RimImporter: Successfully imported image', ['url' => $url, 'rim_id' => $this->record->id, 'media_id' => $media->id]);
+                    } else {
+                        \Log::warning('RimImporter: Failed to download image content', ['url' => $url, 'rim_id' => $this->record->id]);
+                    }
                 } else {
                     \Log::warning('RimImporter: Invalid image URL', ['url' => $url, 'rim_id' => $this->record->id]);
                 }
