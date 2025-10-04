@@ -54,16 +54,19 @@ class Rim extends Model implements HasMedia
     public function registerMediaConversions(\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
     {
         $this->addMediaConversion('thumb')
-            ->width(300)
-            ->height(300)
-            ->sharpen(10)
+            ->width(400)
+            ->height(400)
+            ->quality(90)
+            ->sharpen(5)
+            ->nonQueued()
             ->performOnCollections('rim_feature_image', 'rim_secondary_image', 'rim_gallery');
             
         $this->addMediaConversion('large')
-            ->width(1200)
-            ->height(1200)
-            ->quality(95)
-            ->sharpen(5)
+            ->width(1600)
+            ->height(1600)
+            ->quality(100)
+            ->sharpen(3)
+            ->nonQueued()
             ->performOnCollections('rim_feature_image', 'rim_secondary_image', 'rim_gallery');
     }
 
