@@ -60,9 +60,10 @@ class Rim extends Model implements HasMedia
             ->performOnCollections('rim_feature_image', 'rim_secondary_image', 'rim_gallery');
             
         $this->addMediaConversion('large')
-            ->width(800)
-            ->height(800)
-            ->quality(90)
+            ->width(1200)
+            ->height(1200)
+            ->quality(95)
+            ->sharpen(5)
             ->performOnCollections('rim_feature_image', 'rim_secondary_image', 'rim_gallery');
     }
 
