@@ -102,7 +102,7 @@ class Rim extends Model implements HasMedia
 
     public function getRimFeatureImageUrlAttribute(): ?string
     {
-        return $this->getFirstMediaUrl('rim_feature_image', 'large') ?: $this->getFirstMediaUrl('rim_feature_image') ?: null;
+        return $this->getFirstMediaUrl('rim_feature_image') ?: null;
     }
 
     public function getRimFeatureImageLargeUrlAttribute(): ?string
