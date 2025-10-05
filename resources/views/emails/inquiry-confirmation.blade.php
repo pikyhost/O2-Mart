@@ -20,13 +20,20 @@
         }
         .header {
             background-color: #df2020;
-            padding: 30px 20px;
+            padding: 20px 20px;
             text-align: center;
         }
         .header h1 {
             color: #ffffff;
             margin: 0;
             font-size: 28px;
+        }
+        .header a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .header a:hover {
+            text-decoration: underline;
         }
         .content {
             padding: 30px 20px;
@@ -55,7 +62,7 @@
         .footer {
             background-color: #df2020;
             color: #ffffff;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
             font-size: 14px;
         }
@@ -68,7 +75,7 @@
 <body>
 <div class="email-container">
     <div class="header">
-        <h1>O2Mart – Your Trusted Auto Parts Partner</h1>
+        <h1><a href="https://mk3bel.o2mart.net/">O2Mart – Your Trusted Auto Parts Partner</a></h1>
     </div>
 
     <div class="content">
