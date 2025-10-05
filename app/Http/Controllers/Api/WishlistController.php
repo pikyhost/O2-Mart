@@ -15,19 +15,9 @@ class WishlistController extends Controller
 {
     public function index()
     {
-        $wishlist = WishlistService::getCurrentWishlist();
-        $items = $wishlist->items()->with([
-            'buyable' => function ($query) {
-                $query->with([
-                    'autoPartBrand', 'autoPartCountry',
-                    'batteryBrand', 'batteryCountry', 'batteryDimension',
-                    'tyreBrand', 'tyreCountry',
-                    'rimBrand', 'rimCountry'
-                ]);
-            }
-        ])->get();
+        $wishlist = WishlistService::getCurrentWishlist()->load('items.buyable');
 
-        $processedItems = $items->map(function ($item) {
+        $items = $wishlist->items->map(function ($item) {
             $buyable = $item->buyable;
             if (!$buyable) {
                 return null;
@@ -78,13 +68,13 @@ class WishlistController extends Controller
             return $item;
         })->filter(); 
 
-        $subtotal = $processedItems->sum('subtotal');
+        $subtotal = $items->sum('subtotal');
 
         return response()->json([
             'message' => 'Wishlist loaded successfully',
             'session_id' => session()->getId(),
             'wishlist' => [
-                'items' => $processedItems->values(),
+                'items' => $items->values(),
                 'subtotal' => $subtotal,
                 'total' => $subtotal,
             ]
