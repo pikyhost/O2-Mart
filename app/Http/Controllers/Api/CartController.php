@@ -440,13 +440,11 @@ class CartController extends Controller
                 'items' => $cart->items->filter(fn($item) => $item->buyable !== null)->map(function ($item) use ($vatPercent) {
                     $buyable = $item->buyable;
 
-                    // Calculate item price and subtotal without VAT, accounting for buy 3 get 1 free (tyres only)
-                    $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
+                    // Calculate paid quantity for buy 3 get 1 free (tyres only)
                     $isOfferActive = ($buyable instanceof \App\Models\Tyre) && ($buyable->buy_3_get_1_free ?? false);
                     $paidQuantity = $isOfferActive && $item->quantity >= 3 
                         ? $item->quantity - 1 
                         : $item->quantity;
-                    $itemSubtotal = $paidQuantity * $priceWithoutVat;
                     
                     $itemData = [
                         'type' => class_basename($item->buyable_type),
@@ -454,7 +452,7 @@ class CartController extends Controller
                         'name' => $this->resolveName($buyable),
                         'price_per_unit' => (float) $item->price_per_unit, // Including VAT
                         'quantity' => $item->quantity,
-                        'subtotal' => (float) ($paidQuantity * $item->price_per_unit), // Use paid quantity for item subtotal
+                        'subtotal' => (float) ($paidQuantity * $item->price_per_unit), // Use paid quantity × price including VAT
                         'image' => $this->resolveImage($buyable),
                         'shipping_option' => $item->shipping_option,
                         'mobile_van_id' => $item->mobile_van_id,
