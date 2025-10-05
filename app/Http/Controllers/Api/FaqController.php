@@ -13,33 +13,32 @@ class FaqController extends Controller
 
         $items = $faq->items ?? [];
 
-        $categoryMap = [
-            'general' => 'General Information',
-            'products_services' => 'Products & Services',
-            'returns_missing_parts' => 'Returns & Missing Parts',
-            'security_privacy' => 'Security & Privacy',
-            'registration_account' => 'Registration & Account',
-            'customer_support' => 'Customer Support',
-            'warranty' => 'Warranty',
-            'shipping' => 'Shipping',
-            'returns_refunds' => 'Returns & Refunds',
-            'payment' => 'Pricing & Payment',
-            'how_to_order' => 'How to Order',
-        ];
-
-        $grouped = collect($items)->groupBy('category')->map(function ($items, $category) use ($categoryMap) {
-            $formattedCategory = $categoryMap[$category] ?? ucwords(str_replace('_', ' ', $category));
-            return [
-                'category' => $formattedCategory,
-                'items' => $items
-            ];
-        })->toArray();
+        $grouped = collect($items)->groupBy('category')->toArray();
+        
+        foreach ($grouped as $key => $items) {
+            $grouped[$key] = array_map(function($item) {
+                if (isset($item['category'])) {
+                    $item['category'] = ucwords(str_replace('_', ' ', $item['category']));
+                }
+                return $item;
+            }, $items);
+        }
 
         return response()->json([
             'status' => 'success',
             'data' => [
                 'background_image' => $faq->background_image ? asset('storage/' . $faq->background_image) : null,
-                'categories' => $grouped
+                'general' => $grouped['general'] ?? [],
+                'payment' => $grouped['payment'] ?? [],
+                'products_services' => $grouped['products_services'] ?? [],
+                'returns_missing_parts' => $grouped['returns_missing_parts'] ?? [],
+                'security_privacy' => $grouped['security_privacy'] ?? [],
+                'registration_account' => $grouped['registration_account'] ?? [],
+                'customer_support' => $grouped['customer_support'] ?? [],
+                'warranty' => $grouped['warranty'] ?? [],
+                'shipping' => $grouped['shipping'] ?? [],
+                'returns_refunds' => $grouped['returns_refunds'] ?? [],
+                'how_to_order' => $grouped['how_to_order'] ?? [],
             ]
         ]);
     }
