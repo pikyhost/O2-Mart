@@ -16,6 +16,9 @@ class Rim extends Model implements HasMedia
 
     protected $guarded = [];
     protected $appends = ['share_url', 'rim_feature_image_url', 'rim_secondary_image_url', 'rim_gallery_urls'];
+    protected $casts = [
+        'buy_3_get_1_free' => 'boolean',
+    ];
 
 
     protected function getShareType(): string

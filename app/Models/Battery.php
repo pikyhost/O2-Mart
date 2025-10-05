@@ -23,6 +23,9 @@ class Battery extends Model implements HasMedia
         'meta_description', 'alt_text',
     ];
     protected $appends = ['image_url', 'gallery_images', 'feature_image_url', 'share_url'];
+    protected $casts = [
+        'buy_3_get_1_free' => 'boolean',
+    ];
 
 
     protected function getShareType(): string

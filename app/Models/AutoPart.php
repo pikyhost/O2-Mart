@@ -49,6 +49,7 @@ class AutoPart extends Model implements HasMedia
         'discount_percentage' => 'decimal:2',
         'discounted_price' => 'decimal:2',
         'cross_reference_numbers' => 'array',
+        'buy_3_get_1_free' => 'boolean',
     ];
 
     protected $appends = ['share_url'];

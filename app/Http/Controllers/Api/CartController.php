@@ -59,7 +59,7 @@ class CartController extends Controller
             'price_type' => gettype($priceString)
         ]);
         $quantity = $request->quantity ?? 1;
-        $isOfferActive = $itemModel->buy_3_get_1_free ?? false;
+        $isOfferActive = ($itemModel instanceof \App\Models\Tyre) && ($itemModel->buy_3_get_1_free ?? false);
 
         $cart = CartService::getCurrentCart();
 
@@ -79,8 +79,8 @@ class CartController extends Controller
         if ($existingItem) {
             $newTotalQuantity = $existingItem->quantity + $quantity;
             
-            // Calculate paid quantity: if >= 4, pay for quantity - 1
-            $paidQuantity = $isOfferActive && $newTotalQuantity >= 4 
+            // Calculate paid quantity: if >= 3, pay for quantity - 1
+            $paidQuantity = $isOfferActive && $newTotalQuantity >= 3 
                 ? $newTotalQuantity - 1 
                 : $newTotalQuantity;
 
@@ -90,8 +90,8 @@ class CartController extends Controller
             ]);
 
         } else {
-            // Calculate paid quantity: if >= 4, pay for quantity - 1
-            $paidQuantity = $isOfferActive && $quantity >= 4 
+            // Calculate paid quantity: if >= 3, pay for quantity - 1
+            $paidQuantity = $isOfferActive && $quantity >= 3 
                 ? $quantity - 1 
                 : $quantity;
 
@@ -281,10 +281,10 @@ class CartController extends Controller
         }
 
         // Check if this is a tyre with buy 3 get 1 free offer
-        $isOfferActive = $item->buyable->buy_3_get_1_free ?? false;
+        $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
         
-        // Calculate paid quantity: if >= 4, pay for quantity - 1
-        $paidQuantity = $isOfferActive && $request->quantity >= 4 
+        // Calculate paid quantity: if >= 3, pay for quantity - 1
+        $paidQuantity = $isOfferActive && $request->quantity >= 3 
             ? $request->quantity - 1 
             : $request->quantity;
 
@@ -389,7 +389,8 @@ class CartController extends Controller
             if (!$item->buyable) {
                 continue;
             }
-            $cartTotal += $item->quantity * $item->price_per_unit;
+            // Use subtotal which already accounts for buy 3 get 1 free
+            $cartTotal += $item->subtotal;
         }
 
         // Calculate installation fee only once if any item has "with_installation" shipping option
@@ -418,7 +419,12 @@ class CartController extends Controller
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
             $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
-            $subtotal += $item->quantity * $priceWithoutVat;
+            // Calculate paid quantity for buy 3 get 1 free (tyres only)
+            $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 
+                ? $item->quantity - 1 
+                : $item->quantity;
+            $subtotal += $paidQuantity * $priceWithoutVat;
         }
         
         $cart->subtotal = $subtotal;
@@ -434,9 +440,13 @@ class CartController extends Controller
                 'items' => $cart->items->filter(fn($item) => $item->buyable !== null)->map(function ($item) use ($vatPercent) {
                     $buyable = $item->buyable;
 
-                    // Calculate item price and subtotal without VAT
+                    // Calculate item price and subtotal without VAT, accounting for buy 3 get 1 free (tyres only)
                     $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
-                    $itemSubtotal = $item->quantity * $priceWithoutVat;
+                    $isOfferActive = ($buyable instanceof \App\Models\Tyre) && ($buyable->buy_3_get_1_free ?? false);
+                    $paidQuantity = $isOfferActive && $item->quantity >= 3 
+                        ? $item->quantity - 1 
+                        : $item->quantity;
+                    $itemSubtotal = $paidQuantity * $priceWithoutVat;
                     
                     $itemData = [
                         'type' => class_basename($item->buyable_type),
@@ -810,7 +820,13 @@ class CartController extends Controller
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
 
-            $itemTotal = $item->quantity * $item->price_per_unit;
+            // Calculate paid quantity for buy 3 get 1 free (tyres only)
+            $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 
+                ? $item->quantity - 1 
+                : $item->quantity;
+            
+            $itemTotal = $paidQuantity * $item->price_per_unit;
             $total += $itemTotal;
 
             $items[] = [
@@ -852,13 +868,20 @@ class CartController extends Controller
         foreach ($request->items as $itemData) {
             $tyre = \App\Models\Tyre::find($itemData['buyable_id']);
             $quantity = $itemData['quantity'] ?? 1;
+            $price = $tyre->discounted_price ?? $tyre->price_vat_inclusive ?? $tyre->regular_price ?? 0;
+            
+            // Calculate paid quantity for buy 3 get 1 free
+            $isOfferActive = $tyre->buy_3_get_1_free ?? false;
+            $paidQuantity = $isOfferActive && $quantity >= 3 
+                ? $quantity - floor($quantity / 4) 
+                : $quantity;
 
             $cart->items()->create([
                 'buyable_type'   => $tyre->getMorphClass(), 
                 'buyable_id'     => $tyre->id,
                 'quantity'       => $quantity,
-                'price_per_unit' => $tyre->discounted_price ?? $tyre->price_vat_inclusive ?? $tyre->regular_price ?? 0,
-                'subtotal'       => ($tyre->discounted_price ?? $tyre->price_vat_inclusive ?? $tyre->regular_price ?? 0) * $quantity,
+                'price_per_unit' => $price,
+                'subtotal'       => $price * $paidQuantity,
             ]);
         }
 

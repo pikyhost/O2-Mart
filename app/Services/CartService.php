@@ -31,10 +31,17 @@ class CartService
 
                 if ($existingItem) {
                     $newQuantity = $existingItem->quantity + $item->quantity;
+                    // Check if tyre has buy 3 get 1 free offer
+                    $buyable = $existingItem->buyable;
+                    $isOfferActive = ($buyable instanceof \App\Models\Tyre) && ($buyable->buy_3_get_1_free ?? false);
+                    $paidQuantity = $isOfferActive && $newQuantity >= 3 
+                        ? $newQuantity - 1 
+                        : $newQuantity;
+                    
                     $existingItem->update([
                         'quantity' => $newQuantity,
                         'price_per_unit' => $item->price_per_unit,
-                        'subtotal' => $newQuantity * $item->price_per_unit,
+                        'subtotal' => $paidQuantity * $item->price_per_unit,
                     ]);
                 } else {
                     $userCart->items()->create([
@@ -64,20 +71,17 @@ class CartService
 
         // Calculate items total (same as cart menu)
         $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
-        $itemsTotal = 0;
-        foreach ($cart->items as $item) {
-            if ($item->buyable && $item->buyable->buy_3_get_1_free && $item->quantity >= 4) {
-                $itemsTotal += $item->price_per_unit * ($item->quantity - 1);
-            } else {
-                $itemsTotal += $item->price_per_unit * $item->quantity;
-            }
-        }
         
         // Use same subtotal calculation as cart-menu: total - (total × vatPercent)
         $menuTotal = 0;
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
-            $menuTotal += $item->quantity * $item->price_per_unit; // Including VAT
+            // Calculate paid quantity for buy 3 get 1 free (tyres only)
+            $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 
+                ? $item->quantity - 1 
+                : $item->quantity;
+            $menuTotal += $paidQuantity * $item->price_per_unit; // Including VAT
         }
         $subtotal = $menuTotal - ($menuTotal * $vatPercent);
 
@@ -136,7 +140,12 @@ class CartService
         $menuTotal = 0;
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
-            $menuTotal += $item->quantity * $item->price_per_unit; // Including VAT
+            // Calculate paid quantity for buy 3 get 1 free (tyres only)
+            $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 
+                ? $item->quantity - 1 
+                : $item->quantity;
+            $menuTotal += $paidQuantity * $item->price_per_unit; // Including VAT
         }
         $menuVatAmount = $menuTotal * $vatPercent;
         $menuSubtotal = $menuTotal - $menuVatAmount;
@@ -159,9 +168,13 @@ class CartService
             $buyable = $item->buyable;
             $type = $item->shipping_option ?? 'delivery_only';
 
-            // Calculate item subtotal without VAT (same as cart)
+            // Calculate item subtotal without VAT (same as cart), accounting for buy 3 get 1 free (tyres only)
             $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
-            $itemSubtotal = $item->quantity * $priceWithoutVat;
+            $isOfferActive = ($buyable instanceof \App\Models\Tyre) && ($buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 
+                ? $item->quantity - 1 
+                : $item->quantity;
+            $itemSubtotal = $paidQuantity * $priceWithoutVat;
             
             $entry = [
                 'name' => $buyable->name
