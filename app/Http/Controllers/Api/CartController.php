@@ -868,10 +868,10 @@ class CartController extends Controller
             $quantity = $itemData['quantity'] ?? 1;
             $price = $tyre->discounted_price ?? $tyre->price_vat_inclusive ?? $tyre->regular_price ?? 0;
             
-            // Calculate paid quantity for buy 3 get 1 free
+            // Calculate paid quantity for buy 3 get 1 free (tyres only)
             $isOfferActive = $tyre->buy_3_get_1_free ?? false;
             $paidQuantity = $isOfferActive && $quantity >= 3 
-                ? $quantity - floor($quantity / 4) 
+                ? $quantity - 1 
                 : $quantity;
 
             $cart->items()->create([
