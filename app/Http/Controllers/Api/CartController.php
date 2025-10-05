@@ -719,7 +719,7 @@ class CartController extends Controller
 
         $type = $request->input('type');
         $id = $request->input('id');
-        $days = $request->input('days', 7);
+        $days = $request->input('days', 30);
 
         $model = $type === 'mobile_van'
             ? \App\Models\MobileVanService::with('workingHours')->find($id)
