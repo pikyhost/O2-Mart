@@ -88,6 +88,10 @@ class ClientsResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('first_name')
                     ->label('First name')
                     ->sortable(),

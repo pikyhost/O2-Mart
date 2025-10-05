@@ -27,6 +27,7 @@ class ViewClient extends ViewRecord
                     ->tabs([
                         Infolists\Components\Tabs\Tab::make('Basic Info')
                             ->schema([
+                                Infolists\Components\TextEntry::make('id')->label('Client ID'),
                                 Infolists\Components\TextEntry::make('first_name'),
                                 Infolists\Components\TextEntry::make('last_name'),
                                 Infolists\Components\TextEntry::make('display_name')->label('Display Name'),
