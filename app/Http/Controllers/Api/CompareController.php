@@ -279,28 +279,19 @@ class CompareController extends Controller
             return response()->json(['message' => 'Cannot compare different product types.'], 422);
         }
 
-        // Verify product exists without loading it
-        $modelClass = match ($shortKey) {
-            'auto_part' => \App\Models\AutoPart::class,
-            'battery'   => \App\Models\Battery::class,
-            'tyre'      => \App\Models\Tyre::class,
-            'rim'       => \App\Models\Rim::class,
-        };
-        
-        if (!$modelClass::where('id', $request->buyable_id)->exists()) {
-            return response()->json(['message' => 'Product not found.'], 404);
-        }
-
         // Update product type if needed
         if (!$compareList->product_type) {
             $compareList->update(['product_type' => $shortKey]);
         }
 
-        // Add to compare list
-        $compareList->items()->firstOrCreate([
-            'buyable_type' => $shortKey,
-            'buyable_id' => $request->buyable_id,
-        ]);
+        // Add to compare list using updateOrCreate for better performance
+        $compareList->items()->updateOrCreate(
+            [
+                'buyable_type' => $shortKey,
+                'buyable_id' => $request->buyable_id,
+            ],
+            []
+        );
 
         return response()->json(['message' => 'Product added to compare list.']);
     }

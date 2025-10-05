@@ -15,9 +15,19 @@ class WishlistController extends Controller
 {
     public function index()
     {
-        $wishlist = WishlistService::getCurrentWishlist()->load('items.buyable');
+        $wishlist = WishlistService::getCurrentWishlist();
+        $items = $wishlist->items()->with([
+            'buyable' => function ($query) {
+                $query->with([
+                    'autoPartBrand', 'autoPartCountry',
+                    'batteryBrand', 'batteryCountry', 'batteryDimension',
+                    'tyreBrand', 'tyreCountry',
+                    'rimBrand', 'rimCountry'
+                ]);
+            }
+        ])->get();
 
-        $items = $wishlist->items->map(function ($item) {
+        $processedItems = $items->map(function ($item) {
             $buyable = $item->buyable;
             if (!$buyable) {
                 return null;
@@ -68,13 +78,13 @@ class WishlistController extends Controller
             return $item;
         })->filter(); 
 
-        $subtotal = $items->sum('subtotal');
+        $subtotal = $processedItems->sum('subtotal');
 
         return response()->json([
             'message' => 'Wishlist loaded successfully',
             'session_id' => session()->getId(),
             'wishlist' => [
-                'items' => $items->values(),
+                'items' => $processedItems->values(),
                 'subtotal' => $subtotal,
                 'total' => $subtotal,
             ]
@@ -97,11 +107,13 @@ class WishlistController extends Controller
 
         $wishlist = WishlistService::getCurrentWishlist();
 
-        // Use firstOrCreate for atomic operation
-        $wishlist->items()->firstOrCreate([
-            'buyable_type' => $modelClass,
-            'buyable_id' => $request->buyable_id,
-        ]);
+        $wishlist->items()->updateOrCreate(
+            [
+                'buyable_type' => $modelClass,
+                'buyable_id' => $request->buyable_id,
+            ],
+            []
+        );
 
         return response()->json([
             'message' => 'Added to wishlist',
