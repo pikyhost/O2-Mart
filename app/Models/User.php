@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
+use App\Notifications\CustomResetPassword;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
@@ -142,6 +143,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         $this->attributes['desc_for_comment'] = $value;
     }
 
-
-
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new CustomResetPassword($token));
+    }
 }
