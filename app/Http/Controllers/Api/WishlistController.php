@@ -117,7 +117,8 @@ class WishlistController extends Controller
 
         return response()->json([
             'message' => 'Added to wishlist',
-            'session_id' => session()->getId()
+            'session_id' => session()->getId(),
+            'in_wishlist' => true
         ], 200);
     }
 
@@ -142,7 +143,10 @@ class WishlistController extends Controller
             ->where('buyable_id', $request->buyable_id)
             ->delete();
 
-        return response()->json(['message' => 'Removed from wishlist']);
+        return response()->json([
+            'message' => 'Removed from wishlist',
+            'in_wishlist' => false
+        ]);
     }
 
     private function resolvePrice($buyable): float
