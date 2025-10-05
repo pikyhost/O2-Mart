@@ -140,7 +140,7 @@ class PolicyController extends Controller
         $markdown = $policy?->terms_of_service;
 
         return response()->json([
-            'title' => 'Terms of Service',
+            'title' => 'Terms of Use',
             'markdown' => $markdown,
             'html' => $this->processMarkdown($markdown),
             'meta_title' => $policy?->meta_title_terms_of_service,
