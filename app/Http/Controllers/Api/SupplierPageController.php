@@ -11,29 +11,83 @@ class SupplierPageController extends Controller
 {
     private function processMarkdown($content)
     {
-        // Clean up and format the content properly
+        if (!$content) return null;
+        
         $lines = explode("\n", $content);
-        $processedLines = [];
+        $html = '';
+        $inList = false;
+        $listType = '';
         
         foreach ($lines as $line) {
-            $line = trim($line);
+            $trimmedLine = trim($line);
             
-            // Handle bold formatting
-            $line = preg_replace('/\*\*([^*]+)\*\*/', '<strong>$1</strong>', $line);
-            
-            // Skip empty lines
-            if (empty($line)) {
-                $processedLines[] = '';
+            if (empty($trimmedLine)) {
+                if ($inList) {
+                    $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+                    $inList = false;
+                }
+                $html .= "<br>\n";
                 continue;
             }
             
-            $processedLines[] = $line;
+            if (preg_match('/^(#{1,6})\s+(.+)/', $trimmedLine, $matches)) {
+                if ($inList) {
+                    $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+                    $inList = false;
+                }
+                $level = strlen($matches[1]);
+                $text = $this->processInlineMarkdown($matches[2]);
+                $html .= "<h{$level}>{$text}</h{$level}>\n";
+                continue;
+            }
+            
+            if (preg_match('/^\*\s+(.+)/', $trimmedLine, $matches)) {
+                if (!$inList || $listType !== 'ul') {
+                    if ($inList) $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+                    $html .= "<ul>\n";
+                    $inList = true;
+                    $listType = 'ul';
+                }
+                $text = $this->processInlineMarkdown($matches[1]);
+                $html .= "<li>{$text}</li>\n";
+                continue;
+            }
+            
+            if (preg_match('/^\d+\.\s+(.+)/', $trimmedLine, $matches)) {
+                if (!$inList || $listType !== 'ol') {
+                    if ($inList) $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+                    $html .= "<ol>\n";
+                    $inList = true;
+                    $listType = 'ol';
+                }
+                $text = $this->processInlineMarkdown($matches[1]);
+                $html .= "<li>{$text}</li>\n";
+                continue;
+            }
+            
+            if ($inList) {
+                $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+                $inList = false;
+            }
+            
+            $text = $this->processInlineMarkdown($trimmedLine);
+            $html .= "<p>{$text}</p>\n";
         }
         
-        // Join back and process with markdown
-        $content = implode("\n", $processedLines);
+        if ($inList) {
+            $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+        }
         
-        return Str::markdown($content);
+        return trim($html);
+    }
+
+    private function processInlineMarkdown($text)
+    {
+        $text = preg_replace('/\[([^\]]+)\]\(([^\)]+)\)/', '<a href="$2" target="_blank">$1</a>', $text);
+        $text = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $text);
+        $text = preg_replace('/\*(.*?)\*/', '<em>$1</em>', $text);
+        $text = preg_replace('/`([^`]+)`/', '<code>$1</code>', $text);
+        return $text;
     }
 
     public function show(): JsonResponse

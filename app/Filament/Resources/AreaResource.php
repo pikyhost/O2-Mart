@@ -42,8 +42,7 @@ class AreaResource extends Resource
                    Forms\Components\TextInput::make('shipping_cost')
                        ->label('Additional Shipping Cost')
                        ->numeric()
-                       ->default(0)
-                       ->helperText('Additional cost added to base shipping calculation (0 = no additional cost)'),
+                       ->helperText('Additional cost added to base shipping calculation (leave empty for no additional cost)'),
 
                 //    Forms\Components\TextInput::make('shipping_estimate_time')
                 //        ->required()

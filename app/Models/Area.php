@@ -14,11 +14,13 @@ class Area extends Model
         'name',
         'shipping_cost',
         'shipping_estimate_time',
-        'is_active'
+        'is_active',
+        'is_remote'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_remote' => 'boolean',
         'shipping_cost' => 'decimal:2',
     ];
 

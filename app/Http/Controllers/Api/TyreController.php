@@ -12,6 +12,86 @@ use App\Models\TyreModel;
 
 class TyreController extends Controller
 {
+    private function processMarkdown($content)
+    {
+        if (!$content) return null;
+        
+        $lines = explode("\n", $content);
+        $html = '';
+        $inList = false;
+        $listType = '';
+        
+        foreach ($lines as $line) {
+            $trimmedLine = trim($line);
+            
+            if (empty($trimmedLine)) {
+                if ($inList) {
+                    $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+                    $inList = false;
+                }
+                $html .= "<br>\n";
+                continue;
+            }
+            
+            if (preg_match('/^(#{1,6})\s+(.+)/', $trimmedLine, $matches)) {
+                if ($inList) {
+                    $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+                    $inList = false;
+                }
+                $level = strlen($matches[1]);
+                $text = $this->processInlineMarkdown($matches[2]);
+                $html .= "<h{$level}>{$text}</h{$level}>\n";
+                continue;
+            }
+            
+            if (preg_match('/^\*\s+(.+)/', $trimmedLine, $matches)) {
+                if (!$inList || $listType !== 'ul') {
+                    if ($inList) $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+                    $html .= "<ul>\n";
+                    $inList = true;
+                    $listType = 'ul';
+                }
+                $text = $this->processInlineMarkdown($matches[1]);
+                $html .= "<li>{$text}</li>\n";
+                continue;
+            }
+            
+            if (preg_match('/^\d+\.\s+(.+)/', $trimmedLine, $matches)) {
+                if (!$inList || $listType !== 'ol') {
+                    if ($inList) $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+                    $html .= "<ol>\n";
+                    $inList = true;
+                    $listType = 'ol';
+                }
+                $text = $this->processInlineMarkdown($matches[1]);
+                $html .= "<li>{$text}</li>\n";
+                continue;
+            }
+            
+            if ($inList) {
+                $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+                $inList = false;
+            }
+            
+            $text = $this->processInlineMarkdown($trimmedLine);
+            $html .= "<p>{$text}</p>\n";
+        }
+        
+        if ($inList) {
+            $html .= ($listType === 'ul' ? '</ul>' : '</ol>') . "\n";
+        }
+        
+        return trim($html);
+    }
+
+    private function processInlineMarkdown($text)
+    {
+        $text = preg_replace('/\[([^\]]+)\]\(([^\)]+)\)/', '<a href="$2" target="_blank">$1</a>', $text);
+        $text = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $text);
+        $text = preg_replace('/\*(.*?)\*/', '<em>$1</em>', $text);
+        $text = preg_replace('/`([^`]+)`/', '<code>$1</code>', $text);
+        return $text;
+    }
     public function index(Request $request)
     {
         $query = Tyre::query();
@@ -218,10 +298,13 @@ class TyreController extends Controller
             ->map(fn($group) => $group->count())
             ->sortKeysDesc();
 
+        $tyreArray = $tyre->toArray();
+        $tyreArray['description'] = $this->processMarkdown($tyre->description);
+        
         return response()->json([
             'status' => 'success',
             'data' => array_merge(
-                $tyre->toArray(),
+                $tyreArray,
                 [
                     'feature_image' => $tyre->tyre_feature_image_url,
                     'secondary_image' => $tyre->tyre_secondary_image_url,
