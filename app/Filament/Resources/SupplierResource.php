@@ -63,14 +63,14 @@ class SupplierResource extends Resource
             ->actions([
                 EditAction::make(),
                 Action::make('activate')
-                    ->label('Activate')
+                    ->label('Contact')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->visible(fn ($record) => !$record->is_active)
                     ->action(fn ($record) => $record->update(['is_active' => true])),
 
                 Action::make('deactivate')
-                    ->label('Deactivate')
+                    ->label('Discontact')
                     ->icon('heroicon-o-x-circle')
                     ->color('danger')
                     ->visible(fn ($record) => $record->is_active)
@@ -81,13 +81,13 @@ class SupplierResource extends Resource
                     DeleteBulkAction::make(),
 
                     BulkAction::make('bulkActivate')
-                        ->label('Activate Selected')
+                        ->label('Contact Selected')
                         ->icon('heroicon-o-check-circle')
                         ->color('success')
                         ->action(fn ($records) => $records->each->update(['is_active' => true])),
 
                     BulkAction::make('bulkDeactivate')
-                        ->label('Deactivate Selected')
+                        ->label('Discontact Selected')
                         ->icon('heroicon-o-x-circle')
                         ->color('danger')
                         ->action(fn ($records) => $records->each->update(['is_active' => false])),
