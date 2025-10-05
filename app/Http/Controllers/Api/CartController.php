@@ -478,7 +478,7 @@ class CartController extends Controller
                         'db_price_per_unit' => $item->price_per_unit,
                         'db_subtotal' => $item->subtotal,
                         'response_price_per_unit' => $itemData['price_per_unit'],
-                        'response_subtotal' => $itemData['subtotal']
+                        'response_subtotal' => $itemData['sub']
                     ]);
                     
                     return $itemData;
