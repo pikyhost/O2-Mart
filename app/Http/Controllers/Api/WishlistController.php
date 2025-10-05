@@ -15,7 +15,18 @@ class WishlistController extends Controller
 {
     public function index()
     {
-        $wishlist = WishlistService::getCurrentWishlist()->load('items.buyable');
+        $wishlist = WishlistService::getCurrentWishlist()->load([
+            'items.buyable',
+            'items.buyable.autoPartBrand',
+            'items.buyable.autoPartCountry', 
+            'items.buyable.batteryBrand',
+            'items.buyable.batteryCountry',
+            'items.buyable.batteryDimension',
+            'items.buyable.tyreBrand',
+            'items.buyable.tyreCountry',
+            'items.buyable.rimBrand',
+            'items.buyable.rimCountry'
+        ]);
 
         $items = $wishlist->items->map(function ($item) {
             $buyable = $item->buyable;
@@ -97,8 +108,8 @@ class WishlistController extends Controller
 
         $wishlist = WishlistService::getCurrentWishlist();
 
-        // Use firstOrCreate for atomic operation
-        $wishlist->items()->firstOrCreate([
+        // Use updateOrCreate for better performance
+        $wishlist->items()->updateOrCreate([
             'buyable_type' => $modelClass,
             'buyable_id' => $request->buyable_id,
         ]);
