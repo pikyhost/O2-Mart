@@ -13,18 +13,23 @@ class FaqController extends Controller
 
         $items = $faq->items ?? [];
 
-        $grouped = collect($items)->groupBy('category')->map(function($items, $category) {
-            return [
-                'category_name' => ucwords(str_replace('_', ' ', $category)),
-                'items' => $items
-            ];
-        })->toArray();
+        $grouped = collect($items)->groupBy('category')->toArray();
 
         return response()->json([
             'status' => 'success',
             'data' => [
                 'background_image' => $faq->background_image ? asset('storage/' . $faq->background_image) : null,
-                'categories' => $grouped
+                'General Information' => $grouped['general'] ?? [],
+                'Pricing & Payment' => $grouped['payment'] ?? [],
+                'Products & Services' => $grouped['products_services'] ?? [],
+                'Returns & Missing Parts' => $grouped['returns_missing_parts'] ?? [],
+                'Security & Privacy' => $grouped['security_privacy'] ?? [],
+                'Registration & Account' => $grouped['registration_account'] ?? [],
+                'Customer Support' => $grouped['customer_support'] ?? [],
+                'Warranty' => $grouped['warranty'] ?? [],
+                'Shipping' => $grouped['shipping'] ?? [],
+                'Returns & Refunds' => $grouped['returns_refunds'] ?? [],
+                'How to Order' => $grouped['how_to_order'] ?? [],
             ]
         ]);
     }
