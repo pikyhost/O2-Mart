@@ -20,7 +20,7 @@
         }
         .header {
             background-color: #df2020;
-            padding: 15px 20px;
+            padding: 10px 15px;
             text-align: center;
         }
         .header h1 {
@@ -62,9 +62,9 @@
         .footer {
             background-color: #df2020;
             color: #ffffff;
-            padding: 8px;
+            padding: 5px;
             text-align: center;
-            font-size: 14px;
+            font-size: 12px;
         }
         .footer a {
             color: #ffffff;
