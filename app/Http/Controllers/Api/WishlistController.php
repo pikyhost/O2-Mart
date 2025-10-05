@@ -107,18 +107,15 @@ class WishlistController extends Controller
 
         $wishlist = WishlistService::getCurrentWishlist();
 
-        $wishlist->items()->updateOrCreate(
-            [
-                'buyable_type' => $modelClass,
-                'buyable_id' => $request->buyable_id,
-            ],
-            []
-        );
+        // Use firstOrCreate for atomic operation
+        $wishlist->items()->firstOrCreate([
+            'buyable_type' => $modelClass,
+            'buyable_id' => $request->buyable_id,
+        ]);
 
         return response()->json([
             'message' => 'Added to wishlist',
-            'session_id' => session()->getId(),
-            'in_wishlist' => true
+            'session_id' => session()->getId()
         ], 200);
     }
 
@@ -143,10 +140,7 @@ class WishlistController extends Controller
             ->where('buyable_id', $request->buyable_id)
             ->delete();
 
-        return response()->json([
-            'message' => 'Removed from wishlist',
-            'in_wishlist' => false
-        ]);
+        return response()->json(['message' => 'Removed from wishlist']);
     }
 
     private function resolvePrice($buyable): float
