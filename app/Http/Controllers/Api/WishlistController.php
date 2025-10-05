@@ -108,8 +108,8 @@ class WishlistController extends Controller
 
         $wishlist = WishlistService::getCurrentWishlist();
 
-        // Use updateOrCreate for better performance
-        $wishlist->items()->updateOrCreate([
+        // Use firstOrCreate for atomic operation
+        $wishlist->items()->firstOrCreate([
             'buyable_type' => $modelClass,
             'buyable_id' => $request->buyable_id,
         ]);
