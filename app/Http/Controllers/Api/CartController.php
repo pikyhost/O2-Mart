@@ -454,7 +454,7 @@ class CartController extends Controller
                         'name' => $this->resolveName($buyable),
                         'price_per_unit' => (float) $item->price_per_unit, // Including VAT
                         'quantity' => $item->quantity,
-                        'subtotal' => (float) $itemSubtotal,
+                        'subtotal' => (float) ($paidQuantity * $item->price_per_unit), // Use paid quantity for item subtotal
                         'image' => $this->resolveImage($buyable),
                         'shipping_option' => $item->shipping_option,
                         'mobile_van_id' => $item->mobile_van_id,
