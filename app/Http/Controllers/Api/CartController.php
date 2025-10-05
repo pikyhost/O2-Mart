@@ -446,13 +446,26 @@ class CartController extends Controller
                         ? $item->quantity - 1 
                         : $item->quantity;
                     
+                    \Log::info('Individual Item Subtotal Debug', [
+                        'item_id' => $buyable->id,
+                        'is_tyre' => $buyable instanceof \App\Models\Tyre,
+                        'buy_3_get_1_free' => $buyable->buy_3_get_1_free ?? false,
+                        'is_offer_active' => $isOfferActive,
+                        'quantity' => $item->quantity,
+                        'paid_quantity' => $paidQuantity,
+                        'price_per_unit' => $item->price_per_unit,
+                        'vat_percent' => $vatPercent,
+                        'price_without_vat' => $item->price_per_unit - ($item->price_per_unit * $vatPercent),
+                        'calculated_subtotal' => $paidQuantity * ($item->price_per_unit - ($item->price_per_unit * $vatPercent))
+                    ]);
+                    
                     $itemData = [
                         'type' => class_basename($item->buyable_type),
                         'id' => $buyable->id,
                         'name' => $this->resolveName($buyable),
                         'price_per_unit' => (float) $item->price_per_unit, // Including VAT
                         'quantity' => $item->quantity,
-                        'subtotal' => (float) ($paidQuantity * ($item->price_per_unit - ($item->price_per_unit * $vatPercent))), // VAT-exclusive subtotal with paid quantity
+                        'sub' => (float) ($paidQuantity * ($item->price_per_unit - ($item->price_per_unit * $vatPercent))), // VAT-exclusive subtotal with paid quantity
                         'image' => $this->resolveImage($buyable),
                         'shipping_option' => $item->shipping_option,
                         'mobile_van_id' => $item->mobile_van_id,
