@@ -62,7 +62,7 @@
         .footer {
             background-color: #df2020;
             color: #ffffff;
-            padding: 15px;
+            padding: 10px;
             text-align: center;
             font-size: 14px;
         }
