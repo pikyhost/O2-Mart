@@ -44,7 +44,7 @@ class ProductReviewController extends Controller
             'product_id' => $request->product_id,
         ]);
 
-        return response()->json(['message' => 'Review submitted, pending approval.'], 201);
+        return response()->json(['message' => 'Thank you'], 201);
     }
 
     public function getProductReviews(Request $request)
