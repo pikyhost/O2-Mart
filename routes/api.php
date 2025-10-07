@@ -201,7 +201,10 @@ Route::get('/search-by-size-options', [TyreController::class, 'searchBySizeOptio
 
 Route::get('/{id}', [TyreController::class, 'show']);
 });
-Route::get('/rim-sizes', fn () => \App\Models\RimSize::select('id', 'size')->get());
+Route::get('/rim-sizes', fn () => \App\Models\RimSize::select('id', 'size')->get()->map(function($rimSize) {
+    $rimSize->size = (string) intval($rimSize->size);
+    return $rimSize;
+}));
 
 Route::middleware(CheckAuthOrSession::class)->prefix('compare')->group(function () {
 Route::get('/', [CompareController::class, 'index']);
