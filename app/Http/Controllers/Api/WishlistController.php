@@ -68,7 +68,7 @@ class WishlistController extends Controller
 
             if ($buyable instanceof Battery) {
                 $item['country'] = $buyable->batteryCountry?->name;
-                $item['size'] = $buyable->dimension?->value;
+                $item['size'] = $buyable->capacity?->value;
                 $item['warranty'] = $buyable->warranty;
                 $item['capacity'] = $buyable->capacity ? [
                     'id' => $buyable->capacity->id,
