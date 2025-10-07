@@ -211,28 +211,22 @@ class WishlistController extends Controller
 
 
 
-    /**
-     */
     private function resolveImage($buyable): ?string
     {
-        // Handle Rim images specifically
-        if ($buyable instanceof Rim) {
-            return $buyable->rim_feature_image_url;
+        if ($buyable instanceof AutoPart) {
+            return $buyable->getAutoPartFeatureImageUrl();
         }
 
-        // Handle Tyre images
+        if ($buyable instanceof Battery) {
+            return $buyable->getFeatureImageUrlAttribute();
+        }
+
         if ($buyable instanceof Tyre) {
             return $buyable->tyre_feature_image_url;
         }
 
-        // Handle Battery images
-        if ($buyable instanceof Battery) {
-            return $buyable->feature_image_url;
-        }
-
-        // Handle AutoPart images
-        if ($buyable instanceof AutoPart) {
-            return $buyable->photo_link ? asset('storage/' . $buyable->photo_link) : null;
+        if ($buyable instanceof Rim) {
+            return $buyable->rim_feature_image_url;
         }
 
         return null;
