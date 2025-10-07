@@ -57,7 +57,7 @@ class WishlistController extends Controller
                 $item['country'] = $buyable->rimCountry?->name;
                 $item['year_of_production'] = $buyable->year_of_production;
                 $item['condition'] = $buyable->condition;
-                $item['is_set_of_4'] = $buyable->is_set_of_4 ? $price : 0;
+                $item['is_set_of_4'] = $buyable->regular_price ? $buyable->regular_price * 4 : 0;
                 $item['set_of_4'] = (bool) $buyable->is_set_of_4;
             }
 
@@ -89,7 +89,7 @@ class WishlistController extends Controller
                 $item['country'] = $buyable->tyreCountry?->name;
                 $item['year'] = $buyable->production_year;
                 $item['production_year'] = $buyable->production_year;
-                $item['is_set_of_4'] = $buyable->is_set_of_4 ? $price : 0;
+                $item['is_set_of_4'] = $buyable->price_vat_inclusive ? $buyable->price_vat_inclusive * 4 : 0;
                 $item['set_of_4'] = (bool) $buyable->is_set_of_4;
             }
 

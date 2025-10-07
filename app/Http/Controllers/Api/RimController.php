@@ -235,6 +235,7 @@ class RimController extends Controller
 
         $rimArray = $rim->toArray();
         $rimArray['description'] = $this->processMarkdown($rim->description);
+        $rimArray['is_set_of_4'] = $rim->regular_price ? $rim->regular_price * 4 : 0;
         
         return response()->json([
             'status' => 'success',
