@@ -90,6 +90,9 @@ class HomeController extends Controller
 
 private function processInlineMarkdown($text)
 {
+    // Images ![alt](url)
+    $text = preg_replace('/!\[([^\]]*)\]\(([^\)]+)\)/', '<img src="$2" alt="$1" style="max-width: 100%; height: auto;" />', $text);
+    
     // Links [text](url)
     $text = preg_replace('/\[([^\]]+)\]\(([^\)]+)\)/', '<a href="$2" target="_blank">$1</a>', $text);
     
@@ -101,9 +104,6 @@ private function processInlineMarkdown($text)
     
     // Code inline
     $text = preg_replace('/`([^`]+)`/', '<code>$1</code>', $text);
-    
-    // Already preserve any existing HTML spans (colored text)
-    // These should pass through unchanged
     
     return $text;
 }
