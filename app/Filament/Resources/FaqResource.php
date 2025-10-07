@@ -42,7 +42,7 @@ class FaqResource extends Resource
                                 ->required(),
                             Select::make('category')
                                 ->options([
-                                    'general' => 'General Question',
+                                    'general' => 'General Information',
                                     'payment' => 'Payment & Gift Card',
                                     'products_services' => 'Products & Services',
                                     'returns_missing_parts' => 'Returns & Missing Parts',
