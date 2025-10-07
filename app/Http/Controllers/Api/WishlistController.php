@@ -60,7 +60,8 @@ class WishlistController extends Controller
 
             if ($buyable instanceof Tyre) {
                 $item['country'] = $buyable->tyreCountry?->name;
-                $item['year'] = $buyable->year_of_production;
+                $item['year'] = $buyable->production_year;
+                $item['production_year'] = $buyable->production_year;
                 $item['is_set_of_4'] = $buyable->is_set_of_4 ? $price : 0;
                 $item['set_of_4'] = (bool) $buyable->is_set_of_4;
             }
@@ -226,12 +227,12 @@ class WishlistController extends Controller
 
         // Handle Battery images
         if ($buyable instanceof Battery) {
-            return $buyable->battery_feature_image_url;
+            return $buyable->feature_image_url;
         }
 
         // Handle AutoPart images
         if ($buyable instanceof AutoPart) {
-            return $buyable->auto_part_feature_image_url ?? ($buyable->photo_link ? asset('storage/' . $buyable->photo_link) : null);
+            return $buyable->photo_link ? asset('storage/' . $buyable->photo_link) : null;
         }
 
         return null;
