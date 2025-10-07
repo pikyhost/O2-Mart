@@ -16,6 +16,19 @@ class WishlistController extends Controller
     public function index()
     {
         $wishlist = WishlistService::getCurrentWishlist()->load('items.buyable');
+        
+        // Load specific relationships based on buyable type
+        foreach ($wishlist->items as $item) {
+            if ($item->buyable instanceof Battery) {
+                $item->buyable->load(['batteryBrand', 'capacity', 'dimension', 'batteryCountry']);
+            } elseif ($item->buyable instanceof AutoPart) {
+                $item->buyable->load(['autoPartBrand', 'autoPartCountry']);
+            } elseif ($item->buyable instanceof Tyre) {
+                $item->buyable->load(['tyreBrand', 'tyreCountry']);
+            } elseif ($item->buyable instanceof Rim) {
+                $item->buyable->load(['rimBrand', 'rimCountry']);
+            }
+        }
 
         $items = $wishlist->items->map(function ($item) {
             $buyable = $item->buyable;
@@ -56,6 +69,20 @@ class WishlistController extends Controller
             if ($buyable instanceof Battery) {
                 $item['country'] = $buyable->batteryCountry?->name;
                 $item['size'] = $buyable->batteryDimension?->name ?? $buyable->size;
+                $item['warranty'] = $buyable->warranty;
+                $item['capacity'] = $buyable->capacity ? [
+                    'id' => $buyable->capacity->id,
+                    'value' => $buyable->capacity->value
+                ] : null;
+                $item['dimension'] = $buyable->dimension ? [
+                    'id' => $buyable->dimension->id,
+                    'value' => $buyable->dimension->value
+                ] : null;
+                $item['weight'] = $buyable->weight;
+                $item['sku'] = $buyable->sku;
+                $item['regular_price'] = $buyable->regular_price;
+                $item['discount_percentage'] = $buyable->discount_percentage;
+                $item['discounted_price'] = $buyable->discounted_price;
             }
 
             if ($buyable instanceof Tyre) {
@@ -182,9 +209,8 @@ class WishlistController extends Controller
         if ($buyable instanceof \App\Models\Battery && $buyable->batteryBrand) {
             return [
                 'id' => $buyable->batteryBrand->id,
-                'name' => $buyable->batteryBrand->name,
-                'logo_url' => $buyable->batteryBrand->logo_url 
-                    ?? $buyable->batteryBrand->getFirstMediaUrl('brand_logo'),
+                'value' => $buyable->batteryBrand->value,
+                'logo_url' => $buyable->batteryBrand->logo_url,
             ];
         }
 
@@ -218,7 +244,7 @@ class WishlistController extends Controller
         }
 
         if ($buyable instanceof Battery) {
-            return $buyable->getFeatureImageUrlAttribute();
+            return $buyable->feature_image_url;
         }
 
         if ($buyable instanceof Tyre) {
