@@ -15,7 +15,7 @@ class Rim extends Model implements HasMedia
     use HasFactory, InteractsWithMedia, Sluggable, HasShareUrl;
 
     protected $guarded = [];
-    protected $appends = ['share_url', 'rim_feature_image_url', 'rim_secondary_image_url', 'rim_gallery_urls', 'feature_image_url', 'original_url', 'weight_kg', 'rim_feature_image_large_url'];
+    protected $appends = ['share_url', 'rim_feature_image_url', 'rim_secondary_image_url', 'rim_gallery_urls', 'feature_image_url', 'original_url', 'weight_kg'];
     protected $casts = [
         'buy_3_get_1_free' => 'boolean',
     ];
@@ -114,8 +114,8 @@ class Rim extends Model implements HasMedia
             return null;
         }
         
-        // Get the URL
-        $url = $media->getUrl();
+        // Use large conversion for zoom, fallback to original
+        $url = $media->getUrl('large') ?: $media->getUrl();
         
         if (empty($url)) {
             return null;
