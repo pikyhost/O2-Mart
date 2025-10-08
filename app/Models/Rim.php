@@ -114,18 +114,12 @@ class Rim extends Model implements HasMedia
             return null;
         }
         
-        // Try large conversion first, fallback to original
-        try {
-            $url = $media->getUrl('large');
-            // Check if large conversion actually exists
-            if ($url && $url !== $media->getUrl()) {
-                return $url;
-            }
-        } catch (\Exception $e) {
-            // Large conversion doesn't exist, use original
-        }
-        
+        // Always use original URL to ensure images show
         $url = $media->getUrl();
+        
+        if (empty($url)) {
+            return null;
+        }
         
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             $url = url($url);
