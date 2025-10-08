@@ -97,8 +97,10 @@ class CompareController extends Controller
     {
         return match ($type) {
             'auto_part' => $this->normalizePhotoLink($product->photo_link)
+                ?? $product->getAutoPartFeatureImageUrl()
                 ?? $product->getAutoPartSecondaryImageUrl()
                 ?? $this->normalizePhotoLink($product->image ?? null)
+                ?? $product->getFirstMediaUrl('auto_part_feature_image')
                 ?? $product->getFirstMediaUrl('auto_part_secondary_image')
                 ?? $product->getFirstMediaUrl('feature')
                 ?? ($product->getFirstMediaUrl() ?: null),
