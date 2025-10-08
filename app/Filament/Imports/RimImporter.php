@@ -172,10 +172,14 @@ class RimImporter extends BaseUpsertImporter
                 if (filter_var($url, FILTER_VALIDATE_URL)) {
                     $this->record->clearMediaCollection('rim_feature_image');
                     
-                    $this->record->addMediaFromUrl($url)
+                    $media = $this->record->addMediaFromUrl($url)
                         ->toMediaCollection('rim_feature_image');
                         
-                    unlink($tempFile);
+                    // Force generate conversions like manual upload
+                    if ($media) {
+                        $media->performConversions();
+                    }
+                        
                     $this->record->refresh();
                 }
             } catch (\Exception $e) {
