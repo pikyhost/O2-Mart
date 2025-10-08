@@ -114,8 +114,8 @@ class Rim extends Model implements HasMedia
             return null;
         }
         
-        // Use large conversion for zoom, fallback to original
-        $url = $media->getUrl('large') ?: $media->getUrl();
+        // Always use original URL to ensure images show
+        $url = $media->getUrl();
         
         if (empty($url)) {
             return null;
