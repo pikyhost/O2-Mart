@@ -159,6 +159,25 @@ class Rim extends Model implements HasMedia
 
     public function getZoomImageUrlAttribute(): ?string
     {
+        $media = $this->getFirstMedia('rim_feature_image');
+        if (!$media) {
+            return null;
+        }
+        
+        // Check if image is large enough for zoom (minimum 400x400)
+        try {
+            $imagePath = $media->getPath();
+            if (file_exists($imagePath)) {
+                $imageInfo = getimagesize($imagePath);
+                if ($imageInfo && ($imageInfo[0] < 400 || $imageInfo[1] < 400)) {
+                    // Image too small for zoom, return null to disable zoom
+                    return null;
+                }
+            }
+        } catch (\Exception $e) {
+            // If we can't check dimensions, return the URL anyway
+        }
+        
         return $this->getRimFeatureImageUrlAttribute();
     }
 
