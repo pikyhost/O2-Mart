@@ -101,15 +101,13 @@ class Rim extends Model implements HasMedia
             return null;
         }
         
-        // Get the URL, preferring the original
+        // Get the URL
         $url = $media->getUrl();
         
-        // If URL is empty or invalid, return null
         if (empty($url)) {
             return null;
         }
         
-        // Ensure URL is absolute
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             $url = url($url);
         }
