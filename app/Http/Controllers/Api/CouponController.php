@@ -27,6 +27,9 @@ class CouponController extends Controller
         }
 
         if ($request->filled('area_id')) {
+            if (!\App\Models\Area::find($request->area_id)) {
+                return response()->json(['message' => 'Invalid area ID.'], 400);
+            }
             $cart->update(['area_id' => $request->area_id]);
         }
 
