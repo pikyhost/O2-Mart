@@ -68,19 +68,6 @@ class Rim extends Model implements HasMedia
             ->width(800)
             ->height(800)
             ->nonQueued();
-
-        $this->addMediaCollection('rim_secondary_image')
-            ->singleFile()
-            ->acceptsMimeTypes($imageMimeTypes)
-            ->useDisk('public');
-
-        $this->addMediaCollection('rim_gallery')
-            ->acceptsMimeTypes(array_merge($imageMimeTypes, [
-                'video/mp4',
-                'video/mpeg',
-                'video/quicktime',
-            ]))
-            ->useDisk('public');
     }
 
 
