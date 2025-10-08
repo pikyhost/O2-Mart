@@ -172,9 +172,28 @@ class RimImporter extends BaseUpsertImporter
                 if (filter_var($url, FILTER_VALIDATE_URL)) {
                     $this->record->clearMediaCollection('rim_feature_image');
                     
-                    $this->record->addMediaFromUrl($url)
+                    // Download and detect actual MIME type
+                    $imageData = file_get_contents($url);
+                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                    $mimeType = $finfo->buffer($imageData);
+                    
+                    $extension = match($mimeType) {
+                        'image/jpeg' => '.jpg',
+                        'image/png' => '.png',
+                        'image/webp' => '.webp',
+                        'image/gif' => '.gif',
+                        default => '.jpg'
+                    };
+                    
+                    $filename = \Str::slug($this->record->name) . $extension;
+                    $tempFile = tempnam(sys_get_temp_dir(), 'rim_image') . $extension;
+                    file_put_contents($tempFile, $imageData);
+                    
+                    $this->record->addMedia($tempFile)
+                        ->usingFileName($filename)
                         ->toMediaCollection('rim_feature_image');
                         
+                    unlink($tempFile);
                     $this->record->refresh();
                 }
             } catch (\Exception $e) {

@@ -94,33 +94,25 @@ Route::get('/final-test-2', function() {
     return 'All tests done222222222222222222222222222222222';
 });
 
-Route::get('/fix-rim-images/{id?}', function($id = null) {
-    $rim = $id ? \App\Models\Rim::find($id) : null;
+Route::get('/check-rim/{id}', function($id) {
+    $rim = \App\Models\Rim::find($id);
+    if (!$rim) return "Rim not found";
     
-    if ($id && !$rim) {
-        return "Rim ID {$id} not found";
-    }
-    
-    if ($rim) {
-        $hasMedia = $rim->hasMedia('rim_feature_image');
-        $imageUrl = $rim->rim_feature_image_url;
-        
-        if (!$hasMedia) {
-            return "Rim ID {$id} has no media attached";
-        }
-        
-        if (!$imageUrl) {
-            return "Rim ID {$id} has media but no URL generated";
-        }
-        
-        // Try to regenerate conversions
-        $media = $rim->getFirstMedia('rim_feature_image');
-        if ($media) {
-            $media->performConversions();
-            return "Fixed image for rim ID {$id}. URL: {$imageUrl}";
-        }
-    }
-    
-    $fixed = \App\Models\Rim::fixImageIssues($id);
-    return $id ? "Processed rim ID {$id}" : "Fixed images for {$fixed} rims";
+    return [
+        'name' => $rim->name,
+        'has_media' => $rim->hasMedia('rim_feature_image'),
+        'media_count' => $rim->getMedia('rim_feature_image')->count(),
+        'rim_feature_image_url' => $rim->rim_feature_image_url,
+        'feature_image_url' => $rim->feature_image_url,
+        'original_url' => $rim->original_url,
+        'media_details' => $rim->getMedia('rim_feature_image')->map(function($media) {
+            return [
+                'id' => $media->id,
+                'file_name' => $media->file_name,
+                'url' => $media->getUrl(),
+                'path' => $media->getPath(),
+                'exists' => file_exists($media->getPath())
+            ];
+        })
+    ];
 });
