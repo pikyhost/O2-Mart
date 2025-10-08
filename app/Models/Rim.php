@@ -164,21 +164,14 @@ class Rim extends Model implements HasMedia
             return null;
         }
         
-        // Check if image is large enough for zoom (minimum 400x400)
+        // Try large conversion first
         try {
-            $imagePath = $media->getPath();
-            if (file_exists($imagePath)) {
-                $imageInfo = getimagesize($imagePath);
-                if ($imageInfo && ($imageInfo[0] < 400 || $imageInfo[1] < 400)) {
-                    // Image too small for zoom, return null to disable zoom
-                    return null;
-                }
-            }
+            $largeUrl = $media->getUrl('large');
+            return $largeUrl;
         } catch (\Exception $e) {
-            // If we can't check dimensions, return the URL anyway
+            // Fallback to original
+            return $media->getUrl();
         }
-        
-        return $this->getRimFeatureImageUrlAttribute();
     }
 
 
