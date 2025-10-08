@@ -7,15 +7,18 @@ use Illuminate\Console\Command;
 
 class FixRimImageConversions extends Command
 {
-    protected $signature = 'rim:fix-image-conversions {--id= : Specific rim ID to fix}';
+    protected $signature = 'rim:fix-image-conversions {--id= : Specific rim ID to fix} {--from= : Fix rims starting from this ID}';
     protected $description = 'Fix missing image conversions for rims';
 
     public function handle()
     {
         $rimId = $this->option('id');
+        $fromId = $this->option('from');
         
         if ($rimId) {
             $this->fixSingleRim($rimId);
+        } elseif ($fromId) {
+            $this->fixRimsFrom($fromId);
         } else {
             $this->fixAllRims();
         }
@@ -31,6 +34,27 @@ class FixRimImageConversions extends Command
 
         $this->info("Fixing rim ID: {$rimId} - {$rim->name}");
         $this->fixRimConversions($rim);
+    }
+
+    private function fixRimsFrom($fromId)
+    {
+        $this->info("Checking rims from ID {$fromId} for missing conversions...");
+        
+        $rims = Rim::where('id', '>=', $fromId)
+            ->whereHas('media', function($query) {
+                $query->where('collection_name', 'rim_feature_image');
+            })->get();
+
+        $fixed = 0;
+        $total = $rims->count();
+
+        foreach ($rims as $rim) {
+            if ($this->fixRimConversions($rim)) {
+                $fixed++;
+            }
+        }
+
+        $this->info("Fixed {$fixed} out of {$total} rims (from ID {$fromId})");
     }
 
     private function fixAllRims()
