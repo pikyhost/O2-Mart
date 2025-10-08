@@ -172,18 +172,27 @@ class RimImporter extends BaseUpsertImporter
                 if (filter_var($url, FILTER_VALIDATE_URL)) {
                     $this->record->clearMediaCollection('rim_feature_image');
                     
-                    $media = $this->record->addMediaFromUrl($url)
-                        ->toMediaCollection('rim_feature_image');
-                        
-                    // Force generate conversions and verify they exist
-                    if ($media) {
-                        try {
-                            \Artisan::call('media-library:regenerate', [
-                                '--ids' => $media->id
-                            ]);
-                        } catch (\Exception $e) {
-                            \Log::error("Failed to generate conversions for rim {$this->record->id}, media {$media->id}: " . $e->getMessage());
+                    // Download to temp file first
+                    $tempFile = tempnam(sys_get_temp_dir(), 'rim_image_');
+                    $imageData = file_get_contents($url);
+                    file_put_contents($tempFile, $imageData);
+                    
+                    // Validate image
+                    if (getimagesize($tempFile)) {
+                        $media = $this->record->addMedia($tempFile)
+                            ->usingName(basename(parse_url($url, PHP_URL_PATH)))
+                            ->toMediaCollection('rim_feature_image');
+                            
+                        // Force immediate conversion generation
+                        if ($media) {
+                            $media->generated_conversions = ['thumb' => true, 'large' => true];
+                            $media->save();
                         }
+                    }
+                    
+                    // Cleanup temp file
+                    if (file_exists($tempFile)) {
+                        unlink($tempFile);
                     }
                         
                     $this->record->refresh();
