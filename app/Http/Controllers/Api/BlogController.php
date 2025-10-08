@@ -86,6 +86,7 @@ class BlogController extends Controller
 
     private function processInlineMarkdown($text)
     {
+        $text = preg_replace('/!\[([^\]]*)\]\(([^\)]+)\)/', '<img src="$2" alt="$1" style="max-width: 100%; height: auto;" />', $text);
         $text = preg_replace('/\[([^\]]+)\]\(([^\)]+)\)/', '<a href="$2" target="_blank">$1</a>', $text);
         $text = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $text);
         $text = preg_replace('/\*(.*?)\*/', '<em>$1</em>', $text);
