@@ -201,9 +201,10 @@ class Rim extends Model implements HasMedia
         return $this->reviews()->where('is_approved', true)->avg('rating');
     }
 
-    public static function fixImageIssues()
+    public static function fixImageIssues($rimId = null)
     {
-        $rims = self::all();
+        $query = $rimId ? self::where('id', $rimId) : self::query();
+        $rims = $query->get();
         $fixed = 0;
         
         foreach ($rims as $rim) {
@@ -217,6 +218,8 @@ class Rim extends Model implements HasMedia
                 } catch (\Exception $e) {
                     \Log::error("Failed to fix image for rim ID {$rim->id}: " . $e->getMessage());
                 }
+            } else {
+                \Log::warning("No media found for rim ID {$rim->id}");
             }
         }
         

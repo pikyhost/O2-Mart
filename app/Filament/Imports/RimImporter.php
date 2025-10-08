@@ -173,20 +173,27 @@ class RimImporter extends BaseUpsertImporter
                     // Clear existing media first
                     $this->record->clearMediaCollection('rim_feature_image');
                     
+                    // Clean and decode the URL
+                    $cleanUrl = urldecode($url);
+                    
                     // Get file extension from URL
-                    $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
+                    $extension = pathinfo(parse_url($cleanUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
                     if (empty($extension)) {
                         $extension = 'jpg'; // Default extension
                     }
                     
                     // Generate clean filename
-                    $filename = \Str::slug($this->record->name ?? 'rim-image') . '.' . $extension;
+                    $safeName = preg_replace('/[^a-zA-Z0-9\-_]/', '-', $this->record->name ?? 'rim-image');
+                    $filename = \Str::slug($safeName) . '-' . $this->record->id . '.' . $extension;
                     
                     // Add media with enhanced processing
-                    $media = $this->record->addMediaFromUrl($url)
+                    $media = $this->record->addMediaFromUrl($cleanUrl)
                         ->usingName($this->record->name ?? 'Rim Image')
                         ->usingFileName($filename)
                         ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+                        ->setCustomHeaders([
+                            'User-Agent' => 'Mozilla/5.0 (compatible; O2Mart/1.0)'
+                        ])
                         ->toMediaCollection('rim_feature_image');
                         
                     // Force media conversions to be generated immediately
@@ -199,7 +206,8 @@ class RimImporter extends BaseUpsertImporter
                         
                     \Log::info('RimImporter: Successfully imported image', [
                         'rim_id' => $this->record->id,
-                        'url' => $url,
+                        'original_url' => $url,
+                        'clean_url' => $cleanUrl,
                         'filename' => $filename,
                         'media_url' => $this->record->rim_feature_image_url
                     ]);
