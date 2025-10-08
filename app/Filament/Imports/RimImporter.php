@@ -175,9 +175,17 @@ class RimImporter extends BaseUpsertImporter
                     $media = $this->record->addMediaFromUrl($url)
                         ->toMediaCollection('rim_feature_image');
                         
-                    // Force generate conversions like manual upload
+                    // Force generate conversions and verify they exist
                     if ($media) {
                         $media->performConversions();
+                        
+                        // Verify conversions were created
+                        $conversions = $media->fresh()->getGeneratedConversions();
+                        if (!isset($conversions['large']) || !$conversions['large']) {
+                            \Log::warning("Large conversion not generated for rim {$this->record->id}, media {$media->id}");
+                            // Try again
+                            $media->performConversions();
+                        }
                     }
                         
                     $this->record->refresh();

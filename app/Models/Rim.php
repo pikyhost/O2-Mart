@@ -164,17 +164,35 @@ class Rim extends Model implements HasMedia
             return null;
         }
         
-        // For zoom, always try to use large conversion first
+        // Check if large conversion exists and is generated
+        $conversions = $media->getGeneratedConversions();
+        if (isset($conversions['large']) && $conversions['large']) {
+            try {
+                $largeUrl = $media->getUrl('large');
+                // Verify the conversion file actually exists
+                $largePath = $media->getPath('large');
+                if (file_exists($largePath)) {
+                    return $largeUrl;
+                }
+            } catch (\Exception $e) {
+                \Log::warning("Large conversion failed for media {$media->id}: " . $e->getMessage());
+            }
+        }
+        
+        // If large conversion doesn't exist or file is missing, regenerate it
         try {
+            $media->performConversions();
+            // Try again after regeneration
             $largeUrl = $media->getUrl('large');
-            if ($largeUrl && $largeUrl !== $media->getUrl()) {
+            $largePath = $media->getPath('large');
+            if (file_exists($largePath)) {
                 return $largeUrl;
             }
         } catch (\Exception $e) {
-            // Large conversion doesn't exist
+            \Log::error("Failed to regenerate conversions for media {$media->id}: " . $e->getMessage());
         }
         
-        // Fallback to original
+        // Final fallback to original
         $url = $media->getUrl();
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             $url = url($url);
