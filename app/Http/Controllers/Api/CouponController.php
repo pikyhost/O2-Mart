@@ -17,7 +17,6 @@ class CouponController extends Controller
     {
         $request->validate([
             'coupon_code' => 'required|string',
-            'area_id' => 'nullable|integer',
         ]);
 
         $cart = CartService::getCurrentCart();
@@ -26,22 +25,7 @@ class CouponController extends Controller
             return response()->json(['message' => 'Cart is empty.'], 400);
         }
 
-        if ($request->filled('area_id')) {
-            if (!\App\Models\Area::find($request->area_id)) {
-                return response()->json(['message' => 'Invalid area ID.'], 400);
-            }
-            $cart->update(['area_id' => $request->area_id]);
-        }
 
-        $shipping = [];
-        if ($cart->area_id) {
-            $shipping = ShippingCalculatorService::calculate($cart, 5);
-            if (!empty($shipping['error'])) {
-                return response()->json(['message' => 'Shipping calculation failed.'], 400);
-            }
-        } else {
-            $shipping['total'] = 0;
-        }
 
         $coupon = Coupon::where('code', $request->coupon_code)
             ->where('is_active', true)
@@ -63,12 +47,8 @@ class CouponController extends Controller
         // Calculate installation fees
         $installationFee = CartService::calculateInstallationFee($cart);
         
-        // Calculate shipping (only for delivery_only items)
-        $hasDeliveryOnly = $cart->items->contains('shipping_option', 'delivery_only');
+        // No shipping cost calculation during coupon apply
         $shippingCost = 0;
-        if ($hasDeliveryOnly && $cart->area_id) {
-            $shippingCost = $shipping['total'] ?? 0;
-        }
         
         // Discount applies ONLY to subtotal
         $discountableAmount = $subtotal;
@@ -166,13 +146,8 @@ class CouponController extends Controller
         // Calculate installation fees
         $installationFee = CartService::calculateInstallationFee($cart);
         
-        // Recalculate shipping (only for delivery_only items)
-        $hasDeliveryOnly = $cart->items->contains('shipping_option', 'delivery_only');
+        // No shipping cost calculation during coupon remove
         $shippingCost = 0;
-        if ($hasDeliveryOnly && $cart->area_id) {
-            $shipping = ShippingCalculatorService::calculate($cart, 5);
-            $shippingCost = !empty($shipping['error']) ? 0 : ($shipping['total'] ?? 0);
-        }
         
         // Total = SubTotal + Shipping + Installation + VAT (no discount)
         $totalBeforeVat = $subtotal + $shippingCost + $installationFee;
