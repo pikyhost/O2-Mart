@@ -165,60 +165,20 @@ class RimImporter extends BaseUpsertImporter
             $this->record->attributes()->sync($this->rimAttributesToSync);
         }
         
-        // Import feature image with enhanced processing
+        // Import feature image
         if (!empty($this->data['product_image_url'])) {
             $url = trim($this->data['product_image_url']);
             try {
                 if (filter_var($url, FILTER_VALIDATE_URL)) {
-                    // Clear existing media first
                     $this->record->clearMediaCollection('rim_feature_image');
                     
-                    // Clean and decode the URL
-                    $cleanUrl = urldecode($url);
-                    
-                    // Get file extension from URL
-                    $extension = pathinfo(parse_url($cleanUrl, PHP_URL_PATH), PATHINFO_EXTENSION);
-                    if (empty($extension)) {
-                        $extension = 'jpg'; // Default extension
-                    }
-                    
-                    // Generate clean filename
-                    $safeName = preg_replace('/[^a-zA-Z0-9\-_]/', '-', $this->record->name ?? 'rim-image');
-                    $filename = \Str::slug($safeName) . '-' . $this->record->id . '.' . $extension;
-                    
-                    // Add media with enhanced processing
-                    $media = $this->record->addMediaFromUrl($cleanUrl)
-                        ->usingName($this->record->name ?? 'Rim Image')
-                        ->usingFileName($filename)
-                        ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
-                        ->setCustomHeaders([
-                            'User-Agent' => 'Mozilla/5.0 (compatible; O2Mart/1.0)'
-                        ])
+                    $this->record->addMediaFromUrl($url)
                         ->toMediaCollection('rim_feature_image');
                         
-                    // Force media conversions to be generated immediately
-                    if ($media) {
-                        $media->performConversions();
-                    }
-                        
-                    // Force refresh the model to ensure media is loaded
                     $this->record->refresh();
-                        
-                    \Log::info('RimImporter: Successfully imported image', [
-                        'rim_id' => $this->record->id,
-                        'original_url' => $url,
-                        'clean_url' => $cleanUrl,
-                        'filename' => $filename,
-                        'media_url' => $this->record->rim_feature_image_url
-                    ]);
                 }
             } catch (\Exception $e) {
-                \Log::error('RimImporter: Failed to import image', [
-                    'rim_id' => $this->record->id,
-                    'url' => $url,
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
-                ]);
+                \Log::error('RimImporter image failed: ' . $e->getMessage());
             }
         }
     }

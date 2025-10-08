@@ -15,7 +15,7 @@ class Rim extends Model implements HasMedia
     use HasFactory, InteractsWithMedia, Sluggable, HasShareUrl;
 
     protected $guarded = [];
-    protected $appends = ['share_url', 'rim_feature_image_url', 'rim_secondary_image_url', 'rim_gallery_urls', 'feature_image_url', 'original_url', 'weight_kg', 'rim_feature_image_zoom_url'];
+    protected $appends = ['share_url', 'rim_feature_image_url', 'rim_secondary_image_url', 'rim_gallery_urls', 'feature_image_url', 'original_url', 'weight_kg'];
     protected $casts = [
         'buy_3_get_1_free' => 'boolean',
     ];
@@ -57,22 +57,7 @@ class Rim extends Model implements HasMedia
             ->useDisk('public');
     }
 
-    public function registerMediaConversions(\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
-    {
-        $this->addMediaConversion('thumb')
-            ->width(300)
-            ->height(300)
-            ->sharpen(10)
-            ->optimize()
-            ->nonQueued();
-            
-        $this->addMediaConversion('zoom')
-            ->width(800)
-            ->height(800)
-            ->sharpen(10)
-            ->optimize()
-            ->nonQueued();
-    }
+
 
 
 
@@ -161,23 +146,7 @@ class Rim extends Model implements HasMedia
         return $this->weight;
     }
 
-    public function getRimFeatureImageZoomUrlAttribute(): ?string
-    {
-        $media = $this->getFirstMedia('rim_feature_image');
-        if (!$media) {
-            return null;
-        }
-        
-        // Try to get the zoom conversion, fallback to original
-        $url = $media->getUrl('zoom') ?: $media->getUrl();
-        
-        // Ensure URL is absolute
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            $url = url($url);
-        }
-        
-        return $url;
-    }
+
 
     public function sluggable(): array
     {
