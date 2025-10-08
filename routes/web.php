@@ -95,11 +95,32 @@ Route::get('/final-test-2', function() {
 });
 
 Route::get('/fix-rim-images/{id?}', function($id = null) {
-    if (app()->environment('production')) {
-        abort(404);
+    $rim = $id ? \App\Models\Rim::find($id) : null;
+    
+    if ($id && !$rim) {
+        return "Rim ID {$id} not found";
+    }
+    
+    if ($rim) {
+        $hasMedia = $rim->hasMedia('rim_feature_image');
+        $imageUrl = $rim->rim_feature_image_url;
+        
+        if (!$hasMedia) {
+            return "Rim ID {$id} has no media attached";
+        }
+        
+        if (!$imageUrl) {
+            return "Rim ID {$id} has media but no URL generated";
+        }
+        
+        // Try to regenerate conversions
+        $media = $rim->getFirstMedia('rim_feature_image');
+        if ($media) {
+            $media->performConversions();
+            return "Fixed image for rim ID {$id}. URL: {$imageUrl}";
+        }
     }
     
     $fixed = \App\Models\Rim::fixImageIssues($id);
-    $message = $id ? "Fixed image for rim ID {$id}" : "Fixed images for {$fixed} rims";
-    return $message;
+    return $id ? "Processed rim ID {$id}" : "Fixed images for {$fixed} rims";
 });
