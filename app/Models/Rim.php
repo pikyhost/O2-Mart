@@ -15,7 +15,7 @@ class Rim extends Model implements HasMedia
     use HasFactory, InteractsWithMedia, Sluggable, HasShareUrl;
 
     protected $guarded = [];
-    protected $appends = ['share_url', 'rim_feature_image_url', 'rim_secondary_image_url', 'rim_gallery_urls', 'feature_image_url', 'original_url', 'weight_kg'];
+    protected $appends = ['share_url', 'rim_feature_image_url', 'rim_secondary_image_url', 'rim_gallery_urls', 'feature_image_url', 'original_url', 'weight_kg', 'rim_feature_image_large_url'];
     protected $casts = [
         'buy_3_get_1_free' => 'boolean',
     ];
@@ -42,6 +42,19 @@ class Rim extends Model implements HasMedia
             ->singleFile()
             ->acceptsMimeTypes($imageMimeTypes)
             ->useDisk('public');
+    }
+
+    public function registerMediaConversions(\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(300)
+            ->height(300)
+            ->nonQueued();
+            
+        $this->addMediaConversion('large')
+            ->width(800)
+            ->height(800)
+            ->nonQueued();
 
         $this->addMediaCollection('rim_secondary_image')
             ->singleFile()
@@ -142,6 +155,22 @@ class Rim extends Model implements HasMedia
     public function getWeightKgAttribute(): ?float
     {
         return $this->weight;
+    }
+
+    public function getRimFeatureImageLargeUrlAttribute(): ?string
+    {
+        $media = $this->getFirstMedia('rim_feature_image');
+        if (!$media) {
+            return null;
+        }
+        
+        $url = $media->getUrl('large') ?: $media->getUrl();
+        
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            $url = url($url);
+        }
+        
+        return $url;
     }
 
 

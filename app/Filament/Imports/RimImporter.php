@@ -172,43 +172,8 @@ class RimImporter extends BaseUpsertImporter
                 if (filter_var($url, FILTER_VALIDATE_URL)) {
                     $this->record->clearMediaCollection('rim_feature_image');
                     
-                    // Download and resize image to compatible size
-                    $imageData = file_get_contents($url);
-                    $image = imagecreatefromstring($imageData);
-                    
-                    if ($image) {
-                        $width = imagesx($image);
-                        $height = imagesy($image);
-                        
-                        // Resize if larger than 800x800
-                        if ($width > 800 || $height > 800) {
-                            $ratio = min(800/$width, 800/$height);
-                            $newWidth = (int)($width * $ratio);
-                            $newHeight = (int)($height * $ratio);
-                            
-                            $resized = imagecreatetruecolor($newWidth, $newHeight);
-                            imagecopyresampled($resized, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                            
-                            $tempFile = tempnam(sys_get_temp_dir(), 'rim_') . '.jpg';
-                            imagejpeg($resized, $tempFile, 90);
-                            
-                            imagedestroy($image);
-                            imagedestroy($resized);
-                        } else {
-                            $tempFile = tempnam(sys_get_temp_dir(), 'rim_') . '.jpg';
-                            imagejpeg($image, $tempFile, 90);
-                            imagedestroy($image);
-                        }
-                        
-                        $this->record->addMedia($tempFile)
-                            ->toMediaCollection('rim_feature_image');
-                            
-                        unlink($tempFile);
-                    } else {
-                        // Fallback to original method
-                        $this->record->addMediaFromUrl($url)
-                            ->toMediaCollection('rim_feature_image');
-                    }
+                    $this->record->addMediaFromUrl($url)
+                        ->toMediaCollection('rim_feature_image');
                         
                     unlink($tempFile);
                     $this->record->refresh();
