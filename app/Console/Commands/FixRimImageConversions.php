@@ -108,7 +108,35 @@ class FixRimImageConversions extends Command
         if ($needsFix) {
             try {
                 $this->info("Regenerating conversions for rim ID: {$rim->id}");
-                $media->performConversions();
+                
+                // Delete existing conversions and regenerate
+                $media->clearMediaConversions();
+                
+                // Manually create conversions
+                $thumbPath = $media->getPath('thumb');
+                $largePath = $media->getPath('large');
+                
+                // Create directories if they don't exist
+                $conversionDir = dirname($largePath);
+                if (!file_exists($conversionDir)) {
+                    mkdir($conversionDir, 0755, true);
+                }
+                
+                // Generate thumb conversion
+                if (extension_loaded('gd') || extension_loaded('imagick')) {
+                    $originalPath = $media->getPath();
+                    if (file_exists($originalPath)) {
+                        // Create thumb (300x300)
+                        $this->createImageConversion($originalPath, $thumbPath, 300, 300);
+                        // Create large (800x800)
+                        $this->createImageConversion($originalPath, $largePath, 800, 800);
+                        
+                        // Update generated conversions in database
+                        $media->generated_conversions = ['thumb' => true, 'large' => true];
+                        $media->save();
+                    }
+                }
+                
                 $this->info("✓ Fixed rim ID: {$rim->id}");
                 return true;
             } catch (\Exception $e) {
@@ -117,6 +145,60 @@ class FixRimImageConversions extends Command
             }
         }
 
+        return false;
+    }
+
+    private function createImageConversion($sourcePath, $targetPath, $width, $height)
+    {
+        if (extension_loaded('gd')) {
+            $imageInfo = getimagesize($sourcePath);
+            if (!$imageInfo) return false;
+            
+            $sourceWidth = $imageInfo[0];
+            $sourceHeight = $imageInfo[1];
+            $mimeType = $imageInfo['mime'];
+            
+            // Create source image
+            switch ($mimeType) {
+                case 'image/jpeg':
+                    $sourceImage = imagecreatefromjpeg($sourcePath);
+                    break;
+                case 'image/png':
+                    $sourceImage = imagecreatefrompng($sourcePath);
+                    break;
+                default:
+                    return false;
+            }
+            
+            if (!$sourceImage) return false;
+            
+            // Calculate dimensions maintaining aspect ratio
+            $ratio = min($width / $sourceWidth, $height / $sourceHeight);
+            $newWidth = intval($sourceWidth * $ratio);
+            $newHeight = intval($sourceHeight * $ratio);
+            
+            // Create target image
+            $targetImage = imagecreatetruecolor($newWidth, $newHeight);
+            
+            // Preserve transparency for PNG
+            if ($mimeType === 'image/png') {
+                imagealphablending($targetImage, false);
+                imagesavealpha($targetImage, true);
+            }
+            
+            // Resize
+            imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $sourceWidth, $sourceHeight);
+            
+            // Save
+            $result = imagejpeg($targetImage, $targetPath, 90);
+            
+            // Cleanup
+            imagedestroy($sourceImage);
+            imagedestroy($targetImage);
+            
+            return $result;
+        }
+        
         return false;
     }
 }

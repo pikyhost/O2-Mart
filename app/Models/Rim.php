@@ -179,15 +179,12 @@ class Rim extends Model implements HasMedia
             }
         }
         
-        // If large conversion doesn't exist or file is missing, regenerate it
+        // If large conversion doesn't exist or file is missing, try to regenerate
         try {
-            $media->performConversions();
-            // Try again after regeneration
+            \Artisan::call('rim:fix-image-conversions', ['--id' => $this->id]);
+            $media->refresh();
             $largeUrl = $media->getUrl('large');
-            $largePath = $media->getPath('large');
-            if (file_exists($largePath)) {
-                return $largeUrl;
-            }
+            return $largeUrl;
         } catch (\Exception $e) {
             \Log::error("Failed to regenerate conversions for media {$media->id}: " . $e->getMessage());
         }

@@ -177,14 +177,12 @@ class RimImporter extends BaseUpsertImporter
                         
                     // Force generate conversions and verify they exist
                     if ($media) {
-                        $media->performConversions();
-                        
-                        // Verify conversions were created
-                        $conversions = $media->fresh()->getGeneratedConversions();
-                        if (!isset($conversions['large']) || !$conversions['large']) {
-                            \Log::warning("Large conversion not generated for rim {$this->record->id}, media {$media->id}");
-                            // Try again
-                            $media->performConversions();
+                        try {
+                            \Artisan::call('media-library:regenerate', [
+                                '--ids' => $media->id
+                            ]);
+                        } catch (\Exception $e) {
+                            \Log::error("Failed to generate conversions for rim {$this->record->id}, media {$media->id}: " . $e->getMessage());
                         }
                     }
                         

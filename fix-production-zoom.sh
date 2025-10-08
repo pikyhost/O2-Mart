@@ -2,10 +2,6 @@
 
 echo "🔧 Fixing production zoom image issues..."
 
-# Fix specific rim 56 first
-echo "Fixing rim 56..."
-/usr/bin/php83 artisan rim:fix-image-conversions --id=56
-
 # Check rims from ID 12231 (imported products)
 echo "Checking rims from ID 12231 for missing conversions..."
 /usr/bin/php83 artisan rim:fix-image-conversions --from=12231
