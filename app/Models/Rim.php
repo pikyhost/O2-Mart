@@ -159,43 +159,7 @@ class Rim extends Model implements HasMedia
 
     public function getZoomImageUrlAttribute(): ?string
     {
-        $media = $this->getFirstMedia('rim_feature_image');
-        if (!$media) {
-            return null;
-        }
-        
-        // Check if large conversion exists and is generated
-        $conversions = $media->getGeneratedConversions();
-        if (isset($conversions['large']) && $conversions['large']) {
-            try {
-                $largeUrl = $media->getUrl('large');
-                // Verify the conversion file actually exists
-                $largePath = $media->getPath('large');
-                if (file_exists($largePath)) {
-                    return $largeUrl;
-                }
-            } catch (\Exception $e) {
-                \Log::warning("Large conversion failed for media {$media->id}: " . $e->getMessage());
-            }
-        }
-        
-        // If large conversion doesn't exist or file is missing, try to regenerate
-        try {
-            \Artisan::call('rim:fix-image-conversions', ['--id' => $this->id]);
-            $media->refresh();
-            $largeUrl = $media->getUrl('large');
-            return $largeUrl;
-        } catch (\Exception $e) {
-            \Log::error("Failed to regenerate conversions for media {$media->id}: " . $e->getMessage());
-        }
-        
-        // Final fallback to original
-        $url = $media->getUrl();
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            $url = url($url);
-        }
-        
-        return $url;
+        return $this->getRimFeatureImageUrlAttribute();
     }
 
 
