@@ -204,9 +204,7 @@ class CartController extends Controller
                         'id' => $item->id,
                         'name' => $item->name,
                         'price' => $item->discounted_price ?? $item->price_including_vat,
-                        'image' => method_exists($item, 'getAutoPartSecondaryImageUrl')
-                            ? $item->getAutoPartSecondaryImageUrl()
-                            : null,
+                        'image' => $this->resolveImage($item),
                     ];
                 }
             }
@@ -766,50 +764,48 @@ class CartController extends Controller
 
     private function resolveImage($buyable): ?string
     {
-        // Handle different product types with their specific image methods
-        if ($buyable instanceof \App\Models\Tyre) {
-            return $buyable->tyre_feature_image_url ?? $buyable->tyre_secondary_image_url;
-        }
-        
-        if ($buyable instanceof \App\Models\Battery) {
-            return $buyable->feature_image_url ?? $buyable->image_url;
-        }
-        
-        if ($buyable instanceof \App\Models\AutoPart) {
-            $url = $buyable->getAutoPartSecondaryImageUrl();
-            if (!empty($url)) return $url;
-            
-            if (!empty($buyable->photo_link)) {
-                // Check if photo_link is already a full URL
-                if (str_starts_with($buyable->photo_link, 'http')) {
-                    return $buyable->photo_link;
-                }
-                return asset('storage/' . $buyable->photo_link);
-            }
-        }
-        
-        if ($buyable instanceof \App\Models\Rim) {
-            if (method_exists($buyable, 'getRimFeatureImageUrl')) {
-                $url = $buyable->getRimFeatureImageUrl();
-                if (!empty($url)) return $url;
-            }
-        }
+        return match (get_class($buyable)) {
+            \App\Models\AutoPart::class => $this->normalizePhotoLink($buyable->photo_link)
+                ?? $buyable->getAutoPartFeatureImageUrl()
+                ?? $buyable->getAutoPartSecondaryImageUrl()
+                ?? $this->normalizePhotoLink($buyable->image ?? null)
+                ?? $buyable->getFirstMediaUrl('auto_part_feature_image')
+                ?? $buyable->getFirstMediaUrl('auto_part_secondary_image')
+                ?? $buyable->getFirstMediaUrl('feature')
+                ?? ($buyable->getFirstMediaUrl() ?: null),
 
-        // Fallback to media library collections
-        if ($buyable instanceof \Spatie\MediaLibrary\HasMedia) {
-            $collections = ['feature', 'tyre_feature_image', 'battery_feature_image', 'auto_part_secondary_image', 'rim_feature_image'];
-            
-            foreach ($collections as $collection) {
-                $url = $buyable->getFirstMediaUrl($collection);
-                if (!empty($url)) return $url;
-            }
-            
-            // Try any media as last resort
-            $url = $buyable->getFirstMediaUrl();
-            if (!empty($url)) return $url;
-        }
+            \App\Models\Tyre::class => $buyable->tyre_feature_image_url
+                ?? $buyable->tyre_secondary_image_url
+                ?? $this->normalizePhotoLink($buyable->image)
+                ?? ($buyable->getFirstMediaUrl() ?: null),
 
-        return null;
+            \App\Models\Battery::class => $buyable->getFirstMediaUrl('battery_feature_image')
+                ?? $buyable->getFirstMediaUrl('battery_secondary_image')
+                ?? $buyable->feature_image_url
+                ?? $buyable->image_url
+                ?? $this->normalizePhotoLink($buyable->photo_link)
+                ?? ($buyable->getFirstMediaUrl() ?: null),
+
+            \App\Models\Rim::class => $buyable->rim_feature_image_url
+                ?? $buyable->rim_secondary_image_url
+                ?? $this->normalizePhotoLink($buyable->photo_link)
+                ?? ($buyable->getFirstMediaUrl() ?: null),
+
+            default => ($buyable->getFirstMediaUrl() ?: null),
+        };
+    }
+
+    private function normalizePhotoLink(?string $photoLink): ?string
+    {
+        if (!$photoLink || trim($photoLink) === '') return null;
+        
+        // If it's already a full URL (http/https), return as is
+        if (str_starts_with($photoLink, 'http')) {
+            return $photoLink;
+        }
+        
+        // Otherwise, treat as storage path
+        return asset('storage/' . ltrim($photoLink, '/'));
     }
 
     public function getCartMenu()
