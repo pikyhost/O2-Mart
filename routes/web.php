@@ -93,3 +93,12 @@ talbe:
 Route::get('/final-test-2', function() {
     return 'All tests done222222222222222222222222222222222';
 });
+
+Route::get('/fix-rim-images', function() {
+    if (app()->environment('production')) {
+        abort(404);
+    }
+    
+    $fixed = \App\Models\Rim::fixImageIssues();
+    return "Fixed images for {$fixed} rims";
+});

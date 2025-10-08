@@ -157,7 +157,7 @@ class RimResource extends Resource
 
                         Tab::make('Weight')
                             ->schema([
-                                TextInput::make('weight')->label('Weight (KG) -set of 4')->numeric(),
+                                TextInput::make('weight')->label('Weight (KG) - set of 4')->numeric(),
                             ]),
 
                         Tab::make('Media')

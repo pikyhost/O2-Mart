@@ -165,18 +165,51 @@ class RimImporter extends BaseUpsertImporter
             $this->record->attributes()->sync($this->rimAttributesToSync);
         }
         
-        // Import feature image
+        // Import feature image with enhanced processing
         if (!empty($this->data['product_image_url'])) {
             $url = trim($this->data['product_image_url']);
             try {
                 if (filter_var($url, FILTER_VALIDATE_URL)) {
-                    $this->record->addMediaFromUrl($url)
+                    // Clear existing media first
+                    $this->record->clearMediaCollection('rim_feature_image');
+                    
+                    // Get file extension from URL
+                    $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
+                    if (empty($extension)) {
+                        $extension = 'jpg'; // Default extension
+                    }
+                    
+                    // Generate clean filename
+                    $filename = \Str::slug($this->record->name ?? 'rim-image') . '.' . $extension;
+                    
+                    // Add media with enhanced processing
+                    $media = $this->record->addMediaFromUrl($url)
+                        ->usingName($this->record->name ?? 'Rim Image')
+                        ->usingFileName($filename)
+                        ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
                         ->toMediaCollection('rim_feature_image');
+                        
+                    // Force media conversions to be generated immediately
+                    if ($media) {
+                        $media->performConversions();
+                    }
+                        
+                    // Force refresh the model to ensure media is loaded
+                    $this->record->refresh();
+                        
+                    \Log::info('RimImporter: Successfully imported image', [
+                        'rim_id' => $this->record->id,
+                        'url' => $url,
+                        'filename' => $filename,
+                        'media_url' => $this->record->rim_feature_image_url
+                    ]);
                 }
             } catch (\Exception $e) {
                 \Log::error('RimImporter: Failed to import image', [
+                    'rim_id' => $this->record->id,
                     'url' => $url,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
                 ]);
             }
         }
