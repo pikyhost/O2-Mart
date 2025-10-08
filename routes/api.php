@@ -205,6 +205,7 @@ Route::get('/rim-sizes', fn () => \App\Models\RimSize::select('id', 'size')->get
     $rimSize->size = (string) intval($rimSize->size);
     return $rimSize;
 }));
+// fix
 
 Route::middleware(CheckAuthOrSession::class)->prefix('compare')->group(function () {
 Route::get('/', [CompareController::class, 'index']);
