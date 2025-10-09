@@ -343,46 +343,16 @@ class CartController extends Controller
         }
         
         $installationFee = CartService::calculateInstallationFee($cart);
+        $discount = $cart->discount_amount ?? 0;
         $shippingCost = $cart->shipping_cost ?? 0;
         $discountableAmount = $cartTotal + $installationFee;
         $cartPageTotal = max(0, $discountableAmount - $discount);
         $checkoutTotal = $cartPageTotal + $shippingCost;
         
-        // Recalculate coupon discount if applied
-        if ($cart->applied_coupon) {
-            $coupon = \App\Models\Coupon::where('code', $cart->applied_coupon)->first();
-            if ($coupon) {
-                $totalBeforeDiscount = $cartTotal + $installationFee + $shippingCost;
-                $discount = 0;
-                switch ($coupon->type) {
-                    case 'discount_amount':
-                        $discount = min($coupon->value, $totalBeforeDiscount);
-                        break;
-                    case 'discount_percentage':
-                        $discount = round($totalBeforeDiscount * ($coupon->value / 100), 2);
-                        break;
-                    case 'free_shipping':
-                        $discount = $shippingCost;
-                        break;
-                }
-                $checkoutTotal = max(0, $totalBeforeDiscount - $discount);
-                
-                $cart->update([
-                    'subtotal' => $cartTotal,
-                    'total' => $checkoutTotal,
-                    'discount_amount' => $discount
-                ]);
-            }
-        } else {
-            $cart->update([
-                'subtotal' => $cartTotal,
-                'total' => $checkoutTotal
-            ]);
-        }
-        
-        // Get final discount amount after potential recalculation
-        $cart->refresh();
-        $discount = $cart->discount_amount ?? 0;
+        $cart->update([
+            'subtotal' => $cartTotal,
+            'total' => $checkoutTotal
+        ]);
         
         $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         $vat = round($checkoutTotal * $vatPercent, 2);
