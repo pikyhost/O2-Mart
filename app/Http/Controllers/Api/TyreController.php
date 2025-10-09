@@ -694,26 +694,11 @@ class TyreController extends Controller
         foreach ($grouped as $group) {
             $first = $group->first();
             
-            // Check if this is a set of 4 or front/rear setup
-            $isSetOf4 = $group->every(fn($tyre) => $tyre->is_set_of_4);
-            $hasMultipleSizes = $group->pluck('tire_size')->unique()->count() > 1;
-            
-            // Determine quantities and pricing
-            if ($isSetOf4) {
-                $maxQuantity = 4;
-                $defaultQuantity = 4;
-                $priceMultiplier = 4;
-            } elseif ($hasMultipleSizes) {
-                $maxQuantity = 2;
-                $defaultQuantity = 2;
-                $priceMultiplier = 2;
-            } else {
-                $maxQuantity = 4;
-                $defaultQuantity = 2;
-                $priceMultiplier = 2;
-            }
-
-            $tyreDetails = $group->map(function ($tyre) use ($defaultQuantity) {
+            // Each tyre gets individual quantity (1 or 2 from frontend)
+            $tyreDetails = $group->map(function ($tyre, $index) {
+                // Frontend will set quantity 1 or 2 for each tyre
+                $individualQuantity = 2; // Default, frontend can change to 1
+                
                 return [
                     'id'                => $tyre->id,
                     'title'             => $tyre->title,
@@ -730,21 +715,26 @@ class TyreController extends Controller
                     'average_rating'    => $tyre->average_rating,
                     'brand'             => $tyre->tyreBrand?->name,
                     'brand_logo'        => $tyre->tyreBrand?->logo_url,
-                    'is_set_of_4'       => $tyre->is_set_of_4,
-                    'default_quantity'  => $defaultQuantity,
+                    'individual_quantity' => $individualQuantity,
+                    'max_individual_quantity' => 2, // Frontend can select 1 or 2
                 ];
             })->values();
 
-            $totalPrice = $group->sum(function($tyre) use ($priceMultiplier) {
+            // Calculate total quantity (sum of individual quantities)
+            $totalQuantity = $tyreDetails->sum('individual_quantity');
+            
+            // Calculate total price based on individual quantities
+            $totalPrice = $group->sum(function($tyre) {
                 $price = $tyre->discounted_price ?: $tyre->price_vat_inclusive;
-                return (float)$price * $priceMultiplier;
+                return (float)$price * 2; // Default 2 per tyre
             });
 
-            $cartPayload = $group->map(function ($tyre) use ($defaultQuantity) {
+            // Cart payload with individual quantities
+            $cartPayload = $group->map(function ($tyre) {
                 return [
                     'buyable_type' => 'tyre',
                     'buyable_id'   => $tyre->id,
-                    'quantity'     => $defaultQuantity,
+                    'quantity'     => 2, // Frontend will update this to 1 or 2
                 ];
             })->values();
 
@@ -759,14 +749,11 @@ class TyreController extends Controller
                 'production_year' => $first->production_year,
                 'warranty'        => $first->warranty,
                 'tyres'           => $tyreDetails,
-                'is_set_of_4'     => $isSetOf4,
-                'has_multiple_sizes' => $hasMultipleSizes,
-                'max_quantity'    => $maxQuantity,
-                'default_quantity' => $defaultQuantity,
+                'total_quantity'  => $totalQuantity,
                 'total_price'     => $totalPrice,
-                'set_of_4_price'  => $totalPrice,
+                'set_of_4_price'  => $totalPrice, // Keep for backward compatibility
                 'cart_payload'    => $cartPayload,
-                'display_text'    => $isSetOf4 ? 'Set of 4' : ($hasMultipleSizes ? 'Set of 2 each' : 'Set of 2'),
+                'display_text'    => "Set of {$totalQuantity}", // Dynamic: "Set of 4", "Set of 3", etc.
             ];
         }
     }
