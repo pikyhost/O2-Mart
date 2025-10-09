@@ -15,7 +15,7 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
-    'frontend_url' => env('FRONTEND_URL', 'https://o2-mart-front.vercel.app'),
+    'frontend_url' => env('FRONTEND_URL', 'https://mk3bel.o2mart.net'),
 
 
     /*

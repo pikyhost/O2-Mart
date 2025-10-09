@@ -98,7 +98,7 @@
         
         <p>We received a request to reset the password for your O2Mart account.</p>
         
-        <a href="{{ $resetUrl }}" class="reset-button">Reset Password</a>
+        <a href="{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}" class="reset-button">Reset Password</a>
         
         <p>Please note that this link will expire in 60 minutes.</p>
         
@@ -109,13 +109,13 @@
         <a href="www.o2mart.net">www.o2mart.net</a> | +971 56 178 7270</p>
         
         <p>If you're having trouble clicking the "Reset Password" button, copy and paste the link below into your web browser:</p>
-        <div class="link-text">{{ $resetUrl }}</div>
+        <div class="link-text">{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}</div>
     </div>
 
     <div class="footer" style="text-align: center; padding: 10px 0; background-color: #df2020">
         <p style="font-weight: bold">Follow us:</p>
         
-        <div style="display: flex; justify-content: center; align-items: center">
+        <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
             <!-- LinkedIn -->
             <a href="https://www.linkedin.com/company/o2mart/" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
                 <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" style="width: 16px; height: 16px; display: block" />
