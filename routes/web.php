@@ -88,6 +88,7 @@ talbe:
 
 */
 
+Route::get('/test-paymob', [App\Http\Controllers\PaymobController::class, 'testPayment']);
 
 
 Route::get('/final-test-2', function() {
