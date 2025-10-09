@@ -181,6 +181,7 @@ class RimImporter extends BaseUpsertImporter
                     if (getimagesize($tempFile)) {
                         $media = $this->record->addMedia($tempFile)
                             ->usingName(urldecode(basename(parse_url($url, PHP_URL_PATH))))
+                            ->usingFileName(\Str::random(26) . '.png')
                             ->toMediaCollection('rim_feature_image');
                             
                         // Actually generate conversion files
