@@ -187,14 +187,14 @@ class CartService
                 $entry['scheduled'] = [
                     'van_id' => $item->mobile_van_id,
                     'date' => $item->installation_date,
-                    'location' => optional($item->mobileVan)->location,
+                    'location' => $item->mobileVan?->location ?? null,
                 ];
                 $withInstallation[] = $entry;
             } elseif ($type === 'installation_center') {
                 $entry['scheduled'] = [
                     'center_id' => $item->installation_center_id,
                     'date' => $item->installation_date,
-                    'location' => optional($item->installationCenter)->location,
+                    'location' => $item->installationCenter?->location ?? null,
                 ];
                 $installationCenter[] = $entry;
             } else {
