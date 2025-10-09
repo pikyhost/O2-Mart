@@ -365,7 +365,7 @@ class CartController extends Controller
                         $discount = $shippingCost;
                         break;
                 }
-                $checkoutTotal = max(0, $totalBeforeDiscount - $discount);
+                $checkoutTotal = max(0, $totalBeforeDiscount - $discount) + $shippingCost;
                 
                 $cart->update([
                     'subtotal' => $cartTotal,
