@@ -652,6 +652,7 @@ class TyreController extends Controller
     $year   = $request->input('year');
     $trim   = $request->input('trim');
     $tyreAttribute = $request->input('tyre_attribute'); 
+    
     if (!$makeId || !$modelId || !$year) {
         return response()->json([
             'status'  => 'error',
@@ -676,12 +677,10 @@ class TyreController extends Controller
     $result = [];
 
     foreach ($attributes as $attribute) {
-        // فلترة لو الـ user اختار attribute معين
         if ($tyreAttribute && $attribute->tyre_attribute !== $tyreAttribute) {
             continue;
         }
 
-        // جيب كل الإطارات المرتبطة بالـ attribute
         $tyres = \App\Models\Tyre::with(['tyreBrand', 'media'])
             ->where('tyre_attribute_id', $attribute->id)
             ->get();
@@ -690,17 +689,36 @@ class TyreController extends Controller
             continue;
         }
 
-        // جروب حسب البراند والسنة
         $grouped = $tyres->groupBy(fn($tyre) => $tyre->tyre_brand_id . '-' . $tyre->production_year);
 
         foreach ($grouped as $group) {
             $first = $group->first();
+            
+            // Check if this is a set of 4 or front/rear setup
+            $isSetOf4 = $group->every(fn($tyre) => $tyre->is_set_of_4);
+            $hasMultipleSizes = $group->pluck('tire_size')->unique()->count() > 1;
+            
+            // Determine quantities and pricing
+            if ($isSetOf4) {
+                $maxQuantity = 4;
+                $defaultQuantity = 4;
+                $priceMultiplier = 4;
+            } elseif ($hasMultipleSizes) {
+                $maxQuantity = 2;
+                $defaultQuantity = 2;
+                $priceMultiplier = 2;
+            } else {
+                $maxQuantity = 4;
+                $defaultQuantity = 2;
+                $priceMultiplier = 2;
+            }
 
-            $tyreDetails = $group->map(function ($tyre) {
+            $tyreDetails = $group->map(function ($tyre) use ($defaultQuantity) {
                 return [
                     'id'                => $tyre->id,
                     'title'             => $tyre->title,
                     'description'       => $tyre->description,
+                    'tire_size'         => $tyre->tire_size,
                     'price'             => $tyre->price_vat_inclusive,
                     'discounted_price'  => $tyre->discounted_price,
                     'discount_percent'  => $tyre->discount_percentage,
@@ -712,17 +730,21 @@ class TyreController extends Controller
                     'average_rating'    => $tyre->average_rating,
                     'brand'             => $tyre->tyreBrand?->name,
                     'brand_logo'        => $tyre->tyreBrand?->logo_url,
-                    'position'          => $tyre->pivot->position ?? 'main',
+                    'is_set_of_4'       => $tyre->is_set_of_4,
+                    'default_quantity'  => $defaultQuantity,
                 ];
             })->values();
 
-            $setOf4Price = $group->sum(fn($tyre) => (float)$tyre->price_vat_inclusive * 2);
+            $totalPrice = $group->sum(function($tyre) use ($priceMultiplier) {
+                $price = $tyre->discounted_price ?: $tyre->price_vat_inclusive;
+                return (float)$price * $priceMultiplier;
+            });
 
-            $cartPayload = $group->map(function ($tyre) {
+            $cartPayload = $group->map(function ($tyre) use ($defaultQuantity) {
                 return [
                     'buyable_type' => 'tyre',
                     'buyable_id'   => $tyre->id,
-                    'quantity'     => 2, 
+                    'quantity'     => $defaultQuantity,
                 ];
             })->values();
 
@@ -737,8 +759,14 @@ class TyreController extends Controller
                 'production_year' => $first->production_year,
                 'warranty'        => $first->warranty,
                 'tyres'           => $tyreDetails,
-                'set_of_4_price'  => $setOf4Price,
+                'is_set_of_4'     => $isSetOf4,
+                'has_multiple_sizes' => $hasMultipleSizes,
+                'max_quantity'    => $maxQuantity,
+                'default_quantity' => $defaultQuantity,
+                'total_price'     => $totalPrice,
+                'set_of_4_price'  => $totalPrice,
                 'cart_payload'    => $cartPayload,
+                'display_text'    => $isSetOf4 ? 'Set of 4' : ($hasMultipleSizes ? 'Set of 2 each' : 'Set of 2'),
             ];
         }
     }
