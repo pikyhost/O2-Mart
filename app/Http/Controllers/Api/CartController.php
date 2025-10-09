@@ -352,7 +352,7 @@ class CartController extends Controller
         if ($cart->applied_coupon) {
             $coupon = \App\Models\Coupon::where('code', $cart->applied_coupon)->first();
             if ($coupon) {
-                $totalBeforeDiscount = $cartTotal + $installationFee;
+                $totalBeforeDiscount = $cartTotal + $installationFee + $shippingCost;
                 $discount = 0;
                 switch ($coupon->type) {
                     case 'discount_amount':
@@ -365,7 +365,7 @@ class CartController extends Controller
                         $discount = $shippingCost;
                         break;
                 }
-                $checkoutTotal = max(0, $totalBeforeDiscount - $discount) + $shippingCost;
+                $checkoutTotal = max(0, $totalBeforeDiscount - $discount);
                 
                 $cart->update([
                     'subtotal' => $cartTotal,
