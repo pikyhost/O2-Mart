@@ -924,14 +924,14 @@ class CartController extends Controller
         $request->validate([
             'items' => 'required|array|min:1',
             'items.*.buyable_id' => 'required|integer|exists:tyres,id',
-            'items.*.quantity' => 'nullable|integer|min:1'
+            'items.*.quantity' => 'required|integer|min:1'
         ]);
 
         $cart = \App\Services\CartService::getCurrentCart();
 
         foreach ($request->items as $itemData) {
             $tyre = \App\Models\Tyre::find($itemData['buyable_id']);
-            $quantity = $itemData['quantity'] ?? 1;
+            $quantity = $itemData['quantity'];
             $price = $tyre->discounted_price ?? $tyre->price_vat_inclusive ?? $tyre->regular_price ?? 0;
             
             // Calculate paid quantity for buy 3 get 1 free (tyres only)
