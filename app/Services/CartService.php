@@ -105,35 +105,6 @@ class CartService
             $breakdown = !empty($shipping['error']) ? [] : ($shipping['breakdown'] ?? []);
         }
 
-        // Recalculate coupon discount if applied
-        $discount = 0;
-        if ($cart->applied_coupon) {
-            $coupon = \App\Models\Coupon::where('code', $cart->applied_coupon)
-                ->where('is_active', true)
-                ->where(function ($q) {
-                    $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
-                })
-                ->first();
-                
-            if ($coupon) {
-                $totalBeforeDiscount = $subtotal + $shippingCost + $installationFee + ($menuTotal - $menuSubtotal);
-                switch ($coupon->type) {
-                    case 'discount_amount':
-                        $discount = min($coupon->value, $totalBeforeDiscount);
-                        break;
-                    case 'discount_percentage':
-                        $discount = round($totalBeforeDiscount * ($coupon->value / 100), 2);
-                        break;
-                    case 'free_shipping':
-                        $discount = $shippingCost;
-                        break;
-                }
-                
-                // Update cart with recalculated discount
-                $cart->update(['discount_amount' => $discount]);
-            }
-        }
-        
         // 🟢 Get actual cart-menu values
         $menuTotal = 0;
         foreach ($cart->items as $item) {
@@ -153,6 +124,35 @@ class CartService
         
         // 🟢 VAT = cart-menu total - cart-menu subtotal
         $vat = $menuTotal - $menuSubtotal;
+        
+        // Recalculate coupon discount if applied
+        $discount = 0;
+        if ($cart->applied_coupon) {
+            $coupon = \App\Models\Coupon::where('code', $cart->applied_coupon)
+                ->where('is_active', true)
+                ->where(function ($q) {
+                    $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+                })
+                ->first();
+                
+            if ($coupon) {
+                $totalBeforeDiscount = $subtotal + $shippingCost + $installationFee + $vat;
+                switch ($coupon->type) {
+                    case 'discount_amount':
+                        $discount = min($coupon->value, $totalBeforeDiscount);
+                        break;
+                    case 'discount_percentage':
+                        $discount = round($totalBeforeDiscount * ($coupon->value / 100), 2);
+                        break;
+                    case 'free_shipping':
+                        $discount = $shippingCost;
+                        break;
+                }
+                
+                // Update cart with recalculated discount
+                $cart->update(['discount_amount' => $discount]);
+            }
+        }
         
         // Total = SubTotal + Shipping + Installation + VAT - Discount
         $totalBeforeDiscount = $subtotal + $shippingCost + $installationFee + $vat;
