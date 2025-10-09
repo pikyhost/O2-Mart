@@ -940,13 +940,29 @@ class CartController extends Controller
                 ? $quantity - 1 
                 : $quantity;
 
-            $cart->items()->create([
-                'buyable_type'   => $tyre->getMorphClass(), 
-                'buyable_id'     => $tyre->id,
-                'quantity'       => $quantity,
-                'price_per_unit' => $price,
-                'subtotal'       => $price * $paidQuantity,
-            ]);
+            // Check if item already exists in cart
+            $existingItem = $cart->items()
+                ->where('buyable_type', $tyre->getMorphClass())
+                ->where('buyable_id', $tyre->id)
+                ->first();
+
+            if ($existingItem) {
+                // Update existing item with new quantity (replace, don't add)
+                $existingItem->update([
+                    'quantity' => $quantity,
+                    'price_per_unit' => $price,
+                    'subtotal' => $price * $paidQuantity,
+                ]);
+            } else {
+                // Create new item
+                $cart->items()->create([
+                    'buyable_type'   => $tyre->getMorphClass(), 
+                    'buyable_id'     => $tyre->id,
+                    'quantity'       => $quantity,
+                    'price_per_unit' => $price,
+                    'subtotal'       => $price * $paidQuantity,
+                ]);
+            }
         }
 
         return response()->json([
