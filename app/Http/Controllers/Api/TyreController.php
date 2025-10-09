@@ -410,7 +410,8 @@ class TyreController extends Controller
                 'widths' => Tyre::select('width')->distinct()->pluck('width')->filter()->values(),
                 'heights' => Tyre::select('height')->distinct()->pluck('height')->filter()->values(),
                 'wheel_diameters' => Tyre::select('wheel_diameter')->distinct()->pluck('wheel_diameter')->filter()->map(function($diameter) {
-                    return (string) intval($diameter);
+                    $float = (float) $diameter;
+                    return $float == intval($float) ? (string) intval($float) : (string) $float;
                 })->values(),
             ]
         ]);
@@ -436,7 +437,8 @@ class TyreController extends Controller
     public function wheelDiameters()
     {
         $data = Tyre::select('wheel_diameter')->distinct()->pluck('wheel_diameter')->filter()->map(function($diameter) {
-            return (string) intval($diameter);
+            $float = (float) $diameter;
+            return $float == intval($float) ? (string) intval($float) : (string) $float;
         })->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
@@ -590,7 +592,8 @@ class TyreController extends Controller
                 'widths' => Tyre::whereIn('id', $filteredTyreIds)->select('width')->distinct()->whereNotNull('width')->pluck('width')->filter()->values(),
                 'heights' => Tyre::whereIn('id', $filteredTyreIds)->select('height')->distinct()->whereNotNull('height')->pluck('height')->filter()->values(),
                 'wheel_diameters' => Tyre::whereIn('id', $filteredTyreIds)->select('wheel_diameter')->distinct()->whereNotNull('wheel_diameter')->pluck('wheel_diameter')->filter()->map(function($diameter) {
-                    return (string) intval($diameter);
+                    $float = (float) $diameter;
+                    return $float == intval($float) ? (string) intval($float) : (string) $float;
                 })->values(),
                 'models' => TyreModel::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
                     $q->whereIn('id', $filteredTyreIds);
