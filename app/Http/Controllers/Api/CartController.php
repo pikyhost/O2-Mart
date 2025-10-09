@@ -555,6 +555,15 @@ class CartController extends Controller
                             ($item->mobileVan->name . ' - ' . $item->mobileVan->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) :
                             ($item->shipping_option === 'installation_center' && $item->installationCenter ? 
                                 ($item->installationCenter->name . ' - ' . $item->installationCenter->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null),
+                        'scheduled' => $item->shipping_option === 'with_installation' && $item->mobileVan ? [
+                            'name' => $item->mobileVan->name,
+                            'location' => $item->mobileVan->name . ' - ' . $item->mobileVan->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : ''),
+                            'date' => $item->installation_date,
+                        ] : ($item->shipping_option === 'installation_center' && $item->installationCenter ? [
+                            'name' => $item->installationCenter->name,
+                            'location' => $item->installationCenter->name . ' - ' . $item->installationCenter->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : ''),
+                            'date' => $item->installation_date,
+                        ] : null),
                     ];
                     
                     \Log::info('Cart API Response Item', [
