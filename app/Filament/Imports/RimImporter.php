@@ -183,10 +183,9 @@ class RimImporter extends BaseUpsertImporter
                             ->usingName(urldecode(basename(parse_url($url, PHP_URL_PATH))))
                             ->toMediaCollection('rim_feature_image');
                             
-                        // Force immediate conversion generation
+                        // Actually generate conversion files
                         if ($media) {
-                            $media->generated_conversions = ['thumb' => true, 'large' => true];
-                            $media->save();
+                            $this->generateConversions($media);
                         }
                     }
                     
@@ -213,5 +212,90 @@ class RimImporter extends BaseUpsertImporter
         }
 
         return $body;
+    }
+
+    private function generateConversions($media)
+    {
+        try {
+            $originalPath = $media->getPath();
+            if (!file_exists($originalPath)) {
+                return;
+            }
+
+            // Create conversions directory
+            $conversionsDir = dirname($originalPath) . '/conversions';
+            if (!file_exists($conversionsDir)) {
+                mkdir($conversionsDir, 0755, true);
+            }
+
+            // Generate thumb (300x300)
+            $thumbPath = $conversionsDir . '/' . pathinfo($media->file_name, PATHINFO_FILENAME) . '-thumb.jpg';
+            $this->resizeImage($originalPath, $thumbPath, 300, 300);
+
+            // Generate large (800x800)
+            $largePath = $conversionsDir . '/' . pathinfo($media->file_name, PATHINFO_FILENAME) . '-large.jpg';
+            $this->resizeImage($originalPath, $largePath, 800, 800);
+
+            // Update database
+            $media->generated_conversions = ['thumb' => true, 'large' => true];
+            $media->save();
+
+        } catch (\Exception $e) {
+            \Log::error('Failed to generate conversions: ' . $e->getMessage());
+        }
+    }
+
+    private function resizeImage($sourcePath, $targetPath, $width, $height)
+    {
+        if (!extension_loaded('gd')) {
+            return false;
+        }
+
+        $imageInfo = getimagesize($sourcePath);
+        if (!$imageInfo) return false;
+
+        $sourceWidth = $imageInfo[0];
+        $sourceHeight = $imageInfo[1];
+        $mimeType = $imageInfo['mime'];
+
+        // Create source image
+        switch ($mimeType) {
+            case 'image/jpeg':
+                $sourceImage = imagecreatefromjpeg($sourcePath);
+                break;
+            case 'image/png':
+                $sourceImage = imagecreatefrompng($sourcePath);
+                break;
+            default:
+                return false;
+        }
+
+        if (!$sourceImage) return false;
+
+        // Calculate dimensions maintaining aspect ratio
+        $ratio = min($width / $sourceWidth, $height / $sourceHeight);
+        $newWidth = intval($sourceWidth * $ratio);
+        $newHeight = intval($sourceHeight * $ratio);
+
+        // Create target image
+        $targetImage = imagecreatetruecolor($newWidth, $newHeight);
+
+        // Preserve transparency for PNG
+        if ($mimeType === 'image/png') {
+            imagealphablending($targetImage, false);
+            imagesavealpha($targetImage, true);
+        }
+
+        // Resize
+        imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $sourceWidth, $sourceHeight);
+
+        // Save as JPEG
+        $result = imagejpeg($targetImage, $targetPath, 90);
+
+        // Cleanup
+        imagedestroy($sourceImage);
+        imagedestroy($targetImage);
+
+        return $result;
     }
 }
