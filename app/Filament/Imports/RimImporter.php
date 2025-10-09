@@ -180,7 +180,7 @@ class RimImporter extends BaseUpsertImporter
                     // Validate image
                     if (getimagesize($tempFile)) {
                         $media = $this->record->addMedia($tempFile)
-                            ->usingName(basename(parse_url($url, PHP_URL_PATH)))
+                            ->usingName(urldecode(basename(parse_url($url, PHP_URL_PATH))))
                             ->toMediaCollection('rim_feature_image');
                             
                         // Force immediate conversion generation
