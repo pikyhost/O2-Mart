@@ -349,10 +349,36 @@ class CartController extends Controller
         $cartPageTotal = max(0, $discountableAmount - $discount);
         $checkoutTotal = $cartPageTotal + $shippingCost;
         
-        $cart->update([
-            'subtotal' => $cartTotal,
-            'total' => $checkoutTotal
-        ]);
+        // Recalculate coupon discount if applied
+        if ($cart->applied_coupon) {
+            $coupon = \App\Models\Coupon::where('code', $cart->applied_coupon)->first();
+            if ($coupon) {
+                $discount = 0;
+                switch ($coupon->type) {
+                    case 'discount_amount':
+                        $discount = min($coupon->value, $checkoutTotal);
+                        break;
+                    case 'discount_percentage':
+                        $discount = round($checkoutTotal * ($coupon->value / 100), 2);
+                        break;
+                    case 'free_shipping':
+                        $discount = $shippingCost;
+                        $checkoutTotal -= $shippingCost;
+                        break;
+                }
+                $checkoutTotal = max(0, $checkoutTotal - $discount);
+                $cart->update([
+                    'subtotal' => $cartTotal,
+                    'total' => $checkoutTotal,
+                    'discount_amount' => $discount
+                ]);
+            }
+        } else {
+            $cart->update([
+                'subtotal' => $cartTotal,
+                'total' => $checkoutTotal
+            ]);
+        }
         
         $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         $vat = round($checkoutTotal * $vatPercent, 2);
