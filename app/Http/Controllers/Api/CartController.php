@@ -19,6 +19,11 @@ class CartController extends Controller
 {
     public function add(Request $request)
     {
+        // Handle cart payload for tyre groups
+        if ($request->has('cart_payload')) {
+            return $this->addTyreGroup($request);
+        }
+
         $request->validate([
             'buyable_type' => 'required|string|in:auto_part,battery,tyre,rim',
             'buyable_id'   => 'required|integer',
