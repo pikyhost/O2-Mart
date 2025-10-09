@@ -18,8 +18,6 @@ class CarMakeImporter extends Importer
             ImportColumn::make('name')
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
-            ImportColumn::make('country')
-                ->rules(['max:100']),
             ImportColumn::make('is_active')
                 ->boolean()
                 ->rules(['boolean']),
@@ -34,7 +32,6 @@ class CarMakeImporter extends Importer
             'name' => $name,
         ], [
             'slug' => Str::slug($name),
-            'country' => $this->data['country'] ?? null,
             'is_active' => $this->data['is_active'] ?? true,
         ]);
     }

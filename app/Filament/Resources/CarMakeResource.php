@@ -42,13 +42,6 @@ class CarMakeResource extends Resource
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
 
-                        Forms\Components\FileUpload::make('logo')
-                            ->image()
-                            ->directory('car-makes'),
-
-                        Forms\Components\TextInput::make('country')
-                            ->maxLength(100),
-
                         Forms\Components\Toggle::make('is_active')
                             ->default(true),
                     ])
@@ -59,14 +52,9 @@ class CarMakeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('logo')
-                    ->label('Logo'),
-
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-
-                Tables\Columns\TextColumn::make('country'),
 
                 Tables\Columns\TextColumn::make('models_count')
                     ->label('Models')
