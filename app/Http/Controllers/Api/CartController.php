@@ -343,7 +343,6 @@ class CartController extends Controller
         }
         
         $installationFee = CartService::calculateInstallationFee($cart);
-        $discount = $cart->discount_amount ?? 0;
         $shippingCost = $cart->shipping_cost ?? 0;
         $discountableAmount = $cartTotal + $installationFee;
         $cartPageTotal = max(0, $discountableAmount - $discount);
@@ -380,6 +379,10 @@ class CartController extends Controller
                 'total' => $checkoutTotal
             ]);
         }
+        
+        // Get final discount amount after potential recalculation
+        $cart->refresh();
+        $discount = $cart->discount_amount ?? 0;
         
         $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         $vat = round($checkoutTotal * $vatPercent, 2);
