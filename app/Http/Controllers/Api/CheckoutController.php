@@ -148,15 +148,17 @@ class CheckoutController extends Controller
         $installationFees = count($installationGroups) * $installationFeeValue;
 
 
-        // Calculate subtotal with buy 3 get 1 free logic
+        // Calculate subtotal same as cart summary (VAT-exclusive)
+        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         $subtotal = 0;
         foreach ($cart->items as $item) {
-            $price = $item->price ?? $item->buyable->discounted_price ?? $item->buyable->price_including_vat ?? 0;
-            $isOfferActive = $item->buyable->buy_3_get_1_free ?? false;
-            $paidQuantity = $isOfferActive && $item->quantity >= 4 
+            if (!$item->buyable) continue;
+            $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 
                 ? $item->quantity - 1 
                 : $item->quantity;
-            $subtotal += $price * $paidQuantity;
+            $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
+            $subtotal += $paidQuantity * $priceWithoutVat;
         }
 
         // Coupon logic
@@ -411,14 +413,17 @@ $total = max(0, $totalBeforeDiscount - $discountAmount);
         $installationFees = count($installationGroups) * $installationFeeValue;
 
 
-        // Calculate subtotal with buy 3 get 1 free logic
+        // Calculate subtotal same as cart summary (VAT-exclusive)
+        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         $subtotal = 0;
         foreach ($cart->items as $item) {
-            $isOfferActive = $item->buyable->buy_3_get_1_free ?? false;
-            $paidQuantity = $isOfferActive && $item->quantity >= 4 
+            if (!$item->buyable) continue;
+            $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 
                 ? $item->quantity - 1 
                 : $item->quantity;
-            $subtotal += $item->price_per_unit * $paidQuantity;
+            $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
+            $subtotal += $paidQuantity * $priceWithoutVat;
         }
 
         // Coupon logic
