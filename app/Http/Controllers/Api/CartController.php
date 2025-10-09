@@ -343,14 +343,40 @@ class CartController extends Controller
         }
         
         $installationFee = CartService::calculateInstallationFee($cart);
-        $discount = $cart->discount_amount ?? 0;
         $shippingCost = $cart->shipping_cost ?? 0;
         $discountableAmount = $cartTotal + $installationFee;
+        
+        // Recalculate coupon discount if applied
+        $discount = 0;
+        if ($cart->applied_coupon) {
+            $coupon = \App\Models\Coupon::where('code', $cart->applied_coupon)
+                ->where('is_active', true)
+                ->where(function ($q) {
+                    $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+                })
+                ->first();
+                
+            if ($coupon) {
+                switch ($coupon->type) {
+                    case 'discount_amount':
+                        $discount = min($coupon->value, $discountableAmount);
+                        break;
+                    case 'discount_percentage':
+                        $discount = round($discountableAmount * ($coupon->value / 100), 2);
+                        break;
+                    case 'free_shipping':
+                        $discount = $shippingCost;
+                        break;
+                }
+            }
+        }
+        
         $cartPageTotal = max(0, $discountableAmount - $discount);
         $checkoutTotal = $cartPageTotal + $shippingCost;
         
         $cart->update([
             'subtotal' => $cartTotal,
+            'discount_amount' => $discount,
             'total' => $checkoutTotal
         ]);
         
