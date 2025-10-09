@@ -12,7 +12,7 @@ use App\Services\PaymobPaymentService;
 
 class PaymobController extends Controller
 {
-
+// comment test
 
     public function initiate(Request $request)
     {
@@ -118,6 +118,6 @@ class PaymobController extends Controller
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=failed&order_id=' . $order->id);
         }
     }
-
+// 
     
 }
