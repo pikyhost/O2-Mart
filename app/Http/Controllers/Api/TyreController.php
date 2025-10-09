@@ -760,6 +760,18 @@ class TyreController extends Controller
         }
     }
 
+    // Store quantities in session for cart add to use
+    if ($request->has('quantities')) {
+        $sessionKey = 'tyre_quantities_' . session()->getId();
+        $quantityMap = [];
+        foreach ($result as $group) {
+            foreach ($group['tyres'] as $tyre) {
+                $quantityMap[$tyre['id']] = $tyre['individual_quantity'];
+            }
+        }
+        session([$sessionKey => $quantityMap]);
+    }
+
     return response()->json([
         'status' => 'success',
         'data'   => $result,

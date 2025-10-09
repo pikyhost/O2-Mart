@@ -70,7 +70,10 @@ class CartController extends Controller
             'converted_price_float' => $price,
             'price_type' => gettype($priceString)
         ]);
-        $quantity = $request->quantity ?? 1;
+        // Check if we have stored quantities from filter API
+        $sessionKey = 'tyre_quantities_' . session()->getId();
+        $storedQuantities = session($sessionKey, []);
+        $quantity = $storedQuantities[$request->buyable_id] ?? $request->quantity ?? 1;
         $isOfferActive = ($itemModel instanceof \App\Models\Tyre) && ($itemModel->buy_3_get_1_free ?? false);
 
         $cart = CartService::getCurrentCart();
@@ -86,6 +89,8 @@ class CartController extends Controller
             'id' => $itemModel->id,
             'title' => $itemModel->title ?? null,
             'quantity_added' => $quantity,
+            'stored_quantities' => $storedQuantities,
+            'used_stored_quantity' => isset($storedQuantities[$request->buyable_id]),
         ]);
 
         if ($existingItem) {
