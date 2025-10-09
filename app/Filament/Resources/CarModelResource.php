@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CarModelResource\Pages;
 use App\Filament\Resources\CarModelResource\RelationManagers;
+use App\Filament\Imports\CarModelImporter;
 use App\Models\CarModel;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -145,6 +146,10 @@ class CarModelResource extends Resource
 
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Active'),
+            ])
+            ->headerActions([
+                Tables\Actions\ImportAction::make()
+                    ->importer(CarModelImporter::class),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

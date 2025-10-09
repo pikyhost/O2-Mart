@@ -18,6 +18,8 @@ class VinRecordResource extends Resource
     protected static ?string $model = VinRecord::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function getNavigationGroup(): ?string {return 'Vehicle Data';}
     public static function getNavigationSort(): ?int  { return 30;  }
