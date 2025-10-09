@@ -172,27 +172,12 @@ class RimImporter extends BaseUpsertImporter
                 if (filter_var($url, FILTER_VALIDATE_URL)) {
                     $this->record->clearMediaCollection('rim_feature_image');
                     
-                    // Download to temp file first
-                    $tempFile = tempnam(sys_get_temp_dir(), 'rim_image_');
-                    $imageData = file_get_contents($url);
-                    file_put_contents($tempFile, $imageData);
+                    // Use clean filename directly
+                    $cleanName = \Str::random(26);
                     
-                    // Validate image
-                    if (getimagesize($tempFile)) {
-                        // Generate clean filename without special characters
-                        $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'png';
-                        $cleanFileName = \Str::random(26) . '.' . $extension;
-                        
-                        $media = $this->record->addMedia($tempFile)
-                            ->usingName($cleanFileName)
-                            ->usingFileName($cleanFileName)
-                            ->toMediaCollection('rim_feature_image');
-                    }
-                    
-                    // Cleanup temp file
-                    if (file_exists($tempFile)) {
-                        unlink($tempFile);
-                    }
+                    $media = $this->record->addMediaFromUrl($url)
+                        ->usingName($cleanName)
+                        ->toMediaCollection('rim_feature_image');
                         
                     $this->record->refresh();
                 }
