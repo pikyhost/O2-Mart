@@ -116,13 +116,13 @@ class CartService
                 ->first();
                 
             if ($coupon) {
-                $discountableAmount = $subtotal + $installationFee;
+                $totalBeforeDiscount = $subtotal + $shippingCost + $installationFee + ($menuTotal - $menuSubtotal);
                 switch ($coupon->type) {
                     case 'discount_amount':
-                        $discount = min($coupon->value, $discountableAmount);
+                        $discount = min($coupon->value, $totalBeforeDiscount);
                         break;
                     case 'discount_percentage':
-                        $discount = round($discountableAmount * ($coupon->value / 100), 2);
+                        $discount = round($totalBeforeDiscount * ($coupon->value / 100), 2);
                         break;
                     case 'free_shipping':
                         $discount = $shippingCost;
@@ -133,9 +133,6 @@ class CartService
                 $cart->update(['discount_amount' => $discount]);
             }
         }
-        
-        // Apply discount to subtotal
-        $discountableAfterDiscount = max(0, $subtotal - $discount);
         
         // 🟢 Get actual cart-menu values
         $menuTotal = 0;
@@ -157,9 +154,9 @@ class CartService
         // 🟢 VAT = cart-menu total - cart-menu subtotal
         $vat = $menuTotal - $menuSubtotal;
         
-        // Total = SubTotal after discount + Shipping + Installation + VAT
-        $totalBeforeVat = $discountableAfterDiscount + $shippingCost + $installationFee;
-        $total = $totalBeforeVat + $vat;
+        // Total = SubTotal + Shipping + Installation + VAT - Discount
+        $totalBeforeDiscount = $subtotal + $shippingCost + $installationFee + $vat;
+        $total = max(0, $totalBeforeDiscount - $discount);
 
         $deliveryOnly = [];
         $withInstallation = [];
