@@ -107,7 +107,7 @@ class CouponResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ])  ->defaultSort(['created_at' => 'desc']);
+            ])  ->defaultSort('id', direction: 'desc');
     }
 
     public static function getPages(): array
