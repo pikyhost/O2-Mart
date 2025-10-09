@@ -182,12 +182,6 @@ class RimImporter extends BaseUpsertImporter
                         $media = $this->record->addMedia($tempFile)
                             ->usingName(urldecode(basename(parse_url($url, PHP_URL_PATH))))
                             ->toMediaCollection('rim_feature_image');
-                            
-                        // Force conversion generation like manual upload
-                        if ($media) {
-                            // This triggers the same process as manual upload
-                            $media->performConversions();
-                        }
                     }
                     
                     // Cleanup temp file

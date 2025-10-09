@@ -57,18 +57,7 @@ class Rim extends Model implements HasMedia
             ->useDisk('public');
     }
 
-    public function registerMediaConversions(\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
-    {
-        $this->addMediaConversion('thumb')
-            ->width(300)
-            ->height(300)
-            ->nonQueued();
-            
-        $this->addMediaConversion('large')
-            ->width(800)
-            ->height(800)
-            ->nonQueued();
-    }
+    // Removed conversions to debug zoom issue
 
 
 
@@ -164,17 +153,7 @@ class Rim extends Model implements HasMedia
             return null;
         }
         
-        // Check if large conversion actually exists
-        $conversions = $media->generated_conversions ?? [];
-        if (isset($conversions['large']) && $conversions['large']) {
-            try {
-                return $media->getUrl('large');
-            } catch (\Exception $e) {
-                // Conversion marked as generated but file doesn't exist
-            }
-        }
-        
-        // Return original image URL
+        // Always return original image URL
         return $media->getUrl();
     }
 
