@@ -404,12 +404,11 @@ class CartController extends Controller
         $discount = $cart->discount_amount ?? 0;
         $shippingCost = $cart->shipping_cost ?? 0;
         
-        // Cart page total = items total + installation fees
+        // Cart page total = items total + installation fees - discount
         $cartPageTotal = $cartTotal + $installationFee;
-        $discountableAmount = $cartPageTotal;
-        $cartPageTotalAfterDiscount = max(0, $discountableAmount - $discount);
+        $cartPageTotalAfterDiscount = max(0, $cartPageTotal - $discount);
         
-        // Checkout total = cart total + shipping
+        // Checkout total = cart total after discount + shipping
         $checkoutTotal = $cartPageTotalAfterDiscount + $shippingCost;
         
         // Subtotal = sum of item subtotals (without VAT)
@@ -425,9 +424,11 @@ class CartController extends Controller
             $subtotal += $paidQuantity * $priceWithoutVat;
         }
         
-        $cart->subtotal = $subtotal;
-        $cart->total = $checkoutTotal;
-        $cart->save();
+        // Update cart totals
+        $cart->update([
+            'subtotal' => $subtotal,
+            'total' => $checkoutTotal
+        ]);
 
         $vat = round($checkoutTotal * $vatPercent, 2);
 

@@ -105,36 +105,11 @@ class CartService
             $breakdown = !empty($shipping['error']) ? [] : ($shipping['breakdown'] ?? []);
         }
 
-        // 🟢 Calculate discountable amount (subtotal ONLY, exclude installation)
-        $discountableAmount = $subtotal;
+        // Use existing discount from cart
+        $discount = $cart->discount_amount ?? 0;
         
-        // 🟢 Recalculate discount if coupon is applied
-        $discount = 0;
-        if ($cart->applied_coupon) {
-            $coupon = \App\Models\Coupon::where('code', $cart->applied_coupon)->first();
-            if ($coupon) {
-                switch ($coupon->type) {
-                    case 'discount_percentage':
-                        $discount = round($discountableAmount * ($coupon->value / 100), 2);
-                        break;
-                    case 'discount_amount':
-                        $discount = min($coupon->value, $discountableAmount);
-                        break;
-                    case 'free_shipping':
-                        $discount = 0;
-                        $shippingCost = 0;
-                        break;
-                }
-            }
-        }
-        
-        // 🟢 Apply discount ONLY to subtotal (not installation)
-        $discountableAfterDiscount = max(0, $discountableAmount - $discount);
-        
-        // 🟢 Update cart with recalculated discount
-        if ($cart->applied_coupon && $cart->discount_amount != $discount) {
-            $cart->update(['discount_amount' => $discount]);
-        }
+        // Apply discount to subtotal
+        $discountableAfterDiscount = max(0, $subtotal - $discount);
         
         // 🟢 Get actual cart-menu values
         $menuTotal = 0;
@@ -156,7 +131,7 @@ class CartService
         // 🟢 VAT = cart-menu total - cart-menu subtotal
         $vat = $menuTotal - $menuSubtotal;
         
-        // 🟢 Total = SubTotal + Shipping + Installation + VAT amount
+        // Total = SubTotal after discount + Shipping + Installation + VAT
         $totalBeforeVat = $discountableAfterDiscount + $shippingCost + $installationFee;
         $total = $totalBeforeVat + $vat;
 
