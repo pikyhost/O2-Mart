@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CityResource\Pages;
 
+use App\Filament\Imports\CityImporter;
 use App\Filament\Resources\CityResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ManageRecords;
@@ -14,6 +15,8 @@ class ManageCities extends ManageRecords
     {
         return [
             Actions\CreateAction::make(),
+            Actions\ImportAction::make()
+                ->importer(CityImporter::class),
         ];
     }
 }
