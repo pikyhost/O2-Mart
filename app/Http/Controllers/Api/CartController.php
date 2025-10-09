@@ -19,6 +19,13 @@ class CartController extends Controller
 {
     public function add(Request $request)
     {
+        \Log::info('Cart Add Request Data', [
+            'all_data' => $request->all(),
+            'has_cart_payload' => $request->has('cart_payload'),
+            'method' => $request->method(),
+            'url' => $request->url()
+        ]);
+
         // Handle cart payload for tyre groups
         if ($request->has('cart_payload')) {
             return $this->addTyreGroup($request);
