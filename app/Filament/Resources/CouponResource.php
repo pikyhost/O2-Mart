@@ -76,7 +76,6 @@ class CouponResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-        ->defaultSort(['created_at' => 'desc'])
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
@@ -108,7 +107,7 @@ class CouponResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])  ->defaultSort(['created_at' => 'desc']);
     }
 
     public static function getPages(): array
