@@ -198,9 +198,15 @@ class CheckoutController extends Controller
             $discountAmount = $cart->discount_amount ?? 0;
         }
 
-        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
-$vatBase = $subtotal + $shipping['total'] + $installationFees;
-$vat = round($vatBase * $vatPercent, 2);
+        // Calculate VAT same as cart summary (on items total only)
+$itemsTotal = 0;
+foreach ($cart->items as $item) {
+    if (!$item->buyable) continue;
+    $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+    $paidQuantity = $isOfferActive && $item->quantity >= 3 ? $item->quantity - 1 : $item->quantity;
+    $itemsTotal += $paidQuantity * $item->price_per_unit;
+}
+$vat = round($itemsTotal - $subtotal, 2);
 $totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
 $total = max(0, $totalBeforeDiscount - $discountAmount);
 
@@ -463,9 +469,15 @@ $total = max(0, $totalBeforeDiscount - $discountAmount);
             $discountAmount = $cart->discount_amount ?? 0;
         }
 
-        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
-        $vatBase = $subtotal + $shipping['total'] + $installationFees;
-        $vat = round($vatBase * $vatPercent, 2);
+        // Calculate VAT same as cart summary (on items total only)
+        $itemsTotal = 0;
+        foreach ($cart->items as $item) {
+            if (!$item->buyable) continue;
+            $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 ? $item->quantity - 1 : $item->quantity;
+            $itemsTotal += $paidQuantity * $item->price_per_unit;
+        }
+        $vat = round($itemsTotal - $subtotal, 2);
         $totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
         $total = max(0, $totalBeforeDiscount - $discountAmount);
 
