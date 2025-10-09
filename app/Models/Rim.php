@@ -164,19 +164,12 @@ class Rim extends Model implements HasMedia
             return null;
         }
         
-        // Always try to return large conversion URL format
-        // Frontend expects this specific URL pattern for zoom
-        $originalUrl = $media->getUrl();
-        $pathInfo = pathinfo($originalUrl);
-        
-        // Generate large conversion URL pattern
-        $largeUrl = str_replace(
-            '/' . $media->id . '/' . $media->file_name,
-            '/' . $media->id . '/conversions/' . $pathInfo['filename'] . '-large.jpg',
-            $originalUrl
-        );
-        
-        return $largeUrl;
+        // Try large conversion first, fallback to original
+        try {
+            return $media->getUrl('large');
+        } catch (\Exception $e) {
+            return $media->getUrl();
+        }
     }
 
 
