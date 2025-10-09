@@ -25,12 +25,11 @@ class CustomResetPassword extends Notification
 
     public function toMail($notifiable)
     {
-        $resetUrl = url(config('app.frontend_url') . '/password/reset/' . $this->token . '?email=' . urlencode($notifiable->email));
-
         return (new MailMessage)
             ->subject('Password Reset – O2Mart')
             ->view('emails.password-reset', [
-                'resetUrl' => $resetUrl,
+                'token' => $this->token,
+                'email' => $notifiable->email,
                 'user' => $notifiable
             ]);
     }
