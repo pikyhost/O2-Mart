@@ -1,0 +1,2 @@
+// Add this route to routes/api.php
+Route::get('/paymob/order-status/{orderId}', [PaymobController::class, 'checkOrderStatus']);
