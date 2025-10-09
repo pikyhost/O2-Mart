@@ -123,7 +123,7 @@ class CartService
         $subtotal = $menuSubtotal;
         
         // 🟢 VAT = cart-menu total - cart-menu subtotal
-        $vat = $menuTotal - $menuSubtotal;
+        $vat = round($menuTotal - $menuSubtotal, 2);
         
         // Recalculate coupon discount if applied
         $discount = 0;
