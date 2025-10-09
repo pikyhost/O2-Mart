@@ -1,0 +1,66 @@
+// Replace the scheduled display logic in both desktop and mobile sections
+
+// For desktop section (around line 400), replace this block:
+{deliveryOptions[i] &&
+  selectedSchedules[i]?.option === deliveryOptions[i] &&
+  (selectedSchedules[i]?.location ||
+    selectedSchedules[i]?.date ||
+    product.scheduled) && (
+    <p className="text-[#5F5D5D] text-sm mt-2">
+      <span className="font-semibold underline text-[#333232]">
+        Scheduled :
+      </span>
+      <span className="ml-2">
+        {(() => {
+          // Check backend data first
+          const backendItem = summary?.summary?.with_installation?.find(wi => wi.name === product.name);
+          if (backendItem?.scheduled) {
+            const { name, location, date } = backendItem.scheduled;
+            const formattedDate = date ? new Date(date).toDateString() : '';
+            return `${name || ''} - ${location || ''} - ${formattedDate}`;
+          }
+          
+          // Fallback to local state
+          const schedule = selectedSchedules[i];
+          if (schedule?.location && schedule?.date) {
+            const formattedDate = new Date(schedule.date).toDateString();
+            return `${schedule.location} - ${formattedDate}`;
+          }
+          
+          return "Scheduling in progress...";
+        })()}
+      </span>
+    </p>
+  )}
+
+// For mobile section (around line 500), replace the same block with identical logic:
+{deliveryOptions[i] &&
+  selectedSchedules[i]?.option === deliveryOptions[i] &&
+  (selectedSchedules[i]?.location ||
+    selectedSchedules[i]?.date) && (
+    <p className="text-[#5F5D5D] text-sm mt-2">
+      <span className="font-semibold underline text-[#333232]">
+        Scheduled :
+      </span>
+      <span className="ml-2">
+        {(() => {
+          // Check backend data first
+          const backendItem = summary?.summary?.with_installation?.find(wi => wi.name === product.name);
+          if (backendItem?.scheduled) {
+            const { name, location, date } = backendItem.scheduled;
+            const formattedDate = date ? new Date(date).toDateString() : '';
+            return `${name || ''} - ${location || ''} - ${formattedDate}`;
+          }
+          
+          // Fallback to local state
+          const schedule = selectedSchedules[i];
+          if (schedule?.location && schedule?.date) {
+            const formattedDate = new Date(schedule.date).toDateString();
+            return `${schedule.location} - ${formattedDate}`;
+          }
+          
+          return "Scheduling in progress...";
+        })()}
+      </span>
+    </p>
+  )}

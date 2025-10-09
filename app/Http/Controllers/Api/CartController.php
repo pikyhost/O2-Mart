@@ -345,7 +345,7 @@ class CartController extends Controller
         $item->update([
             'shipping_option'        => $request->shipping_option,
             'mobile_van_id'          => $request->mobile_van_id,
-            'installation_center_id' => $request->center_id ?? null,
+            'installation_center_id' => $request->installation_center_id,
             'installation_date'      => $request->installation_date,
         ]);
 
