@@ -196,11 +196,11 @@ class CheckoutController extends Controller
             $discountAmount = $cart->discount_amount ?? 0;
         }
 
-        $netSubtotal = max(0, $subtotal - $discountAmount);
-$vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
-$vatBase = $netSubtotal + $shipping['total'] + $installationFees;
+        $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
+$vatBase = $subtotal + $shipping['total'] + $installationFees;
 $vat = round($vatBase * $vatPercent, 2);
-$total = $vatBase + $vat;
+$totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
+$total = max(0, $totalBeforeDiscount - $discountAmount);
 
 
         $order = Order::create([
@@ -458,11 +458,11 @@ $total = $vatBase + $vat;
             $discountAmount = $cart->discount_amount ?? 0;
         }
 
-        $netSubtotal = max(0, $subtotal - $discountAmount);
         $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
-        $vatBase = $netSubtotal + $shipping['total'] + $installationFees;
+        $vatBase = $subtotal + $shipping['total'] + $installationFees;
         $vat = round($vatBase * $vatPercent, 2);
-        $total = $vatBase + $vat;
+        $totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
+        $total = max(0, $totalBeforeDiscount - $discountAmount);
 
 
         $order = Order::create([
