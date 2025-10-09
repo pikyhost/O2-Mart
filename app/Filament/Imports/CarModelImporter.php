@@ -19,13 +19,14 @@ class CarModelImporter extends Importer
             ImportColumn::make('make_name')
                 ->label('Make Name')
                 ->requiredMapping()
-                ->rules(['required', 'max:255']),
+                ->rules(['required', 'max:255'])
+                ->fillRecordUsing(fn () => null), // Don't fill the record with this value
             ImportColumn::make('name')
                 ->requiredMapping()
                 ->rules(['required', 'max:255']),
             ImportColumn::make('year_from')
                 ->numeric()
-                ->rules(['required', 'integer', 'min:1900', 'max:' . (now()->year + 1)]),
+                ->rules(['nullable', 'integer', 'min:1900', 'max:' . (now()->year + 1)]),
             ImportColumn::make('year_to')
                 ->numeric()
                 ->rules(['nullable', 'integer', 'min:1900', 'max:' . (now()->year + 1)]),
@@ -37,8 +38,13 @@ class CarModelImporter extends Importer
 
     public function resolveRecord(): ?CarModel
     {
-        $makeName = $this->data['make_name'];
-        $modelName = $this->data['name'];
+        return $this->handleRecordCreation($this->data);
+    }
+    
+    protected function handleRecordCreation(array $data): CarModel
+    {
+        $makeName = $data['make_name'];
+        $modelName = $data['name'];
         
         // Find or create the car make
         $carMake = CarMake::firstOrCreate([
@@ -48,14 +54,15 @@ class CarModelImporter extends Importer
             'is_active' => true,
         ]);
 
-        return CarModel::firstOrNew([
+        // Create or update car model
+        return CarModel::updateOrCreate([
             'car_make_id' => $carMake->id,
             'name' => $modelName,
         ], [
             'slug' => Str::slug($modelName),
-            'year_from' => $this->data['year_from'],
-            'year_to' => $this->data['year_to'] ?? null,
-            'is_active' => $this->data['is_active'] ?? true,
+            'year_from' => $data['year_from'] ?? 2000,
+            'year_to' => $data['year_to'] ?? null,
+            'is_active' => $data['is_active'] ?? true,
         ]);
     }
 
