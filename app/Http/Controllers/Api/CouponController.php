@@ -51,11 +51,28 @@ class CouponController extends Controller
             return response()->json(['message' => 'Minimum order amount required: ' . $coupon->min_order_amount], 400);
         }
 
-        $totalUsed = CouponUsage::where('coupon_id', $coupon->id)->count();
-        $usedByCurrent = CouponUsage::where('coupon_id', $coupon->id)
-            ->when(Auth::check(), fn($q) => $q->where('user_id', Auth::id()))
-            ->when(!Auth::check(), fn($q) => $q->where('session_id', session()->getId()))
+        // Count total usage from both CouponUsage table and completed orders
+        $totalUsedFromCoupons = CouponUsage::where('coupon_id', $coupon->id)->count();
+        $totalUsedFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)
+            ->whereIn('status', ['completed', 'delivered', 'paid'])
             ->count();
+        $totalUsed = $totalUsedFromCoupons + $totalUsedFromOrders;
+        
+        // Use same logic as cart system for user/session identification
+        $user = auth('sanctum')->user();
+        $sessionId = request()->header('X-Session-ID') ?? session()->getId();
+        
+        // Count usage by current user/session from both sources
+        $usedByCurrentFromCoupons = CouponUsage::where('coupon_id', $coupon->id)
+            ->when($user, fn($q) => $q->where('user_id', $user->id))
+            ->when(!$user && $sessionId, fn($q) => $q->where('session_id', $sessionId))
+            ->count();
+        $usedByCurrentFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)
+            ->whereIn('status', ['completed', 'delivered', 'paid'])
+            ->when($user, fn($q) => $q->where('user_id', $user->id))
+            ->when(!$user && $sessionId, fn($q) => $q->where('checkout_token', $sessionId))
+            ->count();
+        $usedByCurrent = $usedByCurrentFromCoupons + $usedByCurrentFromOrders;
 
         if ($coupon->usage_limit && $totalUsed >= $coupon->usage_limit) {
             return response()->json(['message' => 'Coupon usage limit reached.'], 400);
