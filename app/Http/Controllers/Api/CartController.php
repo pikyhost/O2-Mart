@@ -417,7 +417,7 @@ class CartController extends Controller
 
     public function getCart()
     {
-        $cart = CartService::getCurrentCart()->load('items.buyable');
+        $cart = CartService::getCurrentCart()->load('items.buyable', 'items.mobileVan', 'items.installationCenter');
 
         if (!$cart || $cart->items->isEmpty()) {
             return response()->json(['message' => 'Cart is empty'], 404);
@@ -540,8 +540,16 @@ class CartController extends Controller
                         'sub' => (float) ($paidQuantity * ($item->price_per_unit - ($item->price_per_unit * $vatPercent))), // VAT-exclusive subtotal with paid quantity
                         'image' => $this->resolveImage($buyable),
                         'shipping_option' => $item->shipping_option,
-                        'mobile_van_id' => $item->mobile_van_id,
-                        'installation_center_id' => $item->installation_center_id,
+                        'mobile_van_id' => $item->mobile_van_id ? [
+                            'id' => $item->mobile_van_id,
+                            'name' => $item->mobileVan?->name ?? null,
+                            'location' => $item->mobileVan?->location ?? null,
+                        ] : $item->mobile_van_id,
+                        'installation_center_id' => $item->installation_center_id ? [
+                            'id' => $item->installation_center_id,
+                            'name' => $item->installationCenter?->name ?? null,
+                            'location' => $item->installationCenter?->location ?? null,
+                        ] : $item->installation_center_id,
                         'installation_date' => $item->installation_date,
                     ];
                     

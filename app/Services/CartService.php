@@ -186,15 +186,17 @@ class CartService
             if ($type === 'with_installation') {
                 $entry['scheduled'] = [
                     'van_id' => $item->mobile_van_id,
-                    'date' => $item->installation_date,
+                    'name' => $item->mobileVan?->name ?? null,
                     'location' => $item->mobileVan?->location ?? null,
+                    'date' => $item->installation_date,
                 ];
                 $withInstallation[] = $entry;
             } elseif ($type === 'installation_center') {
                 $entry['scheduled'] = [
                     'center_id' => $item->installation_center_id,
-                    'date' => $item->installation_date,
+                    'name' => $item->installationCenter?->name ?? null,
                     'location' => $item->installationCenter?->location ?? null,
+                    'date' => $item->installation_date,
                 ];
                 $installationCenter[] = $entry;
             } else {
