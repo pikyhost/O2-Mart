@@ -694,10 +694,12 @@ class TyreController extends Controller
         foreach ($grouped as $group) {
             $first = $group->first();
             
-            // Each tyre gets individual quantity (1 or 2 from frontend)
-            $tyreDetails = $group->map(function ($tyre, $index) {
-                // Frontend will set quantity 1 or 2 for each tyre
-                $individualQuantity = 2; // Default, frontend can change to 1
+            // Get quantities from request (for testing) or use defaults
+            $quantities = $request->input('quantities', []);
+            
+            $tyreDetails = $group->map(function ($tyre, $index) use ($quantities) {
+                // Use quantity from request or default to 2
+                $individualQuantity = $quantities[$index] ?? 2;
                 
                 return [
                     'id'                => $tyre->id,
@@ -716,7 +718,7 @@ class TyreController extends Controller
                     'brand'             => $tyre->tyreBrand?->name,
                     'brand_logo'        => $tyre->tyreBrand?->logo_url,
                     'individual_quantity' => $individualQuantity,
-                    'max_individual_quantity' => 2, // Frontend can select 1 or 2
+                    'max_individual_quantity' => 2,
                 ];
             })->values();
 
@@ -724,17 +726,17 @@ class TyreController extends Controller
             $totalQuantity = $tyreDetails->sum('individual_quantity');
             
             // Calculate total price based on individual quantities
-            $totalPrice = $group->sum(function($tyre) {
-                $price = $tyre->discounted_price ?: $tyre->price_vat_inclusive;
-                return (float)$price * 2; // Default 2 per tyre
+            $totalPrice = $tyreDetails->sum(function($tyre) {
+                $price = $tyre['discounted_price'] ?: $tyre['price'];
+                return (float)$price * $tyre['individual_quantity'];
             });
 
             // Cart payload with individual quantities
-            $cartPayload = $group->map(function ($tyre) {
+            $cartPayload = $tyreDetails->map(function ($tyre) {
                 return [
                     'buyable_type' => 'tyre',
-                    'buyable_id'   => $tyre->id,
-                    'quantity'     => 2, // Frontend will update this to 1 or 2
+                    'buyable_id'   => $tyre['id'],
+                    'quantity'     => $tyre['individual_quantity'],
                 ];
             })->values();
 
