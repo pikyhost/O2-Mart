@@ -82,6 +82,7 @@ class PaymobController extends Controller
 
     public function handleRedirect(Request $request)
     {
+        $success = $request->query('success') === 'true';
         $merchantOrderId = $request->query('merchant_order_id');
 
         $order = Order::find($merchantOrderId);
@@ -90,8 +91,25 @@ class PaymobController extends Controller
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=not_found');
         }
 
-        // Always redirect to success page, let frontend check actual status
-        return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=processing&order_id=' . $order->id);
+        // For successful payments, mark as completed and redirect to success
+        if ($success) {
+            if ($order->status !== 'completed') {
+                $order->update(['status' => 'completed']);
+                \Log::info('✅ Payment redirect - Order marked as completed', ['order_id' => $order->id]);
+            }
+            return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=success&order_id=' . $order->id);
+        }
+        
+        // For failed payments, wait briefly then check if webhook completed it
+        sleep(1);
+        $order->refresh();
+        
+        if ($order->status === 'completed') {
+            return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=success&order_id=' . $order->id);
+        }
+        
+        $order->update(['status' => 'payment_failed']);
+        return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=failed&order_id=' . $order->id);
     }
 // 
     
