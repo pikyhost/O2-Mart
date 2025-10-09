@@ -186,22 +186,18 @@ class CartService
             if ($type === 'with_installation') {
                 $entry['scheduled'] = [
                     'van_id' => $item->mobile_van_id,
-                    'name' => $item->mobileVan?->name ?? null,
-                    'location' => $item->mobileVan?->location ?? null,
                     'date' => $item->installation_date,
+                    'location' => $item->mobileVan ? 
+                        ($item->mobileVan->name . ' - ' . $item->mobileVan->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null,
                 ];
-                $entry['scheduled_display'] = $item->mobileVan ? 
-                    ($item->mobileVan->name . ' - ' . $item->mobileVan->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null;
                 $withInstallation[] = $entry;
             } elseif ($type === 'installation_center') {
                 $entry['scheduled'] = [
                     'center_id' => $item->installation_center_id,
-                    'name' => $item->installationCenter?->name ?? null,
-                    'location' => $item->installationCenter?->location ?? null,
                     'date' => $item->installation_date,
+                    'location' => $item->installationCenter ? 
+                        ($item->installationCenter->name . ' - ' . $item->installationCenter->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null,
                 ];
-                $entry['scheduled_display'] = $item->installationCenter ? 
-                    ($item->installationCenter->name . ' - ' . $item->installationCenter->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null;
                 $installationCenter[] = $entry;
             } else {
                 $deliveryOnly[] = $entry;
