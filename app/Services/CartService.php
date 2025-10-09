@@ -105,8 +105,34 @@ class CartService
             $breakdown = !empty($shipping['error']) ? [] : ($shipping['breakdown'] ?? []);
         }
 
-        // Use existing discount from cart
-        $discount = $cart->discount_amount ?? 0;
+        // Recalculate coupon discount if applied
+        $discount = 0;
+        if ($cart->applied_coupon) {
+            $coupon = \App\Models\Coupon::where('code', $cart->applied_coupon)
+                ->where('is_active', true)
+                ->where(function ($q) {
+                    $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
+                })
+                ->first();
+                
+            if ($coupon) {
+                $discountableAmount = $subtotal + $installationFee;
+                switch ($coupon->type) {
+                    case 'discount_amount':
+                        $discount = min($coupon->value, $discountableAmount);
+                        break;
+                    case 'discount_percentage':
+                        $discount = round($discountableAmount * ($coupon->value / 100), 2);
+                        break;
+                    case 'free_shipping':
+                        $discount = $shippingCost;
+                        break;
+                }
+                
+                // Update cart with recalculated discount
+                $cart->update(['discount_amount' => $discount]);
+            }
+        }
         
         // Apply discount to subtotal
         $discountableAfterDiscount = max(0, $subtotal - $discount);
