@@ -191,7 +191,7 @@ class CartService
                     'date' => $item->installation_date,
                 ];
                 $entry['scheduled_display'] = $item->mobileVan ? 
-                    ($item->mobileVan->name . ' - ' . $item->mobileVan->location . ' - ' . $item->installation_date) : null;
+                    ($item->mobileVan->name . ' - ' . $item->mobileVan->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null;
                 $withInstallation[] = $entry;
             } elseif ($type === 'installation_center') {
                 $entry['scheduled'] = [
@@ -201,7 +201,7 @@ class CartService
                     'date' => $item->installation_date,
                 ];
                 $entry['scheduled_display'] = $item->installationCenter ? 
-                    ($item->installationCenter->name . ' - ' . $item->installationCenter->location . ' - ' . $item->installation_date) : null;
+                    ($item->installationCenter->name . ' - ' . $item->installationCenter->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null;
                 $installationCenter[] = $entry;
             } else {
                 $deliveryOnly[] = $entry;
