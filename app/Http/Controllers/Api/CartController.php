@@ -915,6 +915,12 @@ class CartController extends Controller
 
     public function addTyreGroup(Request $request)
     {
+        \Log::info('AddTyreGroup Request Data', [
+            'all_data' => $request->all(),
+            'has_cart_payload' => $request->has('cart_payload'),
+            'has_items' => $request->has('items')
+        ]);
+
         if ($request->has('cart_payload')) {
             $request->merge([
                 'items' => $request->input('cart_payload')
@@ -925,6 +931,10 @@ class CartController extends Controller
             'items' => 'required|array|min:1',
             'items.*.buyable_id' => 'required|integer|exists:tyres,id',
             'items.*.quantity' => 'required|integer|min:1'
+        ]);
+
+        \Log::info('AddTyreGroup Validated Items', [
+            'items' => $request->input('items')
         ]);
 
         $cart = \App\Services\CartService::getCurrentCart();
