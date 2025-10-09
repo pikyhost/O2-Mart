@@ -184,7 +184,7 @@ class RimImporter extends BaseUpsertImporter
                         $cleanFileName = \Str::random(26) . '.' . $extension;
                         
                         $media = $this->record->addMedia($tempFile)
-                            ->usingName(urldecode(basename(parse_url($url, PHP_URL_PATH))))
+                            ->usingName($cleanFileName)
                             ->usingFileName($cleanFileName)
                             ->toMediaCollection('rim_feature_image');
                     }
