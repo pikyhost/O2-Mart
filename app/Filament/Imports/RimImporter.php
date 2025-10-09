@@ -179,8 +179,13 @@ class RimImporter extends BaseUpsertImporter
                     
                     // Validate image
                     if (getimagesize($tempFile)) {
+                        // Generate clean filename without special characters
+                        $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'png';
+                        $cleanFileName = \Str::random(26) . '.' . $extension;
+                        
                         $media = $this->record->addMedia($tempFile)
                             ->usingName(urldecode(basename(parse_url($url, PHP_URL_PATH))))
+                            ->usingFileName($cleanFileName)
                             ->toMediaCollection('rim_feature_image');
                     }
                     
