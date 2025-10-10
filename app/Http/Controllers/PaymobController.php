@@ -83,7 +83,6 @@ class PaymobController extends Controller
     public function handleRedirect(Request $request)
     {
         $merchantOrderId = $request->query('merchant_order_id');
-        $success = $request->query('success', 'true');
 
         $order = Order::find($merchantOrderId);
 
@@ -91,20 +90,8 @@ class PaymobController extends Controller
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=not_found');
         }
 
-        // Quick webhook check (2 seconds max)
-        if ($order->status === 'pending') {
-            sleep(2);
-            $order->refresh();
-        }
-        
-        // If still pending after wait, trust redirect parameter
-        if ($order->status === 'pending') {
-            $status = $success === 'true' ? 'success' : 'failed';
-        } else {
-            $status = $order->status === 'completed' ? 'success' : 'failed';
-        }
-        
-        return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=' . $status . '&order_id=' . $order->id);
+        // Always redirect to processing, frontend will check status via API
+        return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=processing&order_id=' . $order->id);
     }
 
     

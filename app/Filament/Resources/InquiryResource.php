@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Collection;
 
 class InquiryResource extends Resource
 {
@@ -238,10 +239,79 @@ class InquiryResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('mark_pending')
+                        ->label('Mark as Pending')
+                        ->icon('heroicon-o-clock')
+                        ->color('gray')
+                        ->action(fn (Inquiry $record) => $record->update(['status' => 'pending']))
+                        ->visible(fn (Inquiry $record) => $record->status !== 'pending'),
+                    Tables\Actions\Action::make('mark_processing')
+                        ->label('Mark as Processing')
+                        ->icon('heroicon-o-cog-6-tooth')
+                        ->color('info')
+                        ->action(fn (Inquiry $record) => $record->update(['status' => 'processing']))
+                        ->visible(fn (Inquiry $record) => $record->status !== 'processing'),
+                    Tables\Actions\Action::make('mark_quoted')
+                        ->label('Mark as Quoted')
+                        ->icon('heroicon-o-currency-dollar')
+                        ->color('warning')
+                        ->action(fn (Inquiry $record) => $record->update(['status' => 'quoted']))
+                        ->visible(fn (Inquiry $record) => $record->status !== 'quoted'),
+                    Tables\Actions\Action::make('mark_completed')
+                        ->label('Mark as Completed')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->action(fn (Inquiry $record) => $record->update(['status' => 'completed']))
+                        ->visible(fn (Inquiry $record) => $record->status !== 'completed'),
+                    Tables\Actions\Action::make('mark_cancelled')
+                        ->label('Mark as Cancelled')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->action(fn (Inquiry $record) => $record->update(['status' => 'cancelled']))
+                        ->visible(fn (Inquiry $record) => $record->status !== 'cancelled'),
+                ])->label('Change Status'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\BulkAction::make('bulk_mark_pending')
+                        ->label('Mark as Pending')
+                        ->icon('heroicon-o-clock')
+                        ->color('gray')
+                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                            $records->each(fn (Inquiry $record) => $record->update(['status' => 'pending']))
+                        ),
+                    Tables\Actions\BulkAction::make('bulk_mark_processing')
+                        ->label('Mark as Processing')
+                        ->icon('heroicon-o-cog-6-tooth')
+                        ->color('info')
+                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                            $records->each(fn (Inquiry $record) => $record->update(['status' => 'processing']))
+                        ),
+                    Tables\Actions\BulkAction::make('bulk_mark_quoted')
+                        ->label('Mark as Quoted')
+                        ->icon('heroicon-o-currency-dollar')
+                        ->color('warning')
+                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                            $records->each(fn (Inquiry $record) => $record->update(['status' => 'quoted']))
+                        ),
+                    Tables\Actions\BulkAction::make('bulk_mark_completed')
+                        ->label('Mark as Completed')
+                        ->icon('heroicon-o-check-circle')
+                        ->color('success')
+                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                            $records->each(fn (Inquiry $record) => $record->update(['status' => 'completed']))
+                        ),
+                    Tables\Actions\BulkAction::make('bulk_mark_cancelled')
+                        ->label('Mark as Cancelled')
+                        ->icon('heroicon-o-x-circle')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                            $records->each(fn (Inquiry $record) => $record->update(['status' => 'cancelled']))
+                        ),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');
