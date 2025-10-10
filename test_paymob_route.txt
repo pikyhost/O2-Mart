@@ -1,2 +1,0 @@
-// Add this route to routes/web.php for testing
-Route::get('/test-paymob', [App\Http\Controllers\PaymobController::class, 'testPayment']);

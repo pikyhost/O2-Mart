@@ -12,7 +12,7 @@ use App\Services\PaymobPaymentService;
 
 class PaymobController extends Controller
 {
-// comment test
+
 
     public function initiate(Request $request)
     {
@@ -91,72 +91,20 @@ class PaymobController extends Controller
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=not_found');
         }
 
-        // For successful payments, mark as completed and redirect to success
         if ($success) {
             if ($order->status !== 'completed') {
                 $order->update(['status' => 'completed']);
                 \Log::info('✅ Payment redirect - Order marked as completed', ['order_id' => $order->id]);
             }
+
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=success&order_id=' . $order->id);
+        } else {
+            $order->update(['status' => 'payment_failed']);
+            \Log::warning('❌ Payment redirect - Payment failed', ['order_id' => $order->id]);
+
+            return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=failed&order_id=' . $order->id);
         }
-        
-        // For failed payments, wait for webhook to potentially complete the order
-        for ($i = 0; $i < 5; $i++) {
-            sleep(1);
-            $order->refresh();
-            
-            if ($order->status === 'completed') {
-                return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=success&order_id=' . $order->id);
-            }
-        }
-        
-        $order->update(['status' => 'payment_failed']);
-        return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=failed&order_id=' . $order->id);
     }
-// 
+
     
-    public function checkOrderStatus($orderId)
-    {
-        $order = Order::find($orderId);
-        
-        if (!$order) {
-            return response()->json(['status' => 'not_found'], 404);
-        }
-        
-        // Wait a moment for webhook to process if order is still pending
-        if ($order->status === 'pending') {
-            sleep(3);
-            $order->refresh();
-        }
-        
-        $status = $order->status === 'completed' ? 'success' : 'failed';
-        
-        return response()->json([
-            'status' => $status,
-            'order_id' => $order->id,
-            'order_status' => $order->status
-        ]);
-    }
-    
-    public function testPayment()
-    {
-        $service = new PaymobPaymentService();
-        
-        $testRequest = new \Illuminate\Http\Request();
-        $testRequest->merge([
-            'amount_cents' => 10000, // 100 AED
-            'contact_email' => 'test@example.com',
-            'name' => 'Test User',
-            'merchant_order_id' => 'TEST_' . time(),
-            'phone_number' => '01000000000',
-        ]);
-        
-        $result = $service->sendPayment($testRequest);
-        
-        if ($result['success']) {
-            return redirect($result['iframe_url']);
-        }
-        
-        return response()->json(['error' => 'Failed to create test payment']);
-    }
 }
