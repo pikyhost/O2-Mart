@@ -43,7 +43,9 @@ class OrderResource extends Resource
             'user',
             'shippingAddress.area',
             'shippingAddress.city',
-            'items',
+            'items.buyable',
+            'items.mobileVan',
+            'items.installationCenter',
         ]);
     }
 
@@ -146,10 +148,14 @@ class OrderResource extends Resource
 
                 Tab::make('Cost Breakdown')->schema([
                     Section::make()->schema([
-                        TextEntry::make('subtotal')->label('Subtotal (AED)')->money('AED'),
-                        TextEntry::make('shipping_cost')->label('Shipping (AED)')->money('AED'),
-                        TextEntry::make('discount')->label('Discount (AED)')->default(0)->money('AED'),
-                        TextEntry::make('total')->label('Total (AED)')->money('AED')->color('primary'),
+                        TextEntry::make('subtotal')->label('Subtotal (AED)')
+                            ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
+                        TextEntry::make('shipping_cost')->label('Shipping (AED)')
+                            ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
+                        TextEntry::make('discount')->label('Discount (AED)')->default(0)
+                            ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
+                        TextEntry::make('total')->label('Total (AED)')->color('primary')
+                            ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
                     ])->columns(2),
                 ]),
 
@@ -182,7 +188,8 @@ class OrderResource extends Resource
                     'pending' => 'warning',
                     'payment_failed' => 'danger',
                 ]),
-                Tables\Columns\TextColumn::make('total')->label('Total (AED)')->money('AED'),
+                Tables\Columns\TextColumn::make('total')->label('Total (AED)')
+                    ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
                 Tables\Columns\TextColumn::make('created_at')->label('Created At')->dateTime(),
             ])
             ->actions([
