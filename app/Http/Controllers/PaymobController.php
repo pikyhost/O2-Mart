@@ -99,6 +99,15 @@ class PaymobController extends Controller
 
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=success&order_id=' . $order->id);
         } else {
+            // Wait 3 seconds for webhook to process
+            sleep(3);
+            $order->refresh();
+            
+            // Check if webhook completed the order
+            if ($order->status === 'completed') {
+                return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=success&order_id=' . $order->id);
+            }
+            
             $order->update(['status' => 'payment_failed']);
             \Log::warning('❌ Payment redirect - Payment failed', ['order_id' => $order->id]);
 
