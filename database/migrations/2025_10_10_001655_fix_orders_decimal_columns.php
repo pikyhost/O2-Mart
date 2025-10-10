@@ -13,8 +13,6 @@ return new class extends Migration
             $table->decimal('subtotal', 10, 2)->default(0)->change();
             $table->decimal('total', 10, 2)->default(0)->change();
             $table->decimal('tax_amount', 10, 2)->default(0)->change();
-            $table->decimal('discount', 10, 2)->default(0)->change();
-            $table->decimal('installation_fees', 10, 2)->default(0)->change();
         });
     }
 
@@ -25,8 +23,6 @@ return new class extends Migration
             $table->unsignedInteger('subtotal')->default(0)->change();
             $table->unsignedInteger('total')->default(0)->change();
             $table->integer('tax_amount')->default(0)->change();
-            $table->integer('discount')->default(0)->change();
-            $table->integer('installation_fees')->default(0)->change();
         });
     }
 };
