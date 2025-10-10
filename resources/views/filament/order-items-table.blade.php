@@ -1,6 +1,8 @@
 @php
     /** @var \App\Models\Order $order */
     $order = $getRecord();
+    // Ensure fresh data is loaded
+    $order->load(['items.mobileVan', 'items.installationCenter', 'items.buyable']);
 @endphp
 
 <div class="mb-4 text-sm">
@@ -41,7 +43,7 @@
                 $type = class_basename($item->buyable_type);
                 $price = $item->price_per_unit;
 
-                $shippingOption = $item->shipping_option ?? 'delivery_only';
+                $shippingOption = $item->shipping_option ?: 'delivery_only';
                 $shippingLabel = match ($shippingOption) {
                     'delivery_only' => 'Delivery Only',
                     'with_installation' => 'Delivery + Home Installation',

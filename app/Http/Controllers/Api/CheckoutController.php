@@ -248,10 +248,10 @@ $total = max(0, $totalBeforeDiscount - $discountAmount);
                 'product_name' => $product->name ?? '',
                 'sku' => $product->sku ?? '',
                 'image_url' => $product->getFirstMediaUrl('feature_image') ?? '',
-                'shipping_option' => $itemData['shipping_option'] ?? 'delivery_only',
-                'installation_center_id' => $itemData['installation_center_id'] ?? null,
-                'mobile_van_id' => $itemData['mobile_van_id'] ?? null,
-                'installation_date' => $itemData['installation_date'] ?? null,
+                'shipping_option' => $cartItem->shipping_option ?? 'delivery_only',
+                'installation_center_id' => $cartItem->installation_center_id,
+                'mobile_van_id' => $cartItem->mobile_van_id,
+                'installation_date' => $cartItem->installation_date,
             ]);
         }
 
@@ -522,10 +522,10 @@ $total = max(0, $totalBeforeDiscount - $discountAmount);
                 'product_name' => $product->name ?? '',
                 'sku' => $product->sku ?? '',
                 'image_url' => $product->getFirstMediaUrl('feature_image') ?? '',
-                'shipping_option' => $itemData['shipping_option'] ?? 'delivery_only',
-                'installation_center_id' => $itemData['installation_center_id'] ?? null,
-                'mobile_van_id' => $itemData['mobile_van_id'] ?? null,
-                'installation_date' => $itemData['installation_date'] ?? null,
+                'shipping_option' => $cartItem->shipping_option ?? 'delivery_only',
+                'installation_center_id' => $cartItem->installation_center_id,
+                'mobile_van_id' => $cartItem->mobile_van_id,
+                'installation_date' => $cartItem->installation_date,
             ]);
         }
 
