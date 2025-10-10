@@ -96,32 +96,7 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
-            ->spa()
-            ->spaUrlExceptions([
-                '*/admin/auto-parts/create',
-                '*/admin/auto-parts/*/edit',
-
-                '*/admin/batteries/create',
-                '*/admin/batteries/*/edit',
-
-                '*/admin/rims/create',
-                '*/admin/rims/*/edit',
-
-                '*/admin/tyres/create',
-                '*/admin/tyres/*/edit',
-
-                '/admin/categories/*/edit',
-                '/admin/categories/create',
-
-                '*/admin/blog-categories/create',
-                '*/admin/blog-categories/*/edit',
-
-                '*/admin/categories/*/edit',
-                '*/admin/categories/create',
-
-                '*/admin/blogs',
-                '*/admin/blogs/*',
-            ])
+           
             ->renderHook(
                 PanelsRenderHook::FOOTER,
                 fn() => view('footer')
@@ -131,31 +106,21 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(PanelsRenderHook::SIDEBAR_NAV_START, fn () => view('navigation-filter'))
             ->renderHook(
                 PanelsRenderHook::HEAD_END,
-                fn () => '<script>
-                    document.addEventListener("DOMContentLoaded", function() {
-                        const sidebar = document.querySelector("[data-sidebar]") || document.querySelector(".fi-sidebar-nav");
-                        if (!sidebar) return;
-                        
-                        // Restore scroll position
-                        const savedScrollTop = sessionStorage.getItem("filament-sidebar-scroll");
-                        if (savedScrollTop) {
-                            sidebar.scrollTop = parseInt(savedScrollTop);
-                        }
-                        
-                        // Save scroll position on navigation
-                        const navLinks = sidebar.querySelectorAll("a[href]");
-                        navLinks.forEach(link => {
-                            link.addEventListener("click", function() {
-                                sessionStorage.setItem("filament-sidebar-scroll", sidebar.scrollTop);
-                            });
-                        });
-                        
-                        // Save on page unload
-                        window.addEventListener("beforeunload", function() {
-                            if (sidebar) {
-                                sessionStorage.setItem("filament-sidebar-scroll", sidebar.scrollTop);
+                fn () => '<style>
+                    .fi-sidebar-nav a[aria-current="page"],
+                    .fi-sidebar-nav .bg-primary-50,
+                    .fi-sidebar-nav .bg-gray-50 {
+                        scroll-margin-top: 50vh;
+                    }
+                </style>
+                <script>
+                    document.addEventListener("livewire:navigated", function() {
+                        setTimeout(() => {
+                            const activeItem = document.querySelector(".fi-sidebar-nav a[aria-current=\"page\"]");
+                            if (activeItem) {
+                                activeItem.scrollIntoView({ behavior: "smooth", block: "center" });
                             }
-                        });
+                        }, 200);
                     });
                 </script>'
             )
