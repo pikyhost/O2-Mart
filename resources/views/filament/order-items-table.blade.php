@@ -54,11 +54,11 @@
                 $extraDetails = '';
                 if ($shippingOption === 'with_installation') {
                     $extraDetails = $item->mobileVan?->name
-                        ? "Mobile Van: {$item->mobileVan->name} on " . \Carbon\Carbon::parse($item->installation_date)->format('d M Y')
+                        ? "Mobile Van: {$item->mobileVan->name} - {$item->mobileVan->location} - " . \Carbon\Carbon::parse($item->installation_date)->format('d M Y')
                         : "Mobile Van: Not Assigned";
                 } elseif ($shippingOption === 'installation_center') {
                     $extraDetails = $item->installationCenter?->name
-                        ? "Installer Shop: {$item->installationCenter->name} on " . \Carbon\Carbon::parse($item->installation_date)->format('d M Y')
+                        ? "Installer Shop: {$item->installationCenter->name} - {$item->installationCenter->location} - " . \Carbon\Carbon::parse($item->installation_date)->format('d M Y')
                         : "Installer Shop: Not Assigned";
                 }
             @endphp
