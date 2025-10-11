@@ -168,45 +168,60 @@ class PaymobController extends Controller
     
     public function checkOrderStatus($orderId)
     {
-        Log::info('ORDER_STATUS_CHECK', ['order_id' => $orderId]);
-        
-        $order = Order::find($orderId);
-        
-        if (!$order) {
-            Log::warning('ORDER_NOT_FOUND', ['order_id' => $orderId]);
+        try {
+            Log::info('ORDER_STATUS_CHECK', ['order_id' => $orderId]);
+            
+            $order = Order::find($orderId);
+            
+            if (!$order) {
+                Log::warning('ORDER_NOT_FOUND', ['order_id' => $orderId]);
+                return response()->json([
+                    'status' => 'not_found',
+                    'message' => 'Order not found. Please check your order details.'
+                ], 200); // Changed to 200 to avoid fetch errors
+            }
+            
+            // Wait for webhook to process if order is still pending
+            $maxAttempts = 5;
+            $attempt = 0;
+            
+            while ($attempt < $maxAttempts && $order->status === 'pending') {
+                Log::info('WAITING_FOR_WEBHOOK', ['attempt' => $attempt + 1, 'order_id' => $orderId]);
+                sleep(1);
+                $order->refresh();
+                $attempt++;
+            }
+            
+            $status = $order->status === 'completed' ? 'success' : 'failed';
+            $message = $this->getPaymentMessage($status);
+            
+            Log::info('ORDER_STATUS_RESPONSE', [
+                'order_id' => $orderId,
+                'order_status' => $order->status,
+                'response_status' => $status,
+                'message' => $message
+            ]);
+            
             return response()->json([
-                'status' => 'not_found',
-                'message' => 'Order not found. Please check your order details.'
-            ], 404);
+                'status' => $status,
+                'order_id' => (int) $order->id,
+                'order_status' => $order->status,
+                'message' => $message
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('ORDER_STATUS_CHECK_ERROR', [
+                'order_id' => $orderId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Unable to check order status. Please contact support.',
+                'error' => $e->getMessage()
+            ]);
         }
-        
-        // Wait for webhook to process if order is still pending
-        $maxAttempts = 5;
-        $attempt = 0;
-        
-        while ($attempt < $maxAttempts && $order->status === 'pending') {
-            Log::info('WAITING_FOR_WEBHOOK', ['attempt' => $attempt + 1, 'order_id' => $orderId]);
-            sleep(1);
-            $order->refresh();
-            $attempt++;
-        }
-        
-        $status = $order->status === 'completed' ? 'success' : 'failed';
-        $message = $this->getPaymentMessage($status);
-        
-        Log::info('ORDER_STATUS_RESPONSE', [
-            'order_id' => $orderId,
-            'order_status' => $order->status,
-            'response_status' => $status,
-            'message' => $message
-        ]);
-        
-        return response()->json([
-            'status' => $status,
-            'order_id' => $order->id,
-            'order_status' => $order->status,
-            'message' => $message
-        ]);
     }
     
     private function getPaymentMessage($status)
