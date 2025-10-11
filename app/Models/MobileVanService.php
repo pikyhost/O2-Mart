@@ -32,35 +32,26 @@ class MobileVanService extends Model
 
    public function getWorkingHoursDisplayAttribute(): array
     {
-        $daysMeta = [
-            1 => ['abbr' => 'Mon'],
-            2 => ['abbr' => 'Tue'],
-            3 => ['abbr' => 'Wed'],
-            4 => ['abbr' => 'Thu'],
-            5 => ['abbr' => 'Fri'],
-            6 => ['abbr' => 'Sat'],
-            7 => ['abbr' => 'Sun'],
-        ];
-
         $hours = $this->relationLoaded('workingHours')
-            ? $this->workingHours
-            : $this->workingHours()->get();
+            ? $this->workingHours->load('day')
+            : $this->workingHours()->with('day')->get();
 
-        $byDay = $hours->keyBy('day_id');
         $workingDays = [];
         $closedDays = [];
 
-        foreach ($daysMeta as $id => $meta) {
-            $wh = $byDay->get($id);
-            $isClosed = !$wh || (bool)$wh->is_closed;
+        foreach ($hours as $wh) {
+            if (!$wh->day) continue;
+            
+            $dayName = substr($wh->day->name, 0, 3); // Get first 3 chars (Mon, Tue, etc.)
+            $isClosed = (bool)$wh->is_closed;
             
             if ($isClosed || !$wh->opening_time || !$wh->closing_time) {
-                $closedDays[] = $meta['abbr'];
+                $closedDays[] = $dayName;
             } else {
                 $open = Carbon::createFromFormat('H:i:s', $wh->opening_time)->format('g:i A');
                 $close = Carbon::createFromFormat('H:i:s', $wh->closing_time)->format('g:i A');
                 $workingDays[] = [
-                    'abbr' => $meta['abbr'],
+                    'abbr' => $dayName,
                     'hours' => "{$open} – {$close}"
                 ];
             }
