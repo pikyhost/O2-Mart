@@ -300,7 +300,10 @@ Route::post('/payment/paymob/callback', [PaymobController::class, 'handleWebhook
 
 
 Route::get('/payment/redirect', [PaymobController::class, 'handleRedirect']);
-Route::get('/paymob/order-status/{orderId}', [PaymobController::class, 'checkOrderStatus']);
+Route::get('/paymob/order-status/{orderId}', [PaymobController::class, 'checkOrderStatus'])->middleware(function ($request, $next) {
+    \Log::info('🎯 Order status API called', ['order_id' => $request->route('orderId'), 'url' => $request->fullUrl()]);
+    return $next($request);
+});
 Route::get('/track/{tracking_number}', [TrackingController::class, 'trackByNumber']);
 
 
