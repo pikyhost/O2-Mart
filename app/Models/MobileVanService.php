@@ -52,9 +52,9 @@ class MobileVanService extends Model
 
         foreach ($daysMeta as $id => $meta) {
             $wh = $byDay->get($id);
-            $isClosed = !$wh || !$wh->is_closed;
+            $isClosed = !$wh || (bool)$wh->is_closed;
             
-            if ($isClosed) {
+            if ($isClosed || !$wh->opening_time || !$wh->closing_time) {
                 $closedDays[] = $meta['abbr'];
             } else {
                 $open = Carbon::createFromFormat('H:i:s', $wh->opening_time)->format('g:i A');

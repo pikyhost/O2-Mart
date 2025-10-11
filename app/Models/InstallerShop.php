@@ -52,7 +52,7 @@ class InstallerShop extends Model
             $wh = $byDay->get($id);
             $isClosed = !$wh || (bool)$wh->is_closed;
             
-            if ($isClosed) {
+            if ($isClosed || !$wh->opening_time || !$wh->closing_time) {
                 $closedDays[] = $meta['abbr'];
             } else {
                 $open = Carbon::createFromFormat('H:i:s', $wh->opening_time)->format('g:i A');
