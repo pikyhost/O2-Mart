@@ -168,10 +168,16 @@ class PaymobController extends Controller
     
     public function checkOrderStatus($orderId)
     {
+        Log::info('ORDER_STATUS_CHECK', ['order_id' => $orderId]);
+        
         $order = Order::find($orderId);
         
         if (!$order) {
-            return response()->json(['status' => 'not_found'], 404);
+            Log::warning('ORDER_NOT_FOUND', ['order_id' => $orderId]);
+            return response()->json([
+                'status' => 'not_found',
+                'message' => 'Order not found. Please check your order details.'
+            ], 404);
         }
         
         // Wait for webhook to process if order is still pending
@@ -179,25 +185,34 @@ class PaymobController extends Controller
         $attempt = 0;
         
         while ($attempt < $maxAttempts && $order->status === 'pending') {
+            Log::info('WAITING_FOR_WEBHOOK', ['attempt' => $attempt + 1, 'order_id' => $orderId]);
             sleep(1);
             $order->refresh();
             $attempt++;
         }
         
         $status = $order->status === 'completed' ? 'success' : 'failed';
+        $message = $this->getPaymentMessage($status);
+        
+        Log::info('ORDER_STATUS_RESPONSE', [
+            'order_id' => $orderId,
+            'order_status' => $order->status,
+            'response_status' => $status,
+            'message' => $message
+        ]);
         
         return response()->json([
             'status' => $status,
             'order_id' => $order->id,
             'order_status' => $order->status,
-            'message' => $this->getPaymentMessage($status)
+            'message' => $message
         ]);
     }
     
     private function getPaymentMessage($status)
     {
         return match($status) {
-            'success' => 'Payment completed successfully! Your order has been confirmed.',
+            'success' => 'Thank You! Your order has been successfully placed. We\'ll get back to you shortly.',
             'failed' => 'Payment failed. Please try again or contact support.',
             'not_found' => 'Order not found. Please check your order details.',
             default => 'Payment is being processed. Please wait...'
