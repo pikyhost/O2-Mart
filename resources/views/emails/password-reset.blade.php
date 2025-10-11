@@ -66,13 +66,34 @@
         .footer {
             background-color: #df2020;
             color: #ffffff;
-            padding: 5px;
+            padding: 10px 20px;
             text-align: center;
             font-size: 12px;
         }
         .footer a {
             color: #ffffff;
             text-decoration: underline;
+        }
+        .footer p {
+            margin: 10px 0;
+        }
+        .social-links {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .social-links a {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            text-decoration: none;
+            margin: 0 7px;
+        }
+        .social-links img {
+            width: 20px;
+            height: 20px;
+            display: block;
+            margin: 5px auto;
         }
         .link-text {
             background-color: #f8f9fa;
@@ -106,38 +127,38 @@
         
         <p>Best regards,<br>
         The O2Mart Team<br>
-        <a href="www.o2mart.net">www.o2mart.net</a> | +971 56 178 7270</p>
+        <a href="https://www.o2mart.net">www.o2mart.net</a> | +971 56 178 7270</p>
         
         <p>If you're having trouble clicking the "Reset Password" button, copy and paste the link below into your web browser:</p>
         <div class="link-text">{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}</div>
     </div>
 
-    <div class="footer" style="text-align: center; padding: 10px 0; background-color: #df2020">
-        <p style="font-weight: bold">Follow us:</p>
+    <div class="footer">
+        <p style="font-weight: bold; margin-bottom: 10px;">Follow us:</p>
         
-        <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin: 0 auto;">
+        <div class="social-links">
             <!-- LinkedIn -->
-            <a href="https://www.linkedin.com/company/o2mart/" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" style="width: 16px; height: 16px; display: block" />
+            <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
+                <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" />
             </a>
             
             <!-- Facebook -->
-            <a href="https://www.facebook.com/o2mart" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" alt="Facebook" style="width: 16px; height: 16px; display: block" />
+            <a href="https://www.facebook.com/o2mart" target="_blank">
+                <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" alt="Facebook" />
             </a>
             
             <!-- Instagram -->
-            <a href="https://www.instagram.com/o2mart/" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" alt="Instagram" style="width: 16px; height: 16px; display: block" />
+            <a href="https://www.instagram.com/o2mart/" target="_blank">
+                <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" alt="Instagram" />
             </a>
             
             <!-- WhatsApp -->
-            <a href="https://wa.me/971561787270" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" alt="WhatsApp" style="width: 16px; height: 16px; display: block" />
+            <a href="https://wa.me/971561787270" target="_blank">
+                <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" alt="WhatsApp" />
             </a>
         </div>
         
-        <p style="margin-top: 6px; font-size: 12px">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
+        <p style="margin-top: 10px;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
     </div>
 </div>
 </body>
