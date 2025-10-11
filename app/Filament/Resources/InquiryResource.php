@@ -288,33 +288,33 @@ class InquiryResource extends Resource
                         ->requiresConfirmation()
                         ->action(fn (Inquiry $record) => $record->update(['status' => 'cancelled']))
                         ->visible(fn (Inquiry $record) => $record->status !== 'cancelled'),
-                ])->label('Change Status'),
+                ])->label('Status Actions'),
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\Action::make('priority_low')
-                        ->label('Set Low Priority')
+                        ->label('Low')
                         ->icon('heroicon-o-arrow-down')
                         ->color('gray')
                         ->action(fn (Inquiry $record) => $record->update(['priority' => 'low']))
                         ->visible(fn (Inquiry $record) => $record->priority !== 'low'),
                     Tables\Actions\Action::make('priority_medium')
-                        ->label('Set Medium Priority')
+                        ->label('Medium')
                         ->icon('heroicon-o-minus')
                         ->color('info')
                         ->action(fn (Inquiry $record) => $record->update(['priority' => 'medium']))
                         ->visible(fn (Inquiry $record) => $record->priority !== 'medium'),
                     Tables\Actions\Action::make('priority_high')
-                        ->label('Set High Priority')
+                        ->label('High')
                         ->icon('heroicon-o-arrow-up')
                         ->color('warning')
                         ->action(fn (Inquiry $record) => $record->update(['priority' => 'high']))
                         ->visible(fn (Inquiry $record) => $record->priority !== 'high'),
                     Tables\Actions\Action::make('priority_urgent')
-                        ->label('Set Urgent Priority')
+                        ->label('Urgent')
                         ->icon('heroicon-o-exclamation-triangle')
                         ->color('danger')
                         ->action(fn (Inquiry $record) => $record->update(['priority' => 'urgent']))
                         ->visible(fn (Inquiry $record) => $record->priority !== 'urgent'),
-                ])->label('Change Priority'),
+                ])->label('Priority Actions'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
