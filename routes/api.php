@@ -298,6 +298,17 @@ Route::post('/api/payment/paymob/initiate', [PaymobController::class, 'initiate'
 Route::post('/payment/paymob/webhook', [PaymobController::class, 'handleWebhook']);
 Route::post('/payment/paymob/callback', [PaymobController::class, 'handleWebhook'])->name('paymob.callback');
 
+// Catch any other webhook attempts
+Route::any('/payment/paymob/{any}', function(\Illuminate\Http\Request $request, $any) {
+    \Log::info('PAYMOB_UNKNOWN_ENDPOINT', [
+        'endpoint' => $any,
+        'method' => $request->method(),
+        'data' => $request->all(),
+        'headers' => $request->headers->all()
+    ]);
+    return response()->json(['status' => 'received']);
+})->where('any', '.*');
+
 
 Route::get('/payment/redirect', [PaymobController::class, 'handleRedirect']);
 Route::get('/paymob/order-status/{orderId}', [PaymobController::class, 'checkOrderStatus']);
