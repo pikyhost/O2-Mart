@@ -139,6 +139,26 @@ class PaymobController extends Controller
         if ($success === 'true' && $order->status === 'pending') {
             $order->update(['status' => 'completed']);
             Log::info('ORDER_UPDATED_VIA_REDIRECT', ['order_id' => $order->id]);
+            
+            // Create Jeebly shipment and send email
+            try {
+                if (!$order->tracking_number) {
+                    $shippingService = new JeeblyService();
+                    $shippingService->createShipment($order);
+                    Log::info('JEEBLY_SHIPMENT_CREATED_VIA_REDIRECT', ['order_id' => $order->id]);
+                }
+
+                $email = $order->contact_email ?? $order->user?->email;
+                if ($email) {
+                    Mail::to($email)->send(new OrderReceiptMail($order));
+                    Log::info('EMAIL_SENT_VIA_REDIRECT', ['order_id' => $order->id]);
+                }
+            } catch (\Exception $e) {
+                Log::error('REDIRECT_PROCESSING_FAILED', [
+                    'order_id' => $order->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
         }
 
         // Always redirect to processing, frontend will check status via API
