@@ -82,6 +82,7 @@ class PaymobController extends Controller
 
     public function handleRedirect(Request $request)
     {
+        $success = $request->query('success') === 'true';
         $merchantOrderId = $request->query('merchant_order_id');
 
         $order = Order::find($merchantOrderId);
@@ -90,12 +91,19 @@ class PaymobController extends Controller
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=not_found');
         }
 
-        // Wait for webhook processing
-        sleep(3);
-        $order->refresh();
-        
-        $status = $order->status === 'completed' ? 'success' : 'failed';
-        return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=' . $status . '&order_id=' . $order->id);
+        if ($success) {
+            if ($order->status !== 'completed') {
+                $order->update(['status' => 'completed']);
+                \Log::info('✅ Payment redirect - Order marked as completed', ['order_id' => $order->id]);
+            }
+
+            return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=success&order_id=' . $order->id);
+        } else {
+            $order->update(['status' => 'payment_failed']);
+            \Log::warning('❌ Payment redirect - Payment failed', ['order_id' => $order->id]);
+
+            return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=failed&order_id=' . $order->id);
+        }
     }
 
     
