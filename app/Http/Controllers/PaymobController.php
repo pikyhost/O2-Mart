@@ -27,7 +27,9 @@ class PaymobController extends Controller
         $paymentRequest = new Request([
             'amount_cents' => $order->total * 100,
             'contact_email' => $order->contact_email ?? $order->user?->email ?? 'guest@example.com',
-            'merchant_order_id' => $order->id,
+
+
+            'merchant_order_id' => $order->id . '_' . time(),
             'contact_name' => $order->user?->name ?? 'Guest',
             'contact_phone' => $order->contact_phone ?? '01000000000'
         ]);
@@ -52,7 +54,10 @@ class PaymobController extends Controller
     {
         $data = $request->all();
         $isPaid = $data['success'] ?? false;
-        $orderId = $data['merchant_order_id'] ?? null;
+        $merchantOrderId = $data['merchant_order_id'] ?? null;
+        
+        // Extract original order ID (remove timestamp suffix)
+        $orderId = $merchantOrderId ? explode('_', $merchantOrderId)[0] : null;
 
         if ($isPaid && $orderId) {
             $order = Order::with('user', 'items')->find($orderId);
@@ -87,7 +92,9 @@ class PaymobController extends Controller
     public function handleRedirect(Request $request)
     {
         $merchantOrderId = $request->query('merchant_order_id');
-        $order = Order::find($merchantOrderId);
+        // Extract original order ID (remove timestamp suffix)
+        $orderId = $merchantOrderId ? explode('_', $merchantOrderId)[0] : null;
+        $order = Order::find($orderId);
 
         if (!$order) {
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=not_found');
