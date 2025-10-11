@@ -206,9 +206,16 @@ class CheckoutController extends Controller
             $paidQuantity = $isOfferActive && $item->quantity >= 3 ? $item->quantity - 1 : $item->quantity;
             $menuTotal += $paidQuantity * $item->price_per_unit; // Including VAT
         }
-        $totalBeforeVat = $subtotal + $shipping['total'] + $installationFees;
-        $vat = round($totalBeforeVat * $vatPercent, 2);
-        $totalBeforeDiscount = $totalBeforeVat + $vat;
+        $menuTotal = 0;
+        foreach ($cart->items as $item) {
+            if (!$item->buyable) continue;
+            $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 ? $item->quantity - 1 : $item->quantity;
+            $menuTotal += $paidQuantity * $item->price_per_unit;
+        }
+        $menuSubtotal = $menuTotal - ($menuTotal * $vatPercent);
+        $vat = round($menuTotal - $menuSubtotal, 2);
+        $totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
         $total = max(0, $totalBeforeDiscount - $discountAmount);
 
 
@@ -478,9 +485,16 @@ class CheckoutController extends Controller
             $paidQuantity = $isOfferActive && $item->quantity >= 3 ? $item->quantity - 1 : $item->quantity;
             $menuTotal += $paidQuantity * $item->price_per_unit; // Including VAT
         }
-        $totalBeforeVat = $subtotal + $shipping['total'] + $installationFees;
-        $vat = round($totalBeforeVat * $vatPercent, 2);
-        $totalBeforeDiscount = $totalBeforeVat + $vat;
+        $menuTotal = 0;
+        foreach ($cart->items as $item) {
+            if (!$item->buyable) continue;
+            $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 ? $item->quantity - 1 : $item->quantity;
+            $menuTotal += $paidQuantity * $item->price_per_unit;
+        }
+        $menuSubtotal = $menuTotal - ($menuTotal * $vatPercent);
+        $vat = round($menuTotal - $menuSubtotal, 2);
+        $totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
         $total = max(0, $totalBeforeDiscount - $discountAmount);
 
 
