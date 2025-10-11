@@ -688,13 +688,50 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function getUserOrders()
+    public function getUserOrders(Request $request)
     {
         $user = Auth::user();
+        $search = $request->get('search');
 
-        $orders = Order::with('items')
-            ->where('user_id', $user->id)
-            ->latest()
+        $query = Order::with('items')->where('user_id', $user->id);
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', '%' . $search . '%')
+                  ->orWhere('tracking_number', 'like', '%' . $search . '%');
+            });
+        }
+
+        $orders = $query->latest()
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'order_id'      => $order->id,
+                    'date'          => $order->created_at->format('F j, Y'),
+                    'status'        => $order->status ?? 'pending',
+                    'total'         => 'AED ' . number_format($order->total, 2) . ' for ' . $order->items->count() . ' item' . ($order->items->count() > 1 ? 's' : ''),
+                    'tracking_no'   => $order->tracking_number,
+                    'view_url'      => route('api.orders.view', ['id' => $order->id]),
+                ];
+            });
+
+        return response()->json([
+            'orders' => $orders,
+        ]);
+    }
+
+    public function getUserOrdersByStatus(Request $request)
+    {
+        $user = Auth::user();
+        $status = $request->get('status');
+
+        $query = Order::with('items')->where('user_id', $user->id);
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        $orders = $query->latest()
             ->get()
             ->map(function ($order) {
                 return [

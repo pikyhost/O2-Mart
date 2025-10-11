@@ -275,6 +275,7 @@ Route::post('/cart/shipping-breakdown', [CartController::class, 'getShippingBrea
 });
 
 Route::middleware('auth:sanctum')->get('/orders/user', [CheckoutController::class, 'getUserOrders']);
+Route::middleware('auth:sanctum')->get('/orders/filter-by-status', [CheckoutController::class, 'getUserOrdersByStatus']);
 Route::middleware('auth:sanctum')->get('/orders/view/{id}', function ($id) {
 $order = \App\Models\Order::with('items')->findOrFail($id);
 
