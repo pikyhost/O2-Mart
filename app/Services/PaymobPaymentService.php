@@ -194,7 +194,7 @@ class PaymobPaymentService
             'billing_data' => $billingData,
             'currency' => 'AED',
             'integration_id' => $this->integrations_id[0],
-            'return_url'     => url('/api/payment/redirect'),
+            'return_url'     => config('services.paymob.redirection_url', url('/api/payment/redirect')),
         ];
 
         $response = $this->buildRequest('POST', '/api/acceptance/payment_keys', $data);
