@@ -122,8 +122,9 @@ class CartService
         // Use menu subtotal as the main subtotal
         $subtotal = $menuSubtotal;
         
-        // 🟢 VAT = cart-menu total - cart-menu subtotal
-        $vat = round($menuTotal - $menuSubtotal, 2);
+        // 🟢 VAT = (subtotal + shipping + installation) × vatPercent
+        $totalBeforeVat = $subtotal + $shippingCost + $installationFee;
+        $vat = round($totalBeforeVat * $vatPercent, 2);
         
         // Recalculate coupon discount if applied
         $discount = 0;

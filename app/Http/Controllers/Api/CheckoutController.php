@@ -214,8 +214,9 @@ class CheckoutController extends Controller
             $menuTotal += $paidQuantity * $item->price_per_unit;
         }
         $menuSubtotal = $menuTotal - ($menuTotal * $vatPercent);
-        $vat = round($menuTotal - $menuSubtotal, 2);
-        $totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
+        $totalBeforeVat = $subtotal + $shipping['total'] + $installationFees;
+        $vat = round($totalBeforeVat * $vatPercent, 2);
+        $totalBeforeDiscount = $totalBeforeVat + $vat;
         $total = max(0, $totalBeforeDiscount - $discountAmount);
 
 
@@ -493,8 +494,9 @@ class CheckoutController extends Controller
             $menuTotal += $paidQuantity * $item->price_per_unit;
         }
         $menuSubtotal = $menuTotal - ($menuTotal * $vatPercent);
-        $vat = round($menuTotal - $menuSubtotal, 2);
-        $totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
+        $totalBeforeVat = $subtotal + $shipping['total'] + $installationFees;
+        $vat = round($totalBeforeVat * $vatPercent, 2);
+        $totalBeforeDiscount = $totalBeforeVat + $vat;
         $total = max(0, $totalBeforeDiscount - $discountAmount);
 
 
