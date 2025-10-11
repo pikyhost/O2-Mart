@@ -198,17 +198,19 @@ class CheckoutController extends Controller
             $discountAmount = $cart->discount_amount ?? 0;
         }
 
-        // Calculate VAT same as cart summary (on items total only)
-$itemsTotal = 0;
-foreach ($cart->items as $item) {
-    if (!$item->buyable) continue;
-    $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
-    $paidQuantity = $isOfferActive && $item->quantity >= 3 ? $item->quantity - 1 : $item->quantity;
-    $itemsTotal += $paidQuantity * $item->price_per_unit;
-}
-$vat = round($itemsTotal - $subtotal, 2);
-$totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
-$total = max(0, $totalBeforeDiscount - $discountAmount);
+        // Calculate VAT exactly same as cart summary
+        $menuTotal = 0;
+        foreach ($cart->items as $item) {
+            if (!$item->buyable) continue;
+            $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
+            $paidQuantity = $isOfferActive && $item->quantity >= 3 ? $item->quantity - 1 : $item->quantity;
+            $menuTotal += $paidQuantity * $item->price_per_unit; // Including VAT
+        }
+        $menuVatAmount = $menuTotal * $vatPercent;
+        $menuSubtotal = $menuTotal - $menuVatAmount;
+        $vat = round($menuTotal - $menuSubtotal, 2);
+        $totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
+        $total = max(0, $totalBeforeDiscount - $discountAmount);
 
 
         $order = Order::create([
@@ -469,15 +471,17 @@ $total = max(0, $totalBeforeDiscount - $discountAmount);
             $discountAmount = $cart->discount_amount ?? 0;
         }
 
-        // Calculate VAT same as cart summary (on items total only)
-        $itemsTotal = 0;
+        // Calculate VAT exactly same as cart summary
+        $menuTotal = 0;
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
             $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
             $paidQuantity = $isOfferActive && $item->quantity >= 3 ? $item->quantity - 1 : $item->quantity;
-            $itemsTotal += $paidQuantity * $item->price_per_unit;
+            $menuTotal += $paidQuantity * $item->price_per_unit; // Including VAT
         }
-        $vat = round($itemsTotal - $subtotal, 2);
+        $menuVatAmount = $menuTotal * $vatPercent;
+        $menuSubtotal = $menuTotal - $menuVatAmount;
+        $vat = round($menuTotal - $menuSubtotal, 2);
         $totalBeforeDiscount = $subtotal + $shipping['total'] + $installationFees + $vat;
         $total = max(0, $totalBeforeDiscount - $discountAmount);
 
