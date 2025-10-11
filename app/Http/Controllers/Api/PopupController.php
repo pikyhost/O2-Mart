@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Popup;
 use App\Models\Coupon;
+use App\Models\PopupEmail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -52,7 +53,6 @@ class PopupController extends Controller
                     'cta_link' => $popup->cta_link,
                     'offer_title' => $popup->offer_title,
                     'offer_type' => $popup->offer_type,
-                    // 'support_link' => route('contact.us'),
                     'is_active' => $popup->is_active,
                     'email_needed' => $popup->email_needed,
                     'display_rules' => $popup->display_rules,
@@ -62,6 +62,12 @@ class PopupController extends Controller
                     'duration_seconds' => $popup->duration_seconds,
                     'dont_show_again_days' => $popup->dont_show_again_days,
                     'specific_pages' => $specificPagesFriendly,
+                    'coupon' => $popup->coupon ? [
+                        'id' => $popup->coupon->id,
+                        'code' => $popup->coupon->code,
+                        'type' => $popup->coupon->type,
+                        'value' => $popup->coupon->value,
+                    ] : null,
                     'created_at' => $popup->created_at->toIso8601String(),
                     'updated_at' => $popup->updated_at->toIso8601String(),
                 ];
@@ -145,12 +151,18 @@ class PopupController extends Controller
                 ], 404);
             }
 
+            // Save email submission
+            PopupEmail::create([
+                'popup_id' => $popup->id,
+                'email' => $request->email,
+            ]);
+
             // Send email with coupon
             Mail::to($request->email)->send(new CouponEmail($coupon));
 
             return response()->json([
                 'message' => 'Coupon code has been sent to your email',
-                'coupon_code' => $coupon->code, // Optional: you might not want to return this
+                'coupon_code' => $coupon->code,
             ], 200);
 
         } catch (\Exception $e) {

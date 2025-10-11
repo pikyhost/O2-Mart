@@ -16,6 +16,7 @@ class InquiryResource extends JsonResource
             'status' => $this->status,
             'status_label' => $this->status_label,
             'priority' => $this->priority,
+            'page_source' => $this->page_source,
 
             // Customer Information
             'customer' => [
