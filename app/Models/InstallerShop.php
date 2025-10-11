@@ -50,7 +50,7 @@ class InstallerShop extends Model
 
         foreach ($daysMeta as $id => $meta) {
             $wh = $byDay->get($id);
-            $isClosed = !$wh || (bool) $wh->is_closed;
+            $isClosed = !$wh || $wh->is_closed == 1 || $wh->is_closed === true || $wh->is_closed === '1';
             
             if ($isClosed) {
                 $closedDays[] = $meta['abbr'];
