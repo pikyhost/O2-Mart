@@ -301,6 +301,7 @@ Route::post('/payment/paymob/callback', [PaymobController::class, 'handleWebhook
 
 Route::get('/payment/redirect', [PaymobController::class, 'handleRedirect']);
 Route::get('/paymob/order-status/{orderId}', [PaymobController::class, 'checkOrderStatus']);
+Route::get('/payment/messages', [PaymobController::class, 'getPaymentMessages']);
 Route::get('/track/{tracking_number}', [TrackingController::class, 'trackByNumber']);
 
 

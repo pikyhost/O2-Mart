@@ -196,7 +196,7 @@ class PaymobPaymentService
         $response = $this->buildRequest('POST', '/api/acceptance/payment_keys', $data);
         $body = $response->getData(true);
 
-        \Log::info('Payment Key Raw Response', ['response' => $body]);
+
 
         return $body['token'] ?? $body['data']['token'] ?? null;
     }

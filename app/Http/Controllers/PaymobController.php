@@ -34,44 +34,32 @@ class PaymobController extends Controller
     }
     public function handleWebhook(Request $request)
     {
-        Log::info('📩 Webhook Received', ['data' => $request->all()]);
-
         $data = $request->all();
-
         $isPaid = $data['success'] ?? false;
         $orderId = $data['merchant_order_id'] ?? null;
 
         if ($isPaid && $orderId) {
             $order = Order::with('user', 'items')->find($orderId);
 
-            if ($order) {
-                if ($order->status !== 'completed') {
-                    $order->update(['status' => 'completed']);
+            if ($order && $order->status !== 'completed') {
+                $order->update(['status' => 'completed']);
 
-                    try {
-                        if (!$order->tracking_number) {
-                            $shippingService = new JeeblyService();
-                            $shippingService->createShipment($order);
-                            Log::info('🚚 Shipment created from webhook', ['order_id' => $order->id]);
-                        }
-
-                        $email = $order->contact_email ?? $order->user?->email;
-                        if ($email) {
-                            Mail::to($email)->send(new OrderReceiptMail($order));
-                        }
-
-                        Log::info('✅ Order receipt email sent', ['order_id' => $order->id]);
-                    } catch (\Exception $e) {
-                        Log::error('❌ Failed in webhook processing', [
-                            'order_id' => $order->id,
-                            'error' => $e->getMessage()
-                        ]);
+                try {
+                    if (!$order->tracking_number) {
+                        $shippingService = new JeeblyService();
+                        $shippingService->createShipment($order);
                     }
-                } else {
-                    Log::info('ℹ️ Order already marked as completed', ['order_id' => $order->id]);
+
+                    $email = $order->contact_email ?? $order->user?->email;
+                    if ($email) {
+                        Mail::to($email)->send(new OrderReceiptMail($order));
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Webhook processing failed', [
+                        'order_id' => $order->id,
+                        'error' => $e->getMessage()
+                    ]);
                 }
-            } else {
-                Log::warning('⚠️ Order not found for webhook', ['order_id' => $orderId]);
             }
         }
 
@@ -82,20 +70,13 @@ class PaymobController extends Controller
 
     public function handleRedirect(Request $request)
     {
-        \Log::info('🔄 Payment redirect received', ['all_params' => $request->all()]);
-        
         $merchantOrderId = $request->query('merchant_order_id');
-        \Log::info('🆔 Merchant Order ID', ['merchant_order_id' => $merchantOrderId]);
-
         $order = Order::find($merchantOrderId);
 
         if (!$order) {
-            \Log::warning('❌ Order not found for redirect', ['merchant_order_id' => $merchantOrderId]);
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=not_found');
         }
 
-        \Log::info('✅ Redirecting to processing', ['order_id' => $order->id, 'frontend_url' => config('services.paymob.frontend_redirect_url')]);
-        
         // Always redirect to processing, frontend will check status via API
         return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=processing&order_id=' . $order->id);
     }
@@ -103,23 +84,17 @@ class PaymobController extends Controller
     
     public function checkOrderStatus($orderId)
     {
-        \Log::info('🔍 Checking order status', ['order_id' => $orderId]);
-        
         $order = Order::find($orderId);
         
         if (!$order) {
-            \Log::warning('❌ Order not found', ['order_id' => $orderId]);
             return response()->json(['status' => 'not_found'], 404);
         }
         
-        \Log::info('📋 Order found', ['order_id' => $orderId, 'current_status' => $order->status]);
-        
-        // Wait longer for webhook to process if order is still pending
+        // Wait for webhook to process if order is still pending
         $maxAttempts = 5;
         $attempt = 0;
         
         while ($attempt < $maxAttempts && $order->status === 'pending') {
-            \Log::info('⏳ Waiting for webhook', ['attempt' => $attempt + 1, 'order_id' => $orderId]);
             sleep(1);
             $order->refresh();
             $attempt++;
@@ -127,38 +102,34 @@ class PaymobController extends Controller
         
         $status = $order->status === 'completed' ? 'success' : 'failed';
         
-        \Log::info('✅ Final status determined', [
-            'order_id' => $orderId,
-            'db_status' => $order->status,
-            'api_status' => $status
-        ]);
-        
         return response()->json([
             'status' => $status,
             'order_id' => $order->id,
-            'order_status' => $order->status
+            'order_status' => $order->status,
+            'message' => $this->getPaymentMessage($status)
         ]);
     }
     
-    public function testPayment()
+    private function getPaymentMessage($status)
     {
-        $service = new PaymobPaymentService();
-        
-        $testRequest = new \Illuminate\Http\Request();
-        $testRequest->merge([
-            'amount_cents' => 10000, // 100 AED
-            'contact_email' => 'test@example.com',
-            'name' => 'Test User',
-            'merchant_order_id' => 'TEST_' . time(),
-            'phone_number' => '01000000000',
+        return match($status) {
+            'success' => 'Payment completed successfully! Your order has been confirmed.',
+            'failed' => 'Payment failed. Please try again or contact support.',
+            'not_found' => 'Order not found. Please check your order details.',
+            default => 'Payment is being processed. Please wait...'
+        };
+    }
+
+    public function getPaymentMessages()
+    {
+        return response()->json([
+            'messages' => [
+                'success' => 'Payment completed successfully! Your order has been confirmed.',
+                'failed' => 'Payment failed. Please try again or contact support.',
+                'processing' => 'Payment is being processed. Please wait...',
+                'not_found' => 'Order not found. Please check your order details.',
+                'timeout' => 'Payment verification timed out. Please contact support if you were charged.'
+            ]
         ]);
-        
-        $result = $service->sendPayment($testRequest);
-        
-        if ($result['success']) {
-            return redirect($result['iframe_url']);
-        }
-        
-        return response()->json(['error' => 'Failed to create test payment']);
     }
 }
