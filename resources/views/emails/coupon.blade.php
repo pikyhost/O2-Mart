@@ -163,7 +163,7 @@
     <div class="footer" style="text-align: center; padding: 10px 0; background-color: #df2020">
         <p style="font-weight: bold">Follow us:</p>
         
-        <div style="display: flex; justify-content: center; align-items: center">
+        <div style="display: flex; justify-content: center; align-items: center; gap: 10px">
             <!-- LinkedIn -->
             <a href="https://www.linkedin.com/company/o2mart/" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
                 <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" style="width: 16px; height: 16px; display: block" />
