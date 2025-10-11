@@ -23,14 +23,27 @@ class PaymobController extends Controller
         $order = Order::findOrFail($request->order_id);
 
         $service = new PaymobPaymentService();
-        $paymentToken = $service->generatePaymentToken($order);
-
-        $iframeId = config('services.paymob.iframe_id');
-        $iframeUrl = "https://accept.paymob.com/api/acceptance/iframe/{$iframeId}?payment_token={$paymentToken}";
-
-        return response()->json([
-            'iframe_url' => $iframeUrl
+        
+        $paymentRequest = new Request([
+            'amount_cents' => $order->total * 100,
+            'contact_email' => $order->contact_email ?? $order->user?->email ?? 'guest@example.com',
+            'merchant_order_id' => $order->id,
+            'contact_name' => $order->user?->name ?? 'Guest',
+            'contact_phone' => $order->contact_phone ?? '01000000000'
         ]);
+        
+        $result = $service->sendPayment($paymentRequest);
+        
+        if ($result['success']) {
+            return response()->json([
+                'iframe_url' => $result['iframe_url']
+            ]);
+        }
+        
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Failed to initiate payment'
+        ], 500);
     }
     public function handleWebhook(Request $request)
     {
