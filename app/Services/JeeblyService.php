@@ -51,14 +51,14 @@ class JeeblyService
         $cartFake = new \App\Models\Cart([
             'area_id' => $order->shippingAddress->area_id,
         ]);
-        $deliveryOnlyItems = $order->items->where('shipping_option', 'delivery_only');
+        $deliveryItems = $order->items->whereIn('shipping_option', ['delivery_only', 'delivery_with_installation']);
 
-        if ($deliveryOnlyItems->isEmpty()) {
-            Log::info('⛔ No delivery_only items to send to Jeebly for order', ['order_id' => $order->id]);
+        if ($deliveryItems->isEmpty()) {
+            Log::info('⛔ No delivery items to send to Jeebly for order', ['order_id' => $order->id]);
             return null;
         }
 
-        $cartFake->setRelation('items', $deliveryOnlyItems->map(function ($item) {
+        $cartFake->setRelation('items', $deliveryItems->map(function ($item) {
 
             return (object)[
                 'buyable' => $item->buyable,
