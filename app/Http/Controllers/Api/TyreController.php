@@ -183,6 +183,7 @@ class TyreController extends Controller
         $tyres->getCollection()->transform(function ($tyre) {
             $tyreArray = $tyre->toArray();
             $tyreArray['is_set_of_4'] = $tyre->price_vat_inclusive ? $tyre->price_vat_inclusive * 4 : 0;
+            $tyreArray['set_of_3'] = $tyre->buy_3_get_1_free && $tyre->price_vat_inclusive ? $tyre->price_vat_inclusive * 3 : 0;
             
             return array_merge(
                 $tyreArray,
@@ -316,6 +317,7 @@ class TyreController extends Controller
                     'buy_3_get_1_free' => (bool) $tyre->buy_3_get_1_free,
                     'production_year' => $tyre->production_year,
                     'is_set_of_4' => $tyre->price_vat_inclusive ? $tyre->price_vat_inclusive * 4 : 0,
+                    'set_of_3' => $tyre->buy_3_get_1_free && $tyre->price_vat_inclusive ? $tyre->price_vat_inclusive * 3 : 0,
                     'tyre_brand' => $tyre->tyreBrand
                         ? array_merge(
                             $tyre->tyreBrand->only(['id', 'name']),
