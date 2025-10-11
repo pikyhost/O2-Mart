@@ -47,51 +47,34 @@ class MobileVanService extends Model
             : $this->workingHours()->get();
 
         $byDay = $hours->keyBy('day_id');
+        $workingDays = [];
+        $closedDays = [];
 
-        $seq = [];
         foreach ($daysMeta as $id => $meta) {
             $wh = $byDay->get($id);
-            // If no working hour record exists, treat as closed
             $isClosed = !$wh || (bool) $wh->is_closed;
-            $open  = ($wh && !$isClosed) ? $wh->opening_time : null;
-            $close = ($wh && !$isClosed) ? $wh->closing_time : null;
-            $key   = $isClosed ? 'closed' : "{$open}-{$close}"; 
-
-            $seq[] = [
-                'abbr'      => $meta['abbr'],
-                'is_closed' => $isClosed,
-                'open'      => $open,
-                'close'     => $close,
-                'key'       => $key,
-            ];
-        }
-
-        $groups = [];
-        $current = null;
-
-        foreach ($seq as $row) {
-            if ($current === null || $current['key'] !== $row['key']) {
-                $current = ['from' => $row, 'to' => $row, 'key' => $row['key']];
-                $groups[] = $current; 
+            
+            if ($isClosed) {
+                $closedDays[] = $meta['abbr'];
             } else {
-                $current['to'] = $row;
-                $groups[count($groups) - 1] = $current;
+                $open = Carbon::createFromFormat('H:i:s', $wh->opening_time)->format('g:i A');
+                $close = Carbon::createFromFormat('H:i:s', $wh->closing_time)->format('g:i A');
+                $workingDays[] = [
+                    'abbr' => $meta['abbr'],
+                    'hours' => "{$open} – {$close}"
+                ];
             }
         }
 
         $out = [];
-        foreach ($groups as $g) {
-            $label = $g['from']['abbr'] === $g['to']['abbr']
-                ? $g['from']['abbr']
-                : "{$g['from']['abbr']}–{$g['to']['abbr']}";
-
-            if ($g['key'] === 'closed') {
-                $out[] = "{$label}: Closed";
-            } else {
-                $open  = Carbon::createFromFormat('H:i:s', $g['from']['open'])->format('g:i A');
-                $close = Carbon::createFromFormat('H:i:s', $g['from']['close'])->format('g:i A');
-                $out[] = "{$label}: {$open} – {$close}";
-            }
+        if (!empty($workingDays)) {
+            $days = implode(', ', array_column($workingDays, 'abbr'));
+            $hours = $workingDays[0]['hours']; // Assuming same hours for all working days
+            $out[] = "{$days}: {$hours}";
+        }
+        if (!empty($closedDays)) {
+            $days = implode(', ', $closedDays);
+            $out[] = "{$days}: Closed";
         }
 
         return $out;

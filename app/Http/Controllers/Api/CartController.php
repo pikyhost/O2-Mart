@@ -835,20 +835,20 @@ class CartController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Branch not found.'], 404);
         }
 
-        $workingHours = $model->workingHours->keyBy('day_id'); // day_id: Monday=1 to Sunday=7
+        $workingHours = $model->workingHours->keyBy('day_id');
         $dates = [];
 
         for ($i = 0; $i < $days; $i++) {
             $date = now()->addDays($i);
-            $dayId = $date->dayOfWeekIso;
+            $dayId = $date->dayOfWeekIso; // Monday=1 to Sunday=7
 
             $wh = $workingHours->get($dayId);
-            $isClosed = $wh ? $wh->is_closed : true;
+            $isClosed = !$wh || (bool) $wh->is_closed;
 
             $dates[] = [
                 'date' => $date->toDateString(),
                 'day' => $i === 0 ? 'today' : $date->format('l'),
-                'is_closed' => (bool) $isClosed,
+                'is_closed' => $isClosed,
                 'available' => !$isClosed,
             ];
         }
