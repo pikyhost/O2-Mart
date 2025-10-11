@@ -67,11 +67,18 @@ class MobileVanService extends Model
         }
 
         $out = [];
-        if (!empty($workingDays)) {
-            $days = implode(', ', array_column($workingDays, 'abbr'));
-            $hours = $workingDays[0]['hours']; // Assuming same hours for all working days
-            $out[] = "{$days}: {$hours}";
+        
+        // Group working days by hours
+        $hourGroups = [];
+        foreach ($workingDays as $day) {
+            $hourGroups[$day['hours']][] = $day['abbr'];
         }
+        
+        foreach ($hourGroups as $hours => $days) {
+            $daysList = implode(', ', $days);
+            $out[] = "{$daysList}: {$hours}";
+        }
+        
         if (!empty($closedDays)) {
             $days = implode(', ', $closedDays);
             $out[] = "{$days}: Closed";
