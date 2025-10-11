@@ -289,6 +289,32 @@ class InquiryResource extends Resource
                         ->action(fn (Inquiry $record) => $record->update(['status' => 'cancelled']))
                         ->visible(fn (Inquiry $record) => $record->status !== 'cancelled'),
                 ])->label('Change Status'),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\Action::make('priority_low')
+                        ->label('Set Low Priority')
+                        ->icon('heroicon-o-arrow-down')
+                        ->color('gray')
+                        ->action(fn (Inquiry $record) => $record->update(['priority' => 'low']))
+                        ->visible(fn (Inquiry $record) => $record->priority !== 'low'),
+                    Tables\Actions\Action::make('priority_medium')
+                        ->label('Set Medium Priority')
+                        ->icon('heroicon-o-minus')
+                        ->color('info')
+                        ->action(fn (Inquiry $record) => $record->update(['priority' => 'medium']))
+                        ->visible(fn (Inquiry $record) => $record->priority !== 'medium'),
+                    Tables\Actions\Action::make('priority_high')
+                        ->label('Set High Priority')
+                        ->icon('heroicon-o-arrow-up')
+                        ->color('warning')
+                        ->action(fn (Inquiry $record) => $record->update(['priority' => 'high']))
+                        ->visible(fn (Inquiry $record) => $record->priority !== 'high'),
+                    Tables\Actions\Action::make('priority_urgent')
+                        ->label('Set Urgent Priority')
+                        ->icon('heroicon-o-exclamation-triangle')
+                        ->color('danger')
+                        ->action(fn (Inquiry $record) => $record->update(['priority' => 'urgent']))
+                        ->visible(fn (Inquiry $record) => $record->priority !== 'urgent'),
+                ])->label('Change Priority'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -328,6 +354,34 @@ class InquiryResource extends Resource
                         ->requiresConfirmation()
                         ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
                             $records->each(fn (Inquiry $record) => $record->update(['status' => 'cancelled']))
+                        ),
+                    Tables\Actions\BulkAction::make('bulk_priority_low')
+                        ->label('Set Low Priority')
+                        ->icon('heroicon-o-arrow-down')
+                        ->color('gray')
+                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                            $records->each(fn (Inquiry $record) => $record->update(['priority' => 'low']))
+                        ),
+                    Tables\Actions\BulkAction::make('bulk_priority_medium')
+                        ->label('Set Medium Priority')
+                        ->icon('heroicon-o-minus')
+                        ->color('info')
+                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                            $records->each(fn (Inquiry $record) => $record->update(['priority' => 'medium']))
+                        ),
+                    Tables\Actions\BulkAction::make('bulk_priority_high')
+                        ->label('Set High Priority')
+                        ->icon('heroicon-o-arrow-up')
+                        ->color('warning')
+                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                            $records->each(fn (Inquiry $record) => $record->update(['priority' => 'high']))
+                        ),
+                    Tables\Actions\BulkAction::make('bulk_priority_urgent')
+                        ->label('Set Urgent Priority')
+                        ->icon('heroicon-o-exclamation-triangle')
+                        ->color('danger')
+                        ->action(fn (\Illuminate\Database\Eloquent\Collection $records) => 
+                            $records->each(fn (Inquiry $record) => $record->update(['priority' => 'urgent']))
                         ),
                 ]),
             ])
