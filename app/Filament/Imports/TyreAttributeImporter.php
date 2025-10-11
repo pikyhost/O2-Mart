@@ -57,7 +57,7 @@ class TyreAttributeImporter extends Importer
             'trim'           => $this->data['Trim'] ?? '',
             'tyre_attribute' => $this->data['Tyre Attribute'] ?? '',
             'rare_attribute' => $this->data['Rare Attribute'] ?? '',
-            'tyre_oem'       => !empty($this->data['Tyre OEM']) && strtolower(trim($this->data['Tyre OEM'])) === 'yes',
+            'tyre_oem'       => (bool) ($this->data['Tyre OEM'] ?? 0),
         ]);
     }
 
