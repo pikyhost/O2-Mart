@@ -62,8 +62,12 @@ class PaymobPaymentService
 
 
         if (!$orderId) {
-            Log::error('Order creation failed', ['response' => $body]);
-            return ['success' => false, 'message' => 'Order creation failed.'];
+            Log::error('Order creation failed', [
+                'response' => $body,
+                'request_data' => $orderData,
+                'auth_token' => $authToken ? 'present' : 'missing'
+            ]);
+            return ['success' => false, 'message' => 'Order creation failed.', 'paymob_response' => $body];
         }
 
 
