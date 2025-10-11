@@ -15,7 +15,7 @@ class Inquiry extends Model
         'car_make', 'car_model', 'car_year', 'vin_chassis_number',
         'required_parts', 'quantity', 'battery_specs', 'description',
         'car_license_photos', 'part_photos', 'admin_notes', 'quoted_price',
-        'quoted_at', 'assigned_to', 'source', 'ip_address', 'user_agent',
+        'quoted_at', 'assigned_to', 'source', 'page_source', 'ip_address', 'user_agent',
         'rim_size', 'front_width', 'front_height', 'front_diameter',
         'rear_tyres'
     ];

@@ -52,18 +52,43 @@ class PaymobController extends Controller
     }
     public function handleWebhook(Request $request)
     {
+        Log::info('WEBHOOK_RECEIVED', [
+            'all_data' => $request->all(),
+            'headers' => $request->headers->all(),
+            'method' => $request->method(),
+            'url' => $request->fullUrl(),
+            'ip' => $request->ip()
+        ]);
+        
         $data = $request->all();
         $isPaid = $data['success'] ?? false;
         $merchantOrderId = $data['merchant_order_id'] ?? null;
         
         // Extract original order ID (remove timestamp suffix)
         $orderId = $merchantOrderId ? explode('_', $merchantOrderId)[0] : null;
+        
+        Log::info('WEBHOOK_PROCESSING', [
+            'is_paid' => $isPaid,
+            'merchant_order_id' => $merchantOrderId,
+            'extracted_order_id' => $orderId
+        ]);
 
         if ($isPaid && $orderId) {
             $order = Order::with('user', 'items')->find($orderId);
+            
+            Log::info('ORDER_FOUND', [
+                'order_id' => $orderId,
+                'order_exists' => $order ? true : false,
+                'current_status' => $order?->status
+            ]);
 
             if ($order && $order->status !== 'completed') {
                 $order->update(['status' => 'completed']);
+                
+                Log::info('ORDER_UPDATED', [
+                    'order_id' => $order->id,
+                    'new_status' => 'completed'
+                ]);
 
                 try {
                     if (!$order->tracking_number) {
@@ -82,6 +107,12 @@ class PaymobController extends Controller
                     ]);
                 }
             }
+        } else {
+            Log::warning('WEBHOOK_IGNORED', [
+                'reason' => !$isPaid ? 'payment_not_successful' : 'no_order_id',
+                'is_paid' => $isPaid,
+                'order_id' => $orderId
+            ]);
         }
 
         return response()->json(['status' => 'ok']);

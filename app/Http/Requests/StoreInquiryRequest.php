@@ -77,6 +77,7 @@ class StoreInquiryRequest extends FormRequest
 
             // Source tracking
             'source' => 'nullable|string|max:50',
+            'page_source' => 'nullable|string|max:100',
         ];
     }
 
