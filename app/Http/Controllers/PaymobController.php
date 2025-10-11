@@ -90,8 +90,12 @@ class PaymobController extends Controller
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=not_found');
         }
 
-        // Always redirect to processing, frontend will check status via API
-        return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=processing&order_id=' . $order->id);
+        // Wait for webhook processing
+        sleep(3);
+        $order->refresh();
+        
+        $status = $order->status === 'completed' ? 'success' : 'failed';
+        return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=' . $status . '&order_id=' . $order->id);
     }
 
     
