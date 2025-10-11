@@ -748,6 +748,23 @@ class CheckoutController extends Controller
             'orders' => $orders,
         ]);
     }
+
+    public function getOrderStatuses()
+    {
+        return response()->json([
+            'statuses' => [
+                ['value' => 'pending', 'label' => 'Pending'],
+                ['value' => 'paid', 'label' => 'Paid'],
+                ['value' => 'preparing', 'label' => 'Preparing'],
+                ['value' => 'shipping', 'label' => 'Shipping'],
+                ['value' => 'completed', 'label' => 'Completed'],
+                ['value' => 'delayed', 'label' => 'Delayed'],
+                ['value' => 'cancelled', 'label' => 'Cancelled'],
+                ['value' => 'refund', 'label' => 'Refund'],
+                ['value' => 'payment_failed', 'label' => 'Payment Failed'],
+            ]
+        ]);
+    }
     
     public function getCheckoutAddresses(Request $request)
     {
