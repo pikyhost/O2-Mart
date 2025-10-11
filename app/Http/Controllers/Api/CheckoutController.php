@@ -214,10 +214,9 @@ class CheckoutController extends Controller
             $menuTotal += $paidQuantity * $item->price_per_unit;
         }
         $menuSubtotal = $menuTotal - ($menuTotal * $vatPercent);
-        $totalBeforeVat = $subtotal + $shipping['total'] + $installationFees;
-        $vat = round($totalBeforeVat * $vatPercent, 2);
-        $totalBeforeDiscount = $totalBeforeVat + $vat;
-        $total = max(0, $totalBeforeDiscount - $discountAmount);
+        // Use cart summary total to ensure exact match
+        $cartSummary = CartService::generateCartSummary($cart);
+        $total = $cartSummary['totals']['total'] - $discountAmount;
 
 
         $order = Order::create([
@@ -494,10 +493,9 @@ class CheckoutController extends Controller
             $menuTotal += $paidQuantity * $item->price_per_unit;
         }
         $menuSubtotal = $menuTotal - ($menuTotal * $vatPercent);
-        $totalBeforeVat = $subtotal + $shipping['total'] + $installationFees;
-        $vat = round($totalBeforeVat * $vatPercent, 2);
-        $totalBeforeDiscount = $totalBeforeVat + $vat;
-        $total = max(0, $totalBeforeDiscount - $discountAmount);
+        // Use cart summary total to ensure exact match
+        $cartSummary = CartService::generateCartSummary($cart);
+        $total = $cartSummary['totals']['total'] - $discountAmount;
 
 
         $order = Order::create([
