@@ -52,7 +52,7 @@ class MobileVanService extends Model
 
         foreach ($daysMeta as $id => $meta) {
             $wh = $byDay->get($id);
-            $isClosed = !$wh || $wh->is_closed == 1 || $wh->is_closed === true || $wh->is_closed === '1';
+            $isClosed = !$wh || !$wh->is_closed;
             
             if ($isClosed) {
                 $closedDays[] = $meta['abbr'];
