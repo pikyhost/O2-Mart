@@ -99,25 +99,22 @@
             margin: 10px 0;
         }
         .social-links {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
+            text-align: center;
             margin: 15px 0;
         }
         .social-links a {
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
+            display: inline-block;
             text-decoration: none;
+            margin: 0 7px;
         }
         .social-links img {
             width: 20px;
             height: 20px;
             display: block;
+            margin: 5px auto;
         }
     </style>
 </head>
