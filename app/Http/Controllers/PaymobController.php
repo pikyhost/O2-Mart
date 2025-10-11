@@ -97,23 +97,35 @@ class PaymobController extends Controller
     
     public function checkOrderStatus($orderId)
     {
+        \Log::info('🔍 Checking order status', ['order_id' => $orderId]);
+        
         $order = Order::find($orderId);
         
         if (!$order) {
+            \Log::warning('❌ Order not found', ['order_id' => $orderId]);
             return response()->json(['status' => 'not_found'], 404);
         }
+        
+        \Log::info('📋 Order found', ['order_id' => $orderId, 'current_status' => $order->status]);
         
         // Wait longer for webhook to process if order is still pending
         $maxAttempts = 5;
         $attempt = 0;
         
         while ($attempt < $maxAttempts && $order->status === 'pending') {
+            \Log::info('⏳ Waiting for webhook', ['attempt' => $attempt + 1, 'order_id' => $orderId]);
             sleep(1);
             $order->refresh();
             $attempt++;
         }
         
         $status = $order->status === 'completed' ? 'success' : 'failed';
+        
+        \Log::info('✅ Final status determined', [
+            'order_id' => $orderId,
+            'db_status' => $order->status,
+            'api_status' => $status
+        ]);
         
         return response()->json([
             'status' => $status,
