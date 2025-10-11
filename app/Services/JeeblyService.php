@@ -51,7 +51,7 @@ class JeeblyService
         $cartFake = new \App\Models\Cart([
             'area_id' => $order->shippingAddress->area_id,
         ]);
-        $deliveryItems = $order->items->whereIn('shipping_option', ['delivery_only', 'delivery_with_installation']);
+        $deliveryItems = $order->items->whereIn('shipping_option', ['delivery_only', 'delivery_with_installation', 'with_installation']);
 
         if ($deliveryItems->isEmpty()) {
             Log::info('⛔ No delivery items to send to Jeebly for order', ['order_id' => $order->id]);

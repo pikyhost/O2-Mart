@@ -343,7 +343,7 @@ class CartController extends Controller
         }
 
         $item->update([
-            'shipping_option'        => $request->shipping_option,
+            'shipping_option'        => $request->shipping_option === 'with_installation' ? 'delivery_with_installation' : $request->shipping_option,
             'mobile_van_id'          => $request->mobile_van_id,
             'installation_center_id' => $request->installation_center_id,
             'installation_date'      => $request->installation_date,
