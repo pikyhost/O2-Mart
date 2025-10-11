@@ -34,6 +34,8 @@ class PaymobController extends Controller
         
         $result = $service->sendPayment($paymentRequest);
         
+        Log::info('Payment initiation result', $result);
+        
         if ($result['success']) {
             return response()->json([
                 'iframe_url' => $result['iframe_url']
@@ -42,7 +44,8 @@ class PaymobController extends Controller
         
         return response()->json([
             'status' => 'error',
-            'message' => 'Failed to initiate payment'
+            'message' => $result['message'] ?? 'Failed to initiate payment',
+            'debug' => $result
         ], 500);
     }
     public function handleWebhook(Request $request)
