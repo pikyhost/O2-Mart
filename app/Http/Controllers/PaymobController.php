@@ -82,14 +82,20 @@ class PaymobController extends Controller
 
     public function handleRedirect(Request $request)
     {
+        \Log::info('🔄 Payment redirect received', ['all_params' => $request->all()]);
+        
         $merchantOrderId = $request->query('merchant_order_id');
+        \Log::info('🆔 Merchant Order ID', ['merchant_order_id' => $merchantOrderId]);
 
         $order = Order::find($merchantOrderId);
 
         if (!$order) {
+            \Log::warning('❌ Order not found for redirect', ['merchant_order_id' => $merchantOrderId]);
             return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=not_found');
         }
 
+        \Log::info('✅ Redirecting to processing', ['order_id' => $order->id, 'frontend_url' => config('services.paymob.frontend_redirect_url')]);
+        
         // Always redirect to processing, frontend will check status via API
         return redirect()->to(config('services.paymob.frontend_redirect_url') . '/payment-status?status=processing&order_id=' . $order->id);
     }
