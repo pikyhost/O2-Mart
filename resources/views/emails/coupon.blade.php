@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Special Coupon</title>
+    <title>Your Special Coupon – O2Mart</title>
     <style>
-        /* Base styles */
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
@@ -14,178 +13,179 @@
             padding: 0;
             background-color: #f5f5f5;
         }
-
-        /* Email container */
         .email-container {
             max-width: 600px;
             margin: 0 auto;
             background-color: #ffffff;
         }
-
-        /* Header */
         .header {
-            background-color: #000000;
-            padding: 30px 20px;
-            text-align: center;
+            background-color: #df2020;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
         }
-
-        .header h1 {
+        .header img {
+            width: 95px;
+            height: auto;
+            display: inline-block;
+            vertical-align: middle;
+            margin-bottom: 3px;
+        }
+        .header h2 {
             color: #ffffff;
             margin: 0;
-            font-size: 28px;
+            font-size: 25px;
         }
-
-        /* Content */
+        .header a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .header a:hover {
+            text-decoration: underline;
+        }
         .content {
             padding: 30px 20px;
         }
-
-        /* Coupon box */
         .coupon-box {
-            background-color: #fff8f0;
-            border: 2px dashed #FF6B00;
+            background-color: #f8f9fa;
+            border: 2px dashed #df2020;
             border-radius: 8px;
             padding: 20px;
             text-align: center;
             margin: 20px 0;
         }
-
         .coupon-code {
             font-size: 28px;
             font-weight: bold;
-            color: #FF6B00;
+            color: #df2020;
             letter-spacing: 2px;
             margin: 10px 0;
         }
-
-        /* Details */
         .details {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
             margin: 20px 0;
         }
-
         .detail-row {
-            display: flex;
             margin-bottom: 10px;
         }
-
-        .detail-label {
-            font-weight: bold;
-            color: #000000;
-            width: 150px;
+        .detail-row strong {
+            color: #df2020;
         }
-
-        .detail-value {
-            flex: 1;
+        .whatsapp-link {
+            background-color: #df2020;
+            color: white !important;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 0;
         }
-
-        /* Footer */
         .footer {
-            background-color: #000000;
+            background-color: #df2020;
             color: #ffffff;
-            padding: 20px;
+            padding: 5px;
             text-align: center;
             font-size: 12px;
         }
-
         .footer a {
-            color: #FF6B00;
-            text-decoration: none;
-        }
-
-        /* Button */
-        .cta-button {
-            display: inline-block;
-            background-color: #FF6B00;
             color: #ffffff;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-
-        /* Responsive */
-        @media only screen and (max-width: 600px) {
-            .coupon-code {
-                font-size: 24px;
-            }
-
-            .detail-row {
-                flex-direction: column;
-            }
-
-            .detail-label {
-                width: 100%;
-                margin-bottom: 5px;
-            }
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 <div class="email-container">
-    <!-- Header -->
     <div class="header">
-        <h1>Your Special Discount</h1>
+        <a href="https://www.o2mart.net" target="_blank" style="display: inline-block">
+            <img src="https://i.ibb.co/0VXXGcfy/logo.png" alt="logo" border="0" />
+        </a>
+        <h2>– Your Special Discount</h2>
     </div>
 
-    <!-- Content -->
     <div class="content">
         <p>Hello,</p>
-        <p>Thank you for subscribing to our Popup! Here's your exclusive coupon code to use on your next purchase.</p>
+        
+        <p>Thank you for subscribing to our offer! Here's your exclusive coupon code to use on your next purchase.</p>
 
-        <!-- Coupon Box -->
         <div class="coupon-box">
             <div>Use this code at checkout:</div>
             <div class="coupon-code">{{ $coupon->code }}</div>
             <div>for
-                @if($coupon->type === 'percentage')
+                @if($coupon->type === 'discount_percentage')
                     {{ $coupon->value }}% off
+                @elseif($coupon->type === 'discount_amount')
+                    {{ $coupon->value }} AED off
                 @else
-                    {{ $coupon->value }} {{ \App\Models\Setting::getCurrency()?->symbol ?? '$' }} off
+                    Free Shipping
                 @endif
             </div>
         </div>
 
-        <!-- Coupon Details -->
         <div class="details">
             <div class="detail-row">
-                <div class="detail-label">Discount Value:</div>
-                <div class="detail-value">
-                    @if($coupon->type === 'percentage')
-                        {{ $coupon->value }}% off your order
-                    @else
-                        {{ $coupon->value }} {{ \App\Models\Setting::getCurrency()?->symbol ?? '$' }} off your order
-                    @endif
-                </div>
+                <strong>Discount Value:</strong>
+                @if($coupon->type === 'discount_percentage')
+                    {{ $coupon->value }}% off your order
+                @elseif($coupon->type === 'discount_amount')
+                    {{ $coupon->value }} AED off your order
+                @else
+                    Free shipping on your order
+                @endif
             </div>
 
             @if($coupon->min_order_amount)
                 <div class="detail-row">
-                    <div class="detail-label">Minimum Order:</div>
-                    <div class="detail-value">{{ $coupon->min_order_amount }} {{ \App\Models\Setting::getCurrency()?->symbol ?? '$' }}</div>
+                    <strong>Minimum Order:</strong> {{ $coupon->min_order_amount }} AED
                 </div>
             @endif
 
-            <div class="detail-row">
-                <div class="detail-label">Expiration Date:</div>
-                <div class="detail-value">{{ $coupon->expires_at->format('F j, Y') }}</div>
-            </div>
+            @if($coupon->expires_at)
+                <div class="detail-row">
+                    <strong>Expiration Date:</strong> {{ $coupon->expires_at->format('F j, Y') }}
+                </div>
+            @endif
         </div>
 
-        <!-- Call to Action -->
-        <div style="text-align: center;">
-            <a href="{{ config('app.frontend_url') }}/shop" class="cta-button">Shop Now</a>
-        </div>
+        <p>Simply enter the code at checkout to apply your discount. Start shopping now:</p>
+        <a href="https://www.o2mart.net/shop" class="whatsapp-link">Shop Now</a>
 
-        <p>Simply enter the code at checkout to apply your discount. This offer is valid until the expiration date shown above.</p>
-        <p>Happy shopping!</p>
-        <p>The {{ config('app.name') }} Team</p>
+        <p>We appreciate your trust in O2Mart – making car care easy, reliable, and hassle-free in the UAE.</p>
+        
+        <p>Best regards,<br>
+        The O2Mart Team<br>
+        <a href="www.o2mart.net">www.o2mart.net</a> | +971 56 178 7270</p>
     </div>
 
-    <!-- Footer -->
-    <div class="footer">
-        <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
-        <p>If you did not request this email, please ignore it.</p>
+    <div class="footer" style="text-align: center; padding: 10px 0; background-color: #df2020">
+        <p style="font-weight: bold">Follow us:</p>
+        
+        <div style="display: flex; justify-content: center; align-items: center">
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/company/o2mart/" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" style="width: 16px; height: 16px; display: block" />
+            </a>
+            
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/o2mart" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" alt="Facebook" style="width: 16px; height: 16px; display: block" />
+            </a>
+            
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/o2mart/" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" alt="Instagram" style="width: 16px; height: 16px; display: block" />
+            </a>
+            
+            <!-- WhatsApp -->
+            <a href="https://wa.me/971561787270" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
+                <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" alt="WhatsApp" style="width: 16px; height: 16px; display: block" />
+            </a>
+        </div>
+        
+        <p style="margin-top: 6px; font-size: 12px">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
     </div>
 </div>
 </body>
