@@ -87,13 +87,37 @@
         .footer {
             background-color: #df2020;
             color: #ffffff;
-            padding: 5px;
+            padding: 10px 20px;
             text-align: center;
             font-size: 12px;
         }
         .footer a {
             color: #ffffff;
             text-decoration: underline;
+        }
+        .footer p {
+            margin: 10px 0;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .social-links a {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+        }
+        .social-links img {
+            width: 20px;
+            height: 20px;
+            display: block;
         }
     </style>
 </head>
@@ -113,41 +137,22 @@
 
         <div class="coupon-box">
             <div>Use this code at checkout:</div>
-            <div class="coupon-code">{{ $coupon->code }}</div>
-            <div>for
-                @if($coupon->type === 'discount_percentage')
-                    {{ $coupon->value }}% off
-                @elseif($coupon->type === 'discount_amount')
-                    {{ $coupon->value }} AED off
-                @else
-                    Free Shipping
-                @endif
-            </div>
+            <div class="coupon-code">SAVE20</div>
+            <div>for 20% off</div>
         </div>
 
         <div class="details">
             <div class="detail-row">
-                <strong>Discount Value:</strong>
-                @if($coupon->type === 'discount_percentage')
-                    {{ $coupon->value }}% off your order
-                @elseif($coupon->type === 'discount_amount')
-                    {{ $coupon->value }} AED off your order
-                @else
-                    Free shipping on your order
-                @endif
+                <strong>Discount Value:</strong> 20% off your order
             </div>
 
-            @if($coupon->min_order_amount)
-                <div class="detail-row">
-                    <strong>Minimum Order:</strong> {{ $coupon->min_order_amount }} AED
-                </div>
-            @endif
+            <div class="detail-row">
+                <strong>Minimum Order:</strong> 100 AED
+            </div>
 
-            @if($coupon->expires_at)
-                <div class="detail-row">
-                    <strong>Expiration Date:</strong> {{ $coupon->expires_at->format('F j, Y') }}
-                </div>
-            @endif
+            <div class="detail-row">
+                <strong>Expiration Date:</strong> December 31, 2025
+            </div>
         </div>
 
         <p>Simply enter the code at checkout to apply your discount. Start shopping now:</p>
@@ -157,35 +162,35 @@
         
         <p>Best regards,<br>
         The O2Mart Team<br>
-        <a href="www.o2mart.net">www.o2mart.net</a> | +971 56 178 7270</p>
+        <a href="https://www.o2mart.net">www.o2mart.net</a> | +971 56 178 7270</p>
     </div>
 
-    <div class="footer" style="text-align: center; padding: 10px 0; background-color: #df2020">
-        <p style="font-weight: bold">Follow us:</p>
+    <div class="footer">
+        <p style="font-weight: bold; margin-bottom: 10px;">Follow us:</p>
         
-        <div style="display: flex; justify-content: center; align-items: center; gap: 10px">
+        <div class="social-links">
             <!-- LinkedIn -->
-            <a href="https://www.linkedin.com/company/o2mart/" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" style="width: 16px; height: 16px; display: block" />
+            <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
+                <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" />
             </a>
             
             <!-- Facebook -->
-            <a href="https://www.facebook.com/o2mart" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" alt="Facebook" style="width: 16px; height: 16px; display: block" />
+            <a href="https://www.facebook.com/o2mart" target="_blank">
+                <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" alt="Facebook" />
             </a>
             
             <!-- Instagram -->
-            <a href="https://www.instagram.com/o2mart/" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" alt="Instagram" style="width: 16px; height: 16px; display: block" />
+            <a href="https://www.instagram.com/o2mart/" target="_blank">
+                <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" alt="Instagram" />
             </a>
             
             <!-- WhatsApp -->
-            <a href="https://wa.me/971561787270" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" alt="WhatsApp" style="width: 16px; height: 16px; display: block" />
+            <a href="https://wa.me/971561787270" target="_blank">
+                <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" alt="WhatsApp" />
             </a>
         </div>
         
-        <p style="margin-top: 6px; font-size: 12px">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
+        <p style="margin-top: 10px;">&copy; 2025 O2Mart. All rights reserved.</p>
     </div>
 </div>
 </body>
