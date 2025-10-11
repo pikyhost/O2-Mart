@@ -400,9 +400,22 @@ class CartController extends Controller
         $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         $vat = round($checkoutTotal * $vatPercent, 2);
         
+        // Get updated item with relationships for scheduled_display
+        $updatedItem = $item->fresh(['mobileVan', 'installationCenter']);
+        
+        $scheduledDisplay = null;
+        if ($updatedItem->shipping_option === 'with_installation' && $updatedItem->mobileVan) {
+            $scheduledDisplay = $updatedItem->mobileVan->name . ' - ' . $updatedItem->mobileVan->location . 
+                ($updatedItem->installation_date ? ' - ' . \Carbon\Carbon::parse($updatedItem->installation_date)->format('D M j Y') : '');
+        } elseif ($updatedItem->shipping_option === 'installation_center' && $updatedItem->installationCenter) {
+            $scheduledDisplay = $updatedItem->installationCenter->name . ' - ' . $updatedItem->installationCenter->location . 
+                ($updatedItem->installation_date ? ' - ' . \Carbon\Carbon::parse($updatedItem->installation_date)->format('D M j Y') : '');
+        }
+        
         return response()->json([
             'message'    => 'Shipping option updated successfully.',
             'session_id' => session()->getId(),
+            'scheduled_display' => $scheduledDisplay,
             'cart' => [
                 'items_total'      => (float) $cartTotal,
                 'installation_fee' => (float) $installationFee,
