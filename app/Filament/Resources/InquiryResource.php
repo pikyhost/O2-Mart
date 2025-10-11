@@ -212,6 +212,12 @@ class InquiryResource extends Resource
                         'urgent' => 'danger',
                         default => 'gray',
                     }),
+                Tables\Columns\TextColumn::make('page_source')
+                    ->label('Page Source')
+                    ->badge()
+                    ->color('info')
+                    ->formatStateUsing(fn (?string $state): string => $state ? Str::title(str_replace('_', ' ', $state)) : 'Unknown')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('assignedUser.name')
                     ->label('Assigned To'),
                 Tables\Columns\TextColumn::make('created_at')
@@ -232,6 +238,17 @@ class InquiryResource extends Resource
                     ->label('Assigned To')
                     ->options(User::all()->pluck('name', 'id'))
                     ->searchable(),
+                Tables\Filters\SelectFilter::make('page_source')
+                    ->label('Page Source')
+                    ->options([
+                        'shop_page' => 'Shop Page',
+                        'auto_parts_page' => 'Auto Parts Page',
+                        'battery_page' => 'Battery Page',
+                        'tires_page' => 'Tires Page',
+                        'rims_page' => 'Rims Page',
+                        'get_quote_page' => 'Get Quote Page',
+                        'contact_page' => 'Contact Page',
+                    ]),
                 Tables\Filters\Filter::make('has_files')
                     ->label('Has Files')
                     ->query(fn (Builder $query): Builder => $query->whereNotNull('car_license_photos')->orWhereNotNull('part_photos')),
