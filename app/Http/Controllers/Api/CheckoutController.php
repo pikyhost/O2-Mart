@@ -243,7 +243,7 @@ class CheckoutController extends Controller
 
         foreach ($cart->items as $cartItem) {
             $product = $cartItem->buyable;
-            $unitPrice = $cartItem->price ?? $product->discounted_price ?? $product->price_including_vat ?? 0;
+            $unitPrice = $cartItem->price_per_unit;
             $itemData = collect($itemsData)->first(fn($i) => $i['buyable_type'] === strtolower(class_basename($cartItem->buyable_type)) && $i['buyable_id'] == $product->id);
 
             OrderItem::create([
@@ -252,7 +252,7 @@ class CheckoutController extends Controller
                 'buyable_id' => $product->id,
                 'quantity' => $cartItem->quantity,
                 'price_per_unit' => $unitPrice,
-                'subtotal' => $unitPrice * $cartItem->quantity,
+                'subtotal' => $cartItem->subtotal,
                 'product_name' => $product->name ?? '',
                 'sku' => $product->sku ?? '',
                 'image_url' => $product->getFirstMediaUrl('feature_image') ?? '',

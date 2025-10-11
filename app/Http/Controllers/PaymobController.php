@@ -103,10 +103,14 @@ class PaymobController extends Controller
             return response()->json(['status' => 'not_found'], 404);
         }
         
-        // Wait a moment for webhook to process if order is still pending
-        if ($order->status === 'pending') {
-            sleep(3);
+        // Wait longer for webhook to process if order is still pending
+        $maxAttempts = 5;
+        $attempt = 0;
+        
+        while ($attempt < $maxAttempts && $order->status === 'pending') {
+            sleep(1);
             $order->refresh();
+            $attempt++;
         }
         
         $status = $order->status === 'completed' ? 'success' : 'failed';
