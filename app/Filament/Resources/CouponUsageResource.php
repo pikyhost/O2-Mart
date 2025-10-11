@@ -102,6 +102,24 @@ class CouponUsageResource extends Resource
                         return 'Guest';
                     }),
 
+                TextColumn::make('email')
+                    ->label(__('Email'))
+                    ->searchable()
+                    ->getStateUsing(function ($record) {
+                        // If user_id is set and user exists, return the user's email
+                        if ($record->user) {
+                            return $record->user->email;
+                        }
+
+                        // For guest users, try to fetch email from order
+                        if ($record->order) {
+                            return $record->order->contact_email ?? '-';
+                        }
+
+                        // Fallback
+                        return '-';
+                    }),
+
                 Tables\Columns\TextColumn::make('order.id')
                     ->label(__('Order ID'))
                     ->searchable()

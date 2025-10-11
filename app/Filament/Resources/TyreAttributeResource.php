@@ -112,7 +112,7 @@ class TyreAttributeResource extends Resource
                 Tables\Columns\TextColumn::make('trim')->label('Trim'),
                 Tables\Columns\TextColumn::make('tyre_attribute')->label('Tyre Attribute'),
                 Tables\Columns\TextColumn::make('rare_attribute')->label('Rare Attribute'),
-                Tables\Columns\TextColumn::make('tyre_oem')->label('Tyre OEM'),
+                Tables\Columns\IconColumn::make('tyre_oem')->label('Tyre OEM')->boolean(),
                 Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable(),
             ])
             ->actions([
