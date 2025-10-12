@@ -278,13 +278,18 @@ class CheckoutController extends Controller
             ]);
         }
 
-        // try {
-        //     (new JeeblyService())->createShipment($order); 
-        // } catch (\Exception $e) {
-        //     \Log::error('Failed to create shipment with Jeebly', ['error' => $e->getMessage()]);
-        //                 Log::info('Trying to create shipment for order', ['id' => $order->id]);
-
-        // }
+        // Check if any item has delivery_only shipping option
+        $hasDeliveryOnly = $cart->items->contains(function($item) {
+            return ($item->shipping_option ?? 'delivery_only') === 'delivery_only';
+        });
+        
+        if ($hasDeliveryOnly) {
+            try {
+                (new JeeblyService())->createShipment($order); 
+            } catch (\Exception $e) {
+                \Log::error('Failed to create shipment with Jeebly', ['error' => $e->getMessage()]);
+            }
+        }
         if ($coupon) {
             CouponUsage::create([
                 'coupon_id' => $coupon->id,
@@ -566,12 +571,18 @@ class CheckoutController extends Controller
             'phone' => $validated['mobile'],
         ]);
 
-        // Send to Jeebly
-        // try {
-        //     (new JeeblyService())->createShipment($order);
-        // } catch (\Exception $e) {
-        //     \Log::error('Jeebly failed', ['e' => $e->getMessage()]);
-        // }
+        // Check if any item has delivery_only shipping option
+        $hasDeliveryOnly = $cart->items->contains(function($item) {
+            return ($item->shipping_option ?? 'delivery_only') === 'delivery_only';
+        });
+        
+        if ($hasDeliveryOnly) {
+            try {
+                (new JeeblyService())->createShipment($order);
+            } catch (\Exception $e) {
+                \Log::error('Jeebly failed', ['e' => $e->getMessage()]);
+            }
+        }
         if ($coupon) {
             CouponUsage::create([
                 'coupon_id' => $coupon->id,
