@@ -216,6 +216,8 @@ class CheckoutController extends Controller
         $menuSubtotal = $menuTotal - ($menuTotal * $vatPercent);
         // Use cart summary total to ensure exact match
         $cartSummary = CartService::generateCartSummary($cart);
+        $vatAmount = $cartSummary['totals']['vat'];
+        $installationFees = $cartSummary['totals']['installation'];
         $total = $cartSummary['totals']['total'] - $discountAmount;
 
 
@@ -224,6 +226,7 @@ class CheckoutController extends Controller
             'subtotal'          => round($subtotal, 2),
             'shipping_cost'     => round($shipping['total'], 2),
             'installation_fees' => round($installationFees, 2),
+            'tax_amount'        => round($vatAmount, 2),
             'discount'          => round($discountAmount, 2),
             'coupon_code'       => $coupon?->code,
             'shipping_breakdown'=> $shipping['breakdown'],
@@ -495,6 +498,8 @@ class CheckoutController extends Controller
         $menuSubtotal = $menuTotal - ($menuTotal * $vatPercent);
         // Use cart summary total to ensure exact match
         $cartSummary = CartService::generateCartSummary($cart);
+        $vatAmount = $cartSummary['totals']['vat'];
+        $installationFees = $cartSummary['totals']['installation'];
         $total = $cartSummary['totals']['total'] - $discountAmount;
 
 
@@ -506,6 +511,7 @@ class CheckoutController extends Controller
             'subtotal' => round($subtotal, 2),
             'shipping_cost' => round($shipping['total'], 2),
             'installation_fees' => round($installationFees, 2),
+            'tax_amount' => round($vatAmount, 2),
             'discount' => round($discountAmount, 2),
             'coupon_code' => $coupon?->code,
             'shipping_breakdown' => $shipping['breakdown'],

@@ -21,6 +21,8 @@ class Order extends Model
         'tax_amount',
         'subtotal',
         'total',
+        'discount',
+        'installation_fees',
         'country_id',
         'governorate_id',
         'city_id',
