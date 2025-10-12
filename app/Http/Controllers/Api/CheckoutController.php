@@ -217,7 +217,6 @@ class CheckoutController extends Controller
         // Use cart summary total to ensure exact match
         $cartSummary = CartService::generateCartSummary($cart);
         $vatAmount = $cartSummary['totals']['vat'];
-        $installationFees = $cartSummary['totals']['installation'];
         $total = $cartSummary['totals']['total'] - $discountAmount;
 
 
@@ -499,7 +498,6 @@ class CheckoutController extends Controller
         // Use cart summary total to ensure exact match
         $cartSummary = CartService::generateCartSummary($cart);
         $vatAmount = $cartSummary['totals']['vat'];
-        $installationFees = $cartSummary['totals']['installation'];
         $total = $cartSummary['totals']['total'] - $discountAmount;
 
 
