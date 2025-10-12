@@ -152,6 +152,8 @@ class OrderResource extends Resource
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
                         TextEntry::make('shipping_cost')->label('Shipping (AED)')
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
+                        TextEntry::make('tax_amount')->label('VAT (AED)')
+                            ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
                         TextEntry::make('discount')->label('Discount (AED)')->default(0)
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
                         TextEntry::make('total')->label('Total (AED)')->color('primary')
