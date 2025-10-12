@@ -352,6 +352,7 @@ class CheckoutController extends Controller
      */
     public function guestCheckout(Request $request)
     {
+        try {
         $sessionId = $request->header('X-Session-ID') ?? session()->getId();
 
         $validated = $request->validate([
@@ -530,6 +531,10 @@ class CheckoutController extends Controller
 
         foreach ($cart->items as $cartItem) {
             $product = $cartItem->buyable;
+            if (!$product) {
+                \Log::error('Product not found for cart item', ['cart_item_id' => $cartItem->id]);
+                continue;
+            }
             $itemData = collect($validated['items'])->first(fn($i) => $i['buyable_type'] === strtolower(class_basename($cartItem->buyable_type)) && $i['buyable_id'] == $product->id);
 
             OrderItem::create([
@@ -605,6 +610,18 @@ class CheckoutController extends Controller
             'shipping_cost' => $shipping['total'],
             'payment_url' => $iframe['iframe_url'] ?? null,
         ]);
+        } catch (\Exception $e) {
+            \Log::error('Guest Checkout Error', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function getTracking($id)
