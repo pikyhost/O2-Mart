@@ -144,12 +144,14 @@ class InquiryResource extends Resource
                                         Forms\Components\FileUpload::make('car_license_photos')
                                             ->label('Car License Photos')
                                             ->multiple()
-                                            ->directory('inquiry-license-photos')
+                                            ->disk('public')
+                                            ->directory('inquiries/car-licenses')
                                             ->columnSpanFull(),
                                         Forms\Components\FileUpload::make('part_photos')
                                             ->label('Part Photos')
                                             ->multiple()
-                                            ->directory('inquiry-part-photos')
+                                            ->disk('public')
+                                            ->directory('inquiries/parts')
                                             ->columnSpanFull(),
                                     ]),
                             ]),

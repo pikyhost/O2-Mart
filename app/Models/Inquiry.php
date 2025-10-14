@@ -22,6 +22,8 @@ class Inquiry extends Model
 
     protected $casts = [
         'required_parts' => 'array',
+        'car_license_photos' => 'array',
+        'part_photos' => 'array',
         'quoted_at' => 'datetime',
         'quoted_price' => 'decimal:2',
         'quantity' => 'integer',
