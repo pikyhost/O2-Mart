@@ -147,14 +147,17 @@ class TyreResource extends Resource
                                     ->label('Tyre Attribute')
                                     ->searchable()
                                     ->getSearchResultsUsing(fn (string $search): array => 
-                                        \App\Models\TyreAttribute::where('model_year', 'like', "%{$search}%")
+                                        \App\Models\TyreAttribute::where('tyre_attribute', 'like', "%{$search}%")
+                                            ->orWhere('model_year', 'like', "%{$search}%")
                                             ->limit(50)
-                                            ->pluck('model_year', 'id')
+                                            ->get()
+                                            ->mapWithKeys(fn ($record) => [$record->id => $record->tyre_attribute . ' - ' . $record->model_year])
                                             ->toArray()
                                     )
-                                    ->getOptionLabelUsing(fn ($value): ?string => 
-                                        \App\Models\TyreAttribute::find($value)?->model_year
-                                    )
+                                    ->getOptionLabelUsing(fn ($value): ?string => {
+                                        $record = \App\Models\TyreAttribute::find($value);
+                                        return $record ? $record->tyre_attribute . ' - ' . $record->model_year : null;
+                                    })
 
                             ])->columns(2),
 
