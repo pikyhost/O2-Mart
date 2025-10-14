@@ -113,21 +113,10 @@ class TyreController extends Controller
                 if ($request->filled('trim')) {
                     $q->where('trim', $request->trim);
                 }
-                
-                if ($request->filled('tyre_attribute') || $request->filled('rare_attribute')) {
-                    $q->where(function($subQ) use ($request) {
-                        if ($request->filled('tyre_attribute')) {
-                            $subQ->where('tyre_attribute', $request->tyre_attribute)
-                                 ->orWhere('rare_attribute', $request->tyre_attribute);
-                        }
-                        if ($request->filled('rare_attribute')) {
-                            $subQ->orWhere('tyre_attribute', $request->rare_attribute)
-                                 ->orWhere('rare_attribute', $request->rare_attribute);
-                        }
-                    });
-                }
             });
-        } elseif ($request->filled('tyre_attribute') || $request->filled('rare_attribute')) {
+        }
+        
+        if ($request->filled('tyre_attribute') || $request->filled('rare_attribute')) {
             $query->whereHas('tyreAttribute', function($q) use ($request) {
                 $q->where(function($subQ) use ($request) {
                     if ($request->filled('tyre_attribute')) {
