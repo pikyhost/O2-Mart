@@ -60,20 +60,7 @@ class StoreInquiryRequest extends FormRequest
             'rear_tyres.*.diameter' => 'required_with:rear_tyres|string|max:10',
             'rear_tyres.*.quantity' => 'required_with:rear_tyres|integer|min:1|max:10',
 
-            // File Uploads
-            'car_license_photos' => [
-                'nullable',
-                'array',
-                'max:5',
-                function ($attribute, $value, $fail) {
-                    if (!empty($value) && !empty($this->input('vin_chassis_number'))) {
-                        $fail('You cannot provide both car license photos and VIN/Chassis number.');
-                    }
-                },
-            ],
-            'car_license_photos.*' => 'max:10240',
-            'part_photos' => 'nullable|array|max:10',
-            'part_photos.*' => 'max:10240',
+
 
             // Source tracking
             'source' => 'nullable|string|max:50',
