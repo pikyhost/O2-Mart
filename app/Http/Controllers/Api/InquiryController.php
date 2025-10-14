@@ -86,15 +86,15 @@ class InquiryController extends Controller
             // Handle file uploads
             if ($request->hasFile('car_license_photos')) {
                 \Log::info('📁 UPLOADING CAR LICENSE PHOTOS');
-                $data['car_license_photos'] = json_encode($this->fileUploadService
-                    ->uploadMultiple($request->file('car_license_photos'), 'inquiries/car-licenses'));
+                $data['car_license_photos'] = $this->fileUploadService
+                    ->uploadMultiple($request->file('car_license_photos'), 'inquiries/car-licenses');
                 \Log::info('✅ CAR LICENSE PHOTOS UPLOADED', ['paths' => $data['car_license_photos']]);
             }
 
             if ($request->hasFile('part_photos')) {
                 \Log::info('📁 UPLOADING PART PHOTOS');
-                $data['part_photos'] = json_encode($this->fileUploadService
-                    ->uploadMultiple($request->file('part_photos'), 'inquiries/parts'));
+                $data['part_photos'] = $this->fileUploadService
+                    ->uploadMultiple($request->file('part_photos'), 'inquiries/parts');
                 \Log::info('✅ PART PHOTOS UPLOADED', ['paths' => $data['part_photos']]);
             }
 

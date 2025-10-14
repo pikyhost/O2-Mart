@@ -22,14 +22,32 @@ class Inquiry extends Model
 
     protected $casts = [
         'required_parts' => 'array',
-        'car_license_photos' => 'array',
-        'part_photos' => 'array',
         'quoted_at' => 'datetime',
         'quoted_price' => 'decimal:2',
         'quantity' => 'integer',
         'car_year' => 'integer',
         'rear_tyres' => 'array',
     ];
+
+    public function getCarLicensePhotosAttribute($value)
+    {
+        return $value ? json_decode($value, true) : [];
+    }
+
+    public function getPartPhotosAttribute($value)
+    {
+        return $value ? json_decode($value, true) : [];
+    }
+
+    public function setCarLicensePhotosAttribute($value)
+    {
+        $this->attributes['car_license_photos'] = is_array($value) ? json_encode($value) : $value;
+    }
+
+    public function setPartPhotosAttribute($value)
+    {
+        $this->attributes['part_photos'] = is_array($value) ? json_encode($value) : $value;
+    }
 
     protected $hidden = ['ip_address', 'user_agent'];
 
