@@ -610,6 +610,7 @@ class TyreController extends Controller
             ],
         ]);
     }
+    //
 
     public function getCompatibleSizes(Request $request)
     {
@@ -649,6 +650,7 @@ class TyreController extends Controller
             'data' => $tyreSizes,
         ]);
     }
+    //
 
    public function filterByCarAndTrim(Request $request)
 {
