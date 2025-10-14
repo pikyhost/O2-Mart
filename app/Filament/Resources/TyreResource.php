@@ -145,13 +145,16 @@ class TyreResource extends Resource
                                     ->step(0.01),
                                 Select::make('tyre_attribute_id')
                                     ->label('Tyre Attribute')
-                                    ->relationship('tyreAttribute', 'tyre_attribute')
-                                    ->getOptionLabelFromRecordUsing(fn ($record) => 
-                                        $record->tyre_attribute . 
-                                        ($record->rare_attribute ? ' - ' . $record->rare_attribute : '')
-                                    )
                                     ->searchable()
-                                    ->preload()
+                                    ->getSearchResultsUsing(fn (string $search): array => 
+                                        \App\Models\TyreAttribute::where('model_year', 'like', "%{$search}%")
+                                            ->limit(50)
+                                            ->pluck('model_year', 'id')
+                                            ->toArray()
+                                    )
+                                    ->getOptionLabelUsing(fn ($value): ?string => 
+                                        \App\Models\TyreAttribute::find($value)?->model_year
+                                    )
 
                             ])->columns(2),
 
