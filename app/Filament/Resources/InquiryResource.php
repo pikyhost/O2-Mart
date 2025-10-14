@@ -149,7 +149,8 @@ class InquiryResource extends Resource
                                             ->downloadable()
                                             ->openable()
                                             ->columnSpanFull()
-                                            ->storeFileNamesIn('car_license_photos_names'),
+                                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                            ->maxSize(5120),
                                         Forms\Components\FileUpload::make('part_photos')
                                             ->label('Part Photos')
                                             ->multiple()
@@ -158,7 +159,8 @@ class InquiryResource extends Resource
                                             ->downloadable()
                                             ->openable()
                                             ->columnSpanFull()
-                                            ->storeFileNamesIn('part_photos_names'),
+                                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                            ->maxSize(5120),
                                     ]),
                             ]),
 

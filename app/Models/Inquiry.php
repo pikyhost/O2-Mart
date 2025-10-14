@@ -14,9 +14,9 @@ class Inquiry extends Model
         'type', 'status', 'priority', 'full_name', 'phone_number', 'email',
         'car_make', 'car_model', 'car_year', 'vin_chassis_number',
         'required_parts', 'quantity', 'battery_specs', 'description',
-        'car_license_photos', 'part_photos', 'car_license_photos_names', 'part_photos_names',
-        'admin_notes', 'quoted_price', 'quoted_at', 'assigned_to', 'source', 'page_source',
-        'ip_address', 'user_agent', 'rim_size', 'front_width', 'front_height', 'front_diameter',
+        'car_license_photos', 'part_photos', 'admin_notes', 'quoted_price',
+        'quoted_at', 'assigned_to', 'source', 'page_source', 'ip_address', 'user_agent',
+        'rim_size', 'front_width', 'front_height', 'front_diameter',
         'rear_tyres'
     ];
 
@@ -24,8 +24,6 @@ class Inquiry extends Model
         'required_parts' => 'array',
         'car_license_photos' => 'array',
         'part_photos' => 'array',
-        'car_license_photos_names' => 'array',
-        'part_photos_names' => 'array',
         'quoted_at' => 'datetime',
         'quoted_price' => 'decimal:2',
         'quantity' => 'integer',
