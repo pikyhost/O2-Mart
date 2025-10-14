@@ -90,8 +90,7 @@ class InquiryController extends Controller
             if ($request->hasFile('car_license_photos')) {
                 \Log::info('📁 UPLOADING CAR LICENSE PHOTOS');
                 foreach ($request->file('car_license_photos') as $file) {
-                    $inquiry->addMediaFromRequest('car_license_photos')
-                        ->each(fn ($fileAdder) => $fileAdder->toMediaCollection('car_license_photos'));
+                    $inquiry->addMedia($file)->toMediaCollection('car_license_photos');
                 }
                 \Log::info('✅ CAR LICENSE PHOTOS UPLOADED');
             }
@@ -99,8 +98,7 @@ class InquiryController extends Controller
             if ($request->hasFile('part_photos')) {
                 \Log::info('📁 UPLOADING PART PHOTOS');
                 foreach ($request->file('part_photos') as $file) {
-                    $inquiry->addMediaFromRequest('part_photos')
-                        ->each(fn ($fileAdder) => $fileAdder->toMediaCollection('part_photos'));
+                    $inquiry->addMedia($file)->toMediaCollection('part_photos');
                 }
                 \Log::info('✅ PART PHOTOS UPLOADED');
             }
