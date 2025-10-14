@@ -91,7 +91,8 @@ class InquiryController extends Controller
             // Handle file uploads with media library
             if ($request->hasFile('car_license_photos')) {
                 \Log::info('📁 UPLOADING CAR LICENSE PHOTOS');
-                foreach ($request->file('car_license_photos') as $file) {
+                $files = is_array($request->file('car_license_photos')) ? $request->file('car_license_photos') : [$request->file('car_license_photos')];
+                foreach ($files as $file) {
                     $inquiry->addMedia($file)->toMediaCollection('car_license_photos');
                 }
                 \Log::info('✅ CAR LICENSE PHOTOS UPLOADED');
@@ -99,7 +100,8 @@ class InquiryController extends Controller
 
             if ($request->hasFile('part_photos')) {
                 \Log::info('📁 UPLOADING PART PHOTOS');
-                foreach ($request->file('part_photos') as $file) {
+                $files = is_array($request->file('part_photos')) ? $request->file('part_photos') : [$request->file('part_photos')];
+                foreach ($files as $file) {
                     $inquiry->addMedia($file)->toMediaCollection('part_photos');
                 }
                 \Log::info('✅ PART PHOTOS UPLOADED');
