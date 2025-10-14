@@ -154,7 +154,7 @@ class TyreResource extends Resource
                                             ->mapWithKeys(fn ($record) => [$record->id => $record->tyre_attribute . ' - ' . $record->model_year])
                                             ->toArray()
                                     )
-                                    ->getOptionLabelUsing(fn ($value): ?string => {
+                                    ->getOptionLabelUsing(function ($value): ?string {
                                         $record = \App\Models\TyreAttribute::find($value);
                                         return $record ? $record->tyre_attribute . ' - ' . $record->model_year : null;
                                     })
