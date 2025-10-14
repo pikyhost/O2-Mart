@@ -148,7 +148,8 @@ class InquiryResource extends Resource
                                             ->directory('inquiry-license-photos')
                                             ->downloadable()
                                             ->openable()
-                                            ->columnSpanFull(),
+                                            ->columnSpanFull()
+                                            ->storeFileNamesIn('car_license_photos_names'),
                                         Forms\Components\FileUpload::make('part_photos')
                                             ->label('Part Photos')
                                             ->multiple()
@@ -156,7 +157,8 @@ class InquiryResource extends Resource
                                             ->directory('inquiry-part-photos')
                                             ->downloadable()
                                             ->openable()
-                                            ->columnSpanFull(),
+                                            ->columnSpanFull()
+                                            ->storeFileNamesIn('part_photos_names'),
                                     ]),
                             ]),
 
