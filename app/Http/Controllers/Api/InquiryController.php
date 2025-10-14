@@ -83,8 +83,10 @@ class InquiryController extends Controller
             DB::beginTransaction();
             \Log::info('🔄 DATABASE TRANSACTION STARTED');
 
-            \Log::info('💾 CREATING INQUIRY IN DATABASE', ['final_data' => $data]);
-            $inquiry = Inquiry::create($data);
+            // Remove file fields from data since we handle them with media library
+            $inquiryData = collect($data)->except(['car_license_photos', 'part_photos'])->toArray();
+            \Log::info('💾 CREATING INQUIRY IN DATABASE', ['final_data' => $inquiryData]);
+            $inquiry = Inquiry::create($inquiryData);
             
             // Handle file uploads with media library
             if ($request->hasFile('car_license_photos')) {
