@@ -89,6 +89,13 @@ class InquiryController extends Controller
             $inquiry = Inquiry::create($inquiryData);
             
             // Handle file uploads with media library
+            \Log::info('📁 FILE UPLOAD DEBUG', [
+                'has_car_photos' => $request->hasFile('car_license_photos'),
+                'has_part_photos' => $request->hasFile('part_photos'),
+                'car_photos_data' => $request->input('car_license_photos'),
+                'part_photos_data' => $request->input('part_photos')
+            ]);
+            
             if ($request->hasFile('car_license_photos')) {
                 \Log::info('📁 UPLOADING CAR LICENSE PHOTOS');
                 $files = is_array($request->file('car_license_photos')) ? $request->file('car_license_photos') : [$request->file('car_license_photos')];
