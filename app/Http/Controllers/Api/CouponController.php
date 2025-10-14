@@ -62,24 +62,24 @@ class CouponController extends Controller
         $user = auth('sanctum')->user();
         $sessionId = request()->header('X-Session-ID') ?? session()->getId();
         
-        // Count usage by current user/session from both sources
-        $usedByCurrentFromCoupons = CouponUsage::where('coupon_id', $coupon->id)
-            ->when($user, fn($q) => $q->where('user_id', $user->id))
-            ->when(!$user && $sessionId, fn($q) => $q->where('session_id', $sessionId))
-            ->count();
+        // Count usage by current user/session only from completed orders (not cart applications)
         $usedByCurrentFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)
             ->whereIn('status', ['completed', 'delivered', 'paid'])
             ->when($user, fn($q) => $q->where('user_id', $user->id))
             ->when(!$user && $sessionId, fn($q) => $q->where('checkout_token', $sessionId))
             ->count();
-        $usedByCurrent = $usedByCurrentFromCoupons + $usedByCurrentFromOrders;
+        
+        // Count total usage only from completed orders
+        $totalUsedFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)
+            ->whereIn('status', ['completed', 'delivered', 'paid'])
+            ->count();
 
-        if ($coupon->usage_limit && $totalUsed >= $coupon->usage_limit) {
+        if ($coupon->usage_limit && $totalUsedFromOrders >= $coupon->usage_limit) {
             return response()->json(['message' => 'Coupon usage limit reached.'], 400);
         }
 
-        if ($coupon->usage_limit_per_user && $usedByCurrent >= $coupon->usage_limit_per_user) {
-            return response()->json(['message' => 'You have already used this coupon.'], 400);
+        if ($coupon->usage_limit_per_user && $usedByCurrentFromOrders >= $coupon->usage_limit_per_user) {
+            return response()->json(['message' => 'You have reached the usage limit for this coupon.'], 400);
         }
 
         // Calculate discount
