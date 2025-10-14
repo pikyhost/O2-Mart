@@ -149,8 +149,8 @@ class InquiryResource extends Resource
                                             ->downloadable()
                                             ->openable()
                                             ->columnSpanFull()
-                                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
-                                            ->maxSize(5120),
+                                            ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [])
+                                            ->formatStateUsing(fn ($state) => is_array($state) ? $state : []),
                                         Forms\Components\FileUpload::make('part_photos')
                                             ->label('Part Photos')
                                             ->multiple()
@@ -159,8 +159,8 @@ class InquiryResource extends Resource
                                             ->downloadable()
                                             ->openable()
                                             ->columnSpanFull()
-                                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
-                                            ->maxSize(5120),
+                                            ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [])
+                                            ->formatStateUsing(fn ($state) => is_array($state) ? $state : []),
                                     ]),
                             ]),
 
