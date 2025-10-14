@@ -71,9 +71,9 @@ class StoreInquiryRequest extends FormRequest
                     }
                 },
             ],
-            'car_license_photos.*' => 'file|image|mimes:jpeg,png,gif,webp|max:10240',
+            'car_license_photos.*' => 'max:10240',
             'part_photos' => 'nullable|array|max:10',
-            'part_photos.*' => 'file|image|mimes:jpeg,png,gif,webp|max:10240',
+            'part_photos.*' => 'max:10240',
 
             // Source tracking
             'source' => 'nullable|string|max:50',
