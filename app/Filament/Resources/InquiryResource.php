@@ -144,23 +144,13 @@ class InquiryResource extends Resource
                                         Forms\Components\FileUpload::make('car_license_photos')
                                             ->label('Car License Photos')
                                             ->multiple()
-                                            ->image()
                                             ->directory('inquiry-license-photos')
-                                            ->downloadable()
-                                            ->openable()
-                                            ->columnSpanFull()
-                                            ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [])
-                                            ->formatStateUsing(fn ($state) => is_array($state) ? $state : []),
+                                            ->columnSpanFull(),
                                         Forms\Components\FileUpload::make('part_photos')
                                             ->label('Part Photos')
                                             ->multiple()
-                                            ->image()
                                             ->directory('inquiry-part-photos')
-                                            ->downloadable()
-                                            ->openable()
-                                            ->columnSpanFull()
-                                            ->dehydrateStateUsing(fn ($state) => is_array($state) ? $state : [])
-                                            ->formatStateUsing(fn ($state) => is_array($state) ? $state : []),
+                                            ->columnSpanFull(),
                                     ]),
                             ]),
 
