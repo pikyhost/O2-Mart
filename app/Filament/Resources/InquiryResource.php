@@ -146,11 +146,27 @@ class InquiryResource extends Resource
                                             ->label('Car License Photos')
                                             ->collection('car_license_photos')
                                             ->multiple()
+                                            ->image()
+                                            ->imagePreviewHeight('150')
+                                            ->loadingIndicatorPosition('left')
+                                            ->panelAspectRatio('2:1')
+                                            ->panelLayout('integrated')
+                                            ->removeUploadedFileButtonPosition('right')
+                                            ->uploadButtonPosition('left')
+                                            ->uploadProgressIndicatorPosition('left')
                                             ->columnSpanFull(),
                                         SpatieMediaLibraryFileUpload::make('part_photos')
                                             ->label('Part Photos')
                                             ->collection('part_photos')
                                             ->multiple()
+                                            ->image()
+                                            ->imagePreviewHeight('150')
+                                            ->loadingIndicatorPosition('left')
+                                            ->panelAspectRatio('2:1')
+                                            ->panelLayout('integrated')
+                                            ->removeUploadedFileButtonPosition('right')
+                                            ->uploadButtonPosition('left')
+                                            ->uploadProgressIndicatorPosition('left')
                                             ->columnSpanFull(),
                                     ]),
                             ]),
