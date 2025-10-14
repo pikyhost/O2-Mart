@@ -7,9 +7,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Inquiry extends Model
+class Inquiry extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     protected $fillable = [
         'type', 'status', 'priority', 'full_name', 'phone_number', 'email',
         'car_make', 'car_model', 'car_year', 'vin_chassis_number',
@@ -29,24 +33,13 @@ class Inquiry extends Model
         'rear_tyres' => 'array',
     ];
 
-    public function getCarLicensePhotosAttribute($value)
+    public function registerMediaCollections(): void
     {
-        return $value ? json_decode($value, true) : [];
-    }
-
-    public function getPartPhotosAttribute($value)
-    {
-        return $value ? json_decode($value, true) : [];
-    }
-
-    public function setCarLicensePhotosAttribute($value)
-    {
-        $this->attributes['car_license_photos'] = is_array($value) ? json_encode($value) : $value;
-    }
-
-    public function setPartPhotosAttribute($value)
-    {
-        $this->attributes['part_photos'] = is_array($value) ? json_encode($value) : $value;
+        $this->addMediaCollection('car_license_photos')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+            
+        $this->addMediaCollection('part_photos')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
     }
 
     protected $hidden = ['ip_address', 'user_agent'];

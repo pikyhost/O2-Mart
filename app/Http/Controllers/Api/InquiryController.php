@@ -83,23 +83,27 @@ class InquiryController extends Controller
             DB::beginTransaction();
             \Log::info('🔄 DATABASE TRANSACTION STARTED');
 
-            // Handle file uploads
+            \Log::info('💾 CREATING INQUIRY IN DATABASE', ['final_data' => $data]);
+            $inquiry = Inquiry::create($data);
+            
+            // Handle file uploads with media library
             if ($request->hasFile('car_license_photos')) {
                 \Log::info('📁 UPLOADING CAR LICENSE PHOTOS');
-                $data['car_license_photos'] = $this->fileUploadService
-                    ->uploadMultiple($request->file('car_license_photos'), 'inquiries/car-licenses');
-                \Log::info('✅ CAR LICENSE PHOTOS UPLOADED', ['paths' => $data['car_license_photos']]);
+                foreach ($request->file('car_license_photos') as $file) {
+                    $inquiry->addMediaFromRequest('car_license_photos')
+                        ->each(fn ($fileAdder) => $fileAdder->toMediaCollection('car_license_photos'));
+                }
+                \Log::info('✅ CAR LICENSE PHOTOS UPLOADED');
             }
 
             if ($request->hasFile('part_photos')) {
                 \Log::info('📁 UPLOADING PART PHOTOS');
-                $data['part_photos'] = $this->fileUploadService
-                    ->uploadMultiple($request->file('part_photos'), 'inquiries/parts');
-                \Log::info('✅ PART PHOTOS UPLOADED', ['paths' => $data['part_photos']]);
+                foreach ($request->file('part_photos') as $file) {
+                    $inquiry->addMediaFromRequest('part_photos')
+                        ->each(fn ($fileAdder) => $fileAdder->toMediaCollection('part_photos'));
+                }
+                \Log::info('✅ PART PHOTOS UPLOADED');
             }
-
-            \Log::info('💾 CREATING INQUIRY IN DATABASE', ['final_data' => $data]);
-            $inquiry = Inquiry::create($data);
             \Log::info('✅ INQUIRY CREATED SUCCESSFULLY', [
                 'inquiry_id' => $inquiry->id,
                 'inquiry_data' => $inquiry->toArray()

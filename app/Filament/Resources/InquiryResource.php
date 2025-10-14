@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 class InquiryResource extends Resource
 {
@@ -141,17 +142,15 @@ class InquiryResource extends Resource
                             ->schema([
                                 Forms\Components\Section::make('Media')
                                     ->schema([
-                                        Forms\Components\FileUpload::make('car_license_photos')
+                                        SpatieMediaLibraryFileUpload::make('car_license_photos')
                                             ->label('Car License Photos')
+                                            ->collection('car_license_photos')
                                             ->multiple()
-                                            ->disk('public')
-                                            ->directory('inquiries/car-licenses')
                                             ->columnSpanFull(),
-                                        Forms\Components\FileUpload::make('part_photos')
+                                        SpatieMediaLibraryFileUpload::make('part_photos')
                                             ->label('Part Photos')
+                                            ->collection('part_photos')
                                             ->multiple()
-                                            ->disk('public')
-                                            ->directory('inquiries/parts')
                                             ->columnSpanFull(),
                                     ]),
                             ]),
