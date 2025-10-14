@@ -71,9 +71,9 @@ class StoreInquiryRequest extends FormRequest
                     }
                 },
             ],
-            'car_license_photos.*' => 'file|max:2048',
+            'car_license_photos.*' => 'max:10240',
             'part_photos' => 'nullable|array|max:10',
-            'part_photos.*' => 'file|max:2048',
+            'part_photos.*' => 'max:10240',
 
             // Source tracking
             'source' => 'nullable|string|max:50',
@@ -94,8 +94,8 @@ class StoreInquiryRequest extends FormRequest
             'required_parts.max' => 'Maximum 10 parts can be requested.',
             'car_license_photos.max' => 'Maximum 5 car license photos allowed.',
             'part_photos.max' => 'Maximum 10 part photos allowed.',
-            'car_license_photos.*.max' => 'Each photo must be less than 2MB.',
-            'part_photos.*.max' => 'Each photo must be less than 2MB.',
+            'car_license_photos.*.max' => 'Each photo must be less than 10MB.',
+            'part_photos.*.max' => 'Each photo must be less than 10MB.',
         ];
     }
 
