@@ -149,31 +149,28 @@ class TyreResource extends Resource
                                     ->preload()
                                     ->getSearchResultsUsing(fn (string $search): array => 
                                         \App\Models\TyreAttribute::where('tyre_attribute', 'like', "%{$search}%")
+                                            ->orWhere('rare_attribute', 'like', "%{$search}%")
                                             ->limit(50)
                                             ->get()
-                                            ->mapWithKeys(fn ($record) => [$record->id => $record->tyre_attribute])
+                                            ->flatMap(fn ($record) => [
+                                                $record->id . '_main' => $record->tyre_attribute,
+                                                $record->id . '_rare' => $record->rare_attribute
+                                            ])
+                                            ->filter()
                                             ->toArray()
                                     )
                                     ->getOptionLabelUsing(function ($value): ?string {
-                                        $record = \App\Models\TyreAttribute::find($value);
-                                        return $record ? $record->tyre_attribute : null;
-                                    }),
-                                Select::make('rare_attribute_id')
-                                    ->label('Rare Attribute')
-                                    ->searchable()
-                                    ->preload()
-                                    ->getSearchResultsUsing(fn (string $search): array => 
-                                        \App\Models\TyreAttribute::where('rare_attribute', 'like', "%{$search}%")
-                                            ->limit(50)
-                                            ->get()
-                                            ->mapWithKeys(fn ($record) => [$record->id => $record->rare_attribute])
-                                            ->toArray()
-                                    )
-                                    ->getOptionLabelUsing(function ($value): ?string {
-                                        $record = \App\Models\TyreAttribute::find($value);
-                                        return $record ? $record->rare_attribute : null;
+                                        if (str_contains($value, '_main')) {
+                                            $id = str_replace('_main', '', $value);
+                                            $record = \App\Models\TyreAttribute::find($id);
+                                            return $record ? $record->tyre_attribute : null;
+                                        } elseif (str_contains($value, '_rare')) {
+                                            $id = str_replace('_rare', '', $value);
+                                            $record = \App\Models\TyreAttribute::find($id);
+                                            return $record ? $record->rare_attribute : null;
+                                        }
+                                        return null;
                                     })
-                                    ->nullable()
 
                             ])->columns(2),
 
