@@ -173,12 +173,11 @@ class TyreResource extends Resource
                                         $record = \App\Models\TyreAttribute::find($value);
                                         return $record ? $record->tyre_attribute : null;
                                     })
-                                    ->saveRelationshipsUsing(function ($component, $state) {
+                                    ->dehydrateStateUsing(function ($state) {
                                         if (str_contains($state, '_rare')) {
-                                            $state = str_replace('_rare', '', $state);
+                                            return str_replace('_rare', '', $state);
                                         }
-                                        $component->getRecord()->tyre_attribute_id = $state;
-                                        $component->getRecord()->save();
+                                        return $state;
                                     })
 
                             ])->columns(2),
