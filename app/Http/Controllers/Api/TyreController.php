@@ -120,12 +120,12 @@ class TyreController extends Controller
             $query->whereHas('tyreAttribute', function($q) use ($request) {
                 $q->where(function($subQ) use ($request) {
                     if ($request->filled('tyre_attribute')) {
-                        $subQ->where('tyre_attribute', $request->tyre_attribute)
-                             ->orWhere('rare_attribute', $request->tyre_attribute);
+                        $subQ->where('tyre_attribute', 'like', '%' . $request->tyre_attribute . '%')
+                             ->orWhere('rare_attribute', 'like', '%' . $request->tyre_attribute . '%');
                     }
                     if ($request->filled('rare_attribute')) {
-                        $subQ->orWhere('tyre_attribute', $request->rare_attribute)
-                             ->orWhere('rare_attribute', $request->rare_attribute);
+                        $subQ->orWhere('tyre_attribute', 'like', '%' . $request->rare_attribute . '%')
+                             ->orWhere('rare_attribute', 'like', '%' . $request->rare_attribute . '%');
                     }
                 });
             });
