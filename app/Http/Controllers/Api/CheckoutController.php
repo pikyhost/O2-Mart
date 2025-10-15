@@ -694,17 +694,29 @@ class CheckoutController extends Controller
             return response()->json(['message' => 'Cart not found.'], 404);
         }
         
-        $cart->update(['area_id' => $request->area_id]);
-        
-        // Add area cost to existing cart shipping cost
+        // Update area cost: subtract old area cost, add new area cost
         $hasDeliveryOnly = $cart->items->contains('shipping_option', 'delivery_only');
         if ($hasDeliveryOnly) {
             $currentShippingCost = $cart->shipping_cost ?? 0;
+            
+            // Subtract previous area cost if exists
+            if ($cart->area_id) {
+                $previousArea = \App\Models\Area::find($cart->area_id);
+                $previousAreaCost = $previousArea?->shipping_cost ?? 0;
+                $currentShippingCost -= $previousAreaCost;
+            }
+            
+            // Add new area cost
             $area = \App\Models\Area::find($request->area_id);
             $areaShippingCost = $area?->shipping_cost ?? 0;
             $totalShippingCost = $currentShippingCost + $areaShippingCost;
             
-            $cart->update(['shipping_cost' => $totalShippingCost]);
+            $cart->update([
+                'area_id' => $request->area_id,
+                'shipping_cost' => $totalShippingCost
+            ]);
+        } else {
+            $cart->update(['area_id' => $request->area_id]);
         }
         
         // Return updated cart summary with new shipping cost

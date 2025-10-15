@@ -92,11 +92,12 @@ class CartService
         $shippingCost = $cart->shipping_cost ?? 0;
         $breakdown = [];
         
-        // Get breakdown if shipping cost exists
+        // Get breakdown if shipping cost exists and area is selected
         if ($shippingCost > 0 && $cart->area_id) {
             $monthlyShipments = auth()->check() ? (auth()->user()->shipment_count ?? 20) : 5;
             $shipping = ShippingCalculatorService::calculate($cart, $monthlyShipments);
             $breakdown = !empty($shipping['error']) ? [] : ($shipping['breakdown'] ?? []);
+            // Don't override the saved shipping cost - just get the breakdown
         }
 
         // 🟢 Get actual cart-menu values
