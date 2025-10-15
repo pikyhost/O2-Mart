@@ -348,6 +348,17 @@ class CartController extends Controller
             'installation_center_id' => $request->installation_center_id,
             'installation_date'      => $request->installation_date,
         ]);
+        
+        // Calculate shipping cost if delivery_only option is selected
+        if ($request->shipping_option === 'delivery_only' && $cart->area_id) {
+            $monthlyShipments = auth()->check() ? (auth()->user()->shipment_count ?? 20) : 5;
+            $shipping = ShippingCalculatorService::calculate($cart, $monthlyShipments);
+            if (empty($shipping['error'])) {
+                $cart->update(['shipping_cost' => $shipping['total']]);
+            }
+        } elseif ($request->shipping_option !== 'delivery_only') {
+            $cart->update(['shipping_cost' => 0]);
+        }
 
         // Recalculate cart totals after shipping option change
         $cart = $cart->load('items.buyable');
