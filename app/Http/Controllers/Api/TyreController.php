@@ -647,7 +647,8 @@ class TyreController extends Controller
     $modelId = $request->input('model_id');
     $year   = $request->input('year');
     $trim   = $request->input('trim');
-    $tyreAttribute = $request->input('tyre_attribute'); 
+    $tyreAttribute = $request->input('tyre_attribute');
+    $rareAttribute = $request->input('rare_attribute'); 
     
     if (!$makeId || !$modelId || $year === null || $year === '') {
         return response()->json([
@@ -674,6 +675,10 @@ class TyreController extends Controller
 
     foreach ($attributes as $attribute) {
         if ($tyreAttribute && !str_contains($attribute->tyre_attribute ?? '', $tyreAttribute) && !str_contains($attribute->rare_attribute ?? '', $tyreAttribute)) {
+            continue;
+        }
+        
+        if ($rareAttribute && !str_contains($attribute->rare_attribute ?? '', $rareAttribute)) {
             continue;
         }
 
