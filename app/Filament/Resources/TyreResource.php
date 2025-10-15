@@ -153,23 +153,16 @@ class TyreResource extends Resource
                                             ->limit(50)
                                             ->get()
                                             ->flatMap(fn ($record) => [
-                                                $record->id . '_main' => $record->tyre_attribute,
-                                                $record->id . '_rare' => $record->rare_attribute
+                                                $record->id => $record->tyre_attribute,
+                                                $record->id => $record->rare_attribute
                                             ])
                                             ->filter()
+                                            ->unique()
                                             ->toArray()
                                     )
                                     ->getOptionLabelUsing(function ($value): ?string {
-                                        if (str_contains($value, '_main')) {
-                                            $id = str_replace('_main', '', $value);
-                                            $record = \App\Models\TyreAttribute::find($id);
-                                            return $record ? $record->tyre_attribute : null;
-                                        } elseif (str_contains($value, '_rare')) {
-                                            $id = str_replace('_rare', '', $value);
-                                            $record = \App\Models\TyreAttribute::find($id);
-                                            return $record ? $record->rare_attribute : null;
-                                        }
-                                        return null;
+                                        $record = \App\Models\TyreAttribute::find($value);
+                                        return $record ? ($record->tyre_attribute ?: $record->rare_attribute) : null;
                                     })
 
                             ])->columns(2),
