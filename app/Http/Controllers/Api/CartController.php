@@ -501,7 +501,7 @@ class CartController extends Controller
         $subtotal = 0;
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
-            $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
+            $priceWithoutVat = $item->price_per_unit / (1 + $vatPercent);
             // Calculate paid quantity for buy 3 get 1 free (tyres only)
             $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
             $paidQuantity = $isOfferActive && $item->quantity >= 3 
@@ -540,8 +540,8 @@ class CartController extends Controller
                         'paid_quantity' => $paidQuantity,
                         'price_per_unit' => $item->price_per_unit,
                         'vat_percent' => $vatPercent,
-                        'price_without_vat' => $item->price_per_unit - ($item->price_per_unit * $vatPercent),
-                        'calculated_subtotal' => $paidQuantity * ($item->price_per_unit - ($item->price_per_unit * $vatPercent))
+                        'price_without_vat' => $item->price_per_unit / (1 + $vatPercent),
+                        'calculated_subtotal' => $paidQuantity * ($item->price_per_unit / (1 + $vatPercent))
                     ]);
                     
                     $itemData = [
@@ -550,7 +550,7 @@ class CartController extends Controller
                         'name' => $this->resolveName($buyable),
                         'price_per_unit' => (float) $item->price_per_unit, // Including VAT
                         'quantity' => $item->quantity,
-                        'sub' => (float) ($paidQuantity * ($item->price_per_unit - ($item->price_per_unit * $vatPercent))), // VAT-exclusive subtotal with paid quantity
+                        'sub' => (float) ($paidQuantity * ($item->price_per_unit / (1 + $vatPercent))), // VAT-exclusive subtotal with paid quantity
                         'image' => $this->resolveImage($buyable),
                         'shipping_option' => $item->shipping_option,
                         'mobile_van_id' => $item->mobile_van_id ? [
@@ -962,8 +962,8 @@ class CartController extends Controller
             ];
         }
 
-        $vatAmount = $total * $vatPercent;
-        $subtotal = $total - $vatAmount;
+        $subtotal = $total / (1 + $vatPercent);
+        $vatAmount = $total - $subtotal;
 
         return response()->json([
             'items' => $items,

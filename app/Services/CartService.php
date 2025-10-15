@@ -72,7 +72,7 @@ class CartService
         // Calculate items total (same as cart menu)
         $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         
-        // Use same subtotal calculation as cart-menu: total - (total × vatPercent)
+        // Use same subtotal calculation as cart-menu: total / (1 + vatPercent)
         $menuTotal = 0;
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
@@ -83,7 +83,7 @@ class CartService
                 : $item->quantity;
             $menuTotal += $paidQuantity * $item->price_per_unit; // Including VAT
         }
-        $subtotal = $menuTotal - ($menuTotal * $vatPercent);
+        $subtotal = $menuTotal / (1 + $vatPercent);
 
         // 🟢 Installation Fees (only once if any item has with_installation)
         $installationFee = 0;
@@ -116,8 +116,8 @@ class CartService
                 : $item->quantity;
             $menuTotal += $paidQuantity * $item->price_per_unit; // Including VAT
         }
-        $menuVatAmount = $menuTotal * $vatPercent;
-        $menuSubtotal = $menuTotal - $menuVatAmount;
+        $menuSubtotal = $menuTotal / (1 + $vatPercent);
+        $menuVatAmount = $menuTotal - $menuSubtotal;
         
         // Use menu subtotal as the main subtotal
         $subtotal = $menuSubtotal;
@@ -167,7 +167,7 @@ class CartService
             $type = $item->shipping_option ?? 'delivery_only';
 
             // Calculate item subtotal without VAT (same as cart), accounting for buy 3 get 1 free (tyres only)
-            $priceWithoutVat = $item->price_per_unit - ($item->price_per_unit * $vatPercent);
+            $priceWithoutVat = $item->price_per_unit / (1 + $vatPercent);
             $isOfferActive = ($buyable instanceof \App\Models\Tyre) && ($buyable->buy_3_get_1_free ?? false);
             $paidQuantity = $isOfferActive && $item->quantity >= 3 
                 ? $item->quantity - 1 
