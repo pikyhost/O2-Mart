@@ -649,7 +649,7 @@ class TyreController extends Controller
     $trim   = $request->input('trim');
     $tyreAttribute = $request->input('tyre_attribute'); 
     
-    if (!$makeId || !$modelId || !$year) {
+    if (!$makeId || !$modelId || $year === null || $year === '') {
         return response()->json([
             'status'  => 'error',
             'message' => 'Missing required parameters',
