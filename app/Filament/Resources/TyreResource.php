@@ -156,7 +156,7 @@ class TyreResource extends Resource
                                     )
                                     ->getOptionLabelUsing(function ($value): ?string {
                                         $record = \App\Models\TyreAttribute::find($value);
-                                        return $record ? $record->tyre_attribute . ' - ' . $record->model_year : null;
+                                        return $record ? $record->tyre_attribute : null;
                                     })
 
                             ])->columns(2),
