@@ -217,7 +217,7 @@ class CheckoutController extends Controller
         // Use cart summary total to ensure exact match
         $cartSummary = CartService::generateCartSummary($cart);
         $vatAmount = $cartSummary['totals']['vat'];
-        $total = $cartSummary['totals']['total'] - $discountAmount;
+        $total = $cartSummary['totals']['total'];
 
 
         $order = Order::create([
@@ -497,7 +497,7 @@ class CheckoutController extends Controller
         // Use cart summary total to ensure exact match
         $cartSummary = CartService::generateCartSummary($cart);
         $vatAmount = $cartSummary['totals']['vat'];
-        $total = $cartSummary['totals']['total'] - $discountAmount;
+        $total = $cartSummary['totals']['total'];
 
 
         $order = Order::create([
