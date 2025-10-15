@@ -19,18 +19,17 @@ class ShippingCalculatorService
             }
 
             $areaId = $areaId ?? $cart->area_id ?? null;
-
-            if (!$areaId) {
-                throw new \Exception('Area ID not found in cart');
-            }
-
-            $isRemote = self::isRemote($areaId);
+            
+            // Calculate base cost without area cost
+            $isRemote = $areaId ? self::isRemote($areaId) : false;
             $baseCost = self::getBaseCost($monthlyShipments, $isRemote, $setting);
             
-            // Add area-specific shipping cost
-            $area = Area::find($areaId);
-            $areaShippingCost = $area?->shipping_cost ?? 0;
-            $baseCost += $areaShippingCost;
+            // Add area-specific shipping cost only if area is provided
+            $areaShippingCost = 0;
+            if ($areaId) {
+                $area = Area::find($areaId);
+                $areaShippingCost = $area?->shipping_cost ?? 0;
+            }
 
             $totalWeight = 0;
 
@@ -50,7 +49,7 @@ class ShippingCalculatorService
             $extraWeight = max(0, $totalWeight - 5);
             $extraCharge = $extraWeight * ($setting->extra_per_kg ?? 2);
 
-            $subtotal = $baseCost + $extraCharge;
+            $subtotal = $baseCost + $extraCharge + $areaShippingCost;
 
             $fuel = round($subtotal * ($setting->fuel_percent ?? 0.02), 2);
             $subtotal += $fuel;
