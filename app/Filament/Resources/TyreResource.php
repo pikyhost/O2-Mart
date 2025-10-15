@@ -147,7 +147,7 @@ class TyreResource extends Resource
                                     ->label('Tyre Attribute')
                                     ->searchable()
                                     ->preload()
-                                    ->getSearchResultsUsing(fn (string $search): array => {
+                                    ->getSearchResultsUsing(function (string $search): array {
                                         $results = [];
                                         $records = \App\Models\TyreAttribute::where('tyre_attribute', 'like', "%{$search}%")
                                             ->orWhere('rare_attribute', 'like', "%{$search}%")
