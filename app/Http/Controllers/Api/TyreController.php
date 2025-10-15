@@ -805,7 +805,7 @@ class TyreController extends Controller
         $addedItems = [];
         
         foreach ($attributes as $attr) {
-            // Add the combined format (original) - only if both exist
+            // Add the combined format first - only if both exist
             if ($attr->tyre_attribute && $attr->rare_attribute) {
                 $combinedKey = $attr->tyre_attribute . '|' . $attr->rare_attribute;
                 if (!in_array($combinedKey, $addedItems)) {
@@ -816,11 +816,9 @@ class TyreController extends Controller
                     ];
                     $addedItems[] = $combinedKey;
                 }
-            }
-            
-            // Add main attribute as individual option
-            if ($attr->tyre_attribute) {
-                $mainKey = $attr->tyre_attribute . '|';
+                
+                // Also add individual options for the combined attributes
+                $mainKey = $attr->tyre_attribute . '|individual';
                 if (!in_array($mainKey, $addedItems)) {
                     $result[] = [
                         'main'  => $attr->tyre_attribute,
@@ -829,11 +827,8 @@ class TyreController extends Controller
                     ];
                     $addedItems[] = $mainKey;
                 }
-            }
-            
-            // Add rare attribute as individual option
-            if ($attr->rare_attribute) {
-                $rareKey = $attr->rare_attribute . '|';
+                
+                $rareKey = $attr->rare_attribute . '|individual';
                 if (!in_array($rareKey, $addedItems)) {
                     $result[] = [
                         'main'  => $attr->rare_attribute,
@@ -841,6 +836,31 @@ class TyreController extends Controller
                         'is_oe' => (bool)($attr->tyre_oem ?? false),
                     ];
                     $addedItems[] = $rareKey;
+                }
+            } else {
+                // Add single attributes (when only one exists)
+                if ($attr->tyre_attribute) {
+                    $mainKey = $attr->tyre_attribute . '|single';
+                    if (!in_array($mainKey, $addedItems)) {
+                        $result[] = [
+                            'main'  => $attr->tyre_attribute,
+                            'rare'  => '',
+                            'is_oe' => (bool)($attr->tyre_oem ?? false),
+                        ];
+                        $addedItems[] = $mainKey;
+                    }
+                }
+                
+                if ($attr->rare_attribute) {
+                    $rareKey = $attr->rare_attribute . '|single';
+                    if (!in_array($rareKey, $addedItems)) {
+                        $result[] = [
+                            'main'  => $attr->rare_attribute,
+                            'rare'  => '',
+                            'is_oe' => (bool)($attr->tyre_oem ?? false),
+                        ];
+                        $addedItems[] = $rareKey;
+                    }
                 }
             }
         }
