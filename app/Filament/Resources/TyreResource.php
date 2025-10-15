@@ -146,6 +146,7 @@ class TyreResource extends Resource
                                 Select::make('tyre_attribute_id')
                                     ->label('Tyre Attribute')
                                     ->searchable()
+                                    ->preload()
                                     ->getSearchResultsUsing(fn (string $search): array => 
                                         \App\Models\TyreAttribute::where('tyre_attribute', 'like', "%{$search}%")
                                             ->orWhere('model_year', 'like', "%{$search}%")
