@@ -214,7 +214,7 @@ class CartService
                 'installation' => $installationFee,
                 'discount' => $discount,
                 'vat' => $vat,
-                'total' => round($total, 2),
+                'total' => (float) number_format($total, 2, '.', ''),
             ],
             'shipping_breakdown' => $breakdown,
             'applied_coupon' => $cart->applied_coupon,
