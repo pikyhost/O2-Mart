@@ -151,12 +151,12 @@ class TyreResource extends Resource
                                             ->orWhere('model_year', 'like', "%{$search}%")
                                             ->limit(50)
                                             ->get()
-                                            ->mapWithKeys(fn ($record) => [$record->id => $record->tyre_attribute . ' - ' . $record->model_year])
+                                            ->mapWithKeys(fn ($record) => [$record->id => $record->tyre_attribute])
                                             ->toArray()
                                     )
                                     ->getOptionLabelUsing(function ($value): ?string {
                                         $record = \App\Models\TyreAttribute::find($value);
-                                        return $record ? $record->tyre_attribute . ' - ' . $record->model_year : null;
+                                        return $record ? $record->tyre_attribute : null;
                                     })
 
                             ])->columns(2),
