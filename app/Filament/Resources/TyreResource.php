@@ -152,17 +152,12 @@ class TyreResource extends Resource
                                             ->orWhere('rare_attribute', 'like', "%{$search}%")
                                             ->limit(50)
                                             ->get()
-                                            ->flatMap(fn ($record) => [
-                                                $record->id => $record->tyre_attribute,
-                                                $record->id => $record->rare_attribute
-                                            ])
-                                            ->filter()
-                                            ->unique()
+                                            ->mapWithKeys(fn ($record) => [$record->id => $record->tyre_attribute . ($record->rare_attribute ? PHP_EOL . $record->rare_attribute : '')])
                                             ->toArray()
                                     )
                                     ->getOptionLabelUsing(function ($value): ?string {
                                         $record = \App\Models\TyreAttribute::find($value);
-                                        return $record ? ($record->tyre_attribute ?: $record->rare_attribute) : null;
+                                        return $record ? $record->tyre_attribute . ($record->rare_attribute ? PHP_EOL . $record->rare_attribute : '') : null;
                                     })
 
                             ])->columns(2),
