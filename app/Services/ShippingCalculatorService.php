@@ -10,7 +10,7 @@ class ShippingCalculatorService
 {
     protected static string $view = 'filament.resources.pages.view-record-full-width';
 
-    public static function calculate(Cart $cart, int $monthlyShipments): array
+    public static function calculate(Cart $cart, int $monthlyShipments, ?int $areaId = null): array
     {
         try {
             $setting = ShippingSetting::first();
@@ -18,7 +18,7 @@ class ShippingCalculatorService
                 throw new \Exception('Shipping settings not found');
             }
 
-            $areaId = $cart->area_id ?? null;
+            $areaId = $areaId ?? $cart->area_id ?? null;
 
             if (!$areaId) {
                 throw new \Exception('Area ID not found in cart');

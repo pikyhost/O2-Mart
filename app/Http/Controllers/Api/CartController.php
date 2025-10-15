@@ -637,9 +637,12 @@ class CartController extends Controller
             return response()->json(['message' => 'Cart is empty'], 404);
         }
 
-        $cart->update(['area_id' => $request->area_id]);
-
-        $shipping = ShippingCalculatorService::calculate($cart, $request->monthly_shipments);
+        $shipping = ShippingCalculatorService::calculate($cart, $request->monthly_shipments, $request->area_id);
+        
+        // Only update cart area_id if calculation succeeds
+        if (empty($shipping['error'])) {
+            $cart->update(['area_id' => $request->area_id]);
+        }
 
         if (!empty($shipping['error'])) {
             return response()->json([
