@@ -799,18 +799,29 @@ class TyreController extends Controller
             $query->where('trim', $request->trim);
         }
 
-        $attributes = $query->get(['tyre_attribute','rare_attribute','tyre_oem'])
-            ->map(function ($attr) {
-                return [
-                    'main'  => $attr->tyre_attribute ?? '',
-                    'rare'  => $attr->rare_attribute ?? '',
+        $attributes = $query->get(['tyre_attribute','rare_attribute','tyre_oem']);
+        
+        $result = [];
+        foreach ($attributes as $attr) {
+            // Add main attribute if exists
+            if ($attr->tyre_attribute) {
+                $result[] = [
+                    'main'  => $attr->tyre_attribute,
+                    'rare'  => '',
                     'is_oe' => (bool)($attr->tyre_oem ?? false),
                 ];
-            })
-            ->unique(function ($item) {
-                return ($item['main'] ?? '') .'-'. ($item['rare'] ?? '');
-            })
-            ->values();
+            }
+            // Add rare attribute if exists
+            if ($attr->rare_attribute) {
+                $result[] = [
+                    'main'  => $attr->rare_attribute,
+                    'rare'  => '',
+                    'is_oe' => (bool)($attr->tyre_oem ?? false),
+                ];
+            }
+        }
+        
+        $attributes = collect($result)->unique('main')->values();
 
         // Get car make and model names
         $make = \App\Models\CarMake::find($request->make_id);
