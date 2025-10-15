@@ -802,36 +802,50 @@ class TyreController extends Controller
         $attributes = $query->get(['tyre_attribute','rare_attribute','tyre_oem']);
         
         $result = [];
+        $addedItems = [];
+        
         foreach ($attributes as $attr) {
-            // Add the combined format (original)
-            $result[] = [
-                'main'  => $attr->tyre_attribute ?? '',
-                'rare'  => $attr->rare_attribute ?? '',
-                'is_oe' => (bool)($attr->tyre_oem ?? false),
-            ];
+            // Add the combined format (original) - only if both exist
+            if ($attr->tyre_attribute && $attr->rare_attribute) {
+                $combinedKey = $attr->tyre_attribute . '|' . $attr->rare_attribute;
+                if (!in_array($combinedKey, $addedItems)) {
+                    $result[] = [
+                        'main'  => $attr->tyre_attribute,
+                        'rare'  => $attr->rare_attribute,
+                        'is_oe' => (bool)($attr->tyre_oem ?? false),
+                    ];
+                    $addedItems[] = $combinedKey;
+                }
+            }
             
             // Add main attribute as individual option
             if ($attr->tyre_attribute) {
-                $result[] = [
-                    'main'  => $attr->tyre_attribute,
-                    'rare'  => '',
-                    'is_oe' => (bool)($attr->tyre_oem ?? false),
-                ];
+                $mainKey = $attr->tyre_attribute . '|';
+                if (!in_array($mainKey, $addedItems)) {
+                    $result[] = [
+                        'main'  => $attr->tyre_attribute,
+                        'rare'  => '',
+                        'is_oe' => (bool)($attr->tyre_oem ?? false),
+                    ];
+                    $addedItems[] = $mainKey;
+                }
             }
             
             // Add rare attribute as individual option
             if ($attr->rare_attribute) {
-                $result[] = [
-                    'main'  => $attr->rare_attribute,
-                    'rare'  => '',
-                    'is_oe' => (bool)($attr->tyre_oem ?? false),
-                ];
+                $rareKey = $attr->rare_attribute . '|';
+                if (!in_array($rareKey, $addedItems)) {
+                    $result[] = [
+                        'main'  => $attr->rare_attribute,
+                        'rare'  => '',
+                        'is_oe' => (bool)($attr->tyre_oem ?? false),
+                    ];
+                    $addedItems[] = $rareKey;
+                }
             }
         }
         
-        $attributes = collect($result)->unique(function ($item) {
-            return ($item['main'] ?? '') . '|' . ($item['rare'] ?? '');
-        })->values();
+        $attributes = collect($result);
 
         // Get car make and model names
         $make = \App\Models\CarMake::find($request->make_id);
