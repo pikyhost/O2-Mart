@@ -149,15 +149,15 @@ class TyreResource extends Resource
                                     ->preload()
                                     ->getSearchResultsUsing(fn (string $search): array => 
                                         \App\Models\TyreAttribute::where('tyre_attribute', 'like', "%{$search}%")
-                                            ->orWhere('model_year', 'like', "%{$search}%")
+                                            ->orWhere('rare_attribute', 'like', "%{$search}%")
                                             ->limit(50)
                                             ->get()
-                                            ->mapWithKeys(fn ($record) => [$record->id => $record->tyre_attribute . ' - ' . $record->model_year])
+                                            ->mapWithKeys(fn ($record) => [$record->id => $record->tyre_attribute . ($record->rare_attribute ? ' - ' . $record->rare_attribute : '')])
                                             ->toArray()
                                     )
                                     ->getOptionLabelUsing(function ($value): ?string {
                                         $record = \App\Models\TyreAttribute::find($value);
-                                        return $record ? $record->tyre_attribute : null;
+                                        return $record ? $record->tyre_attribute . ($record->rare_attribute ? ' - ' . $record->rare_attribute : '') : null;
                                     })
 
                             ])->columns(2),
