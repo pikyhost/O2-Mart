@@ -219,6 +219,7 @@ class CheckoutController extends Controller
         $vatAmount = $cartSummary['totals']['vat'];
         $total = $cartSummary['totals']['total'];
 
+        // comment
 
         $order = Order::create([
             'user_id'           => $user->id,
