@@ -696,13 +696,20 @@ class CheckoutController extends Controller
         
         $cart->update(['area_id' => $request->area_id]);
         
-        // Add area cost to existing shipping cost if delivery_only items exist
+        // Recalculate shipping cost properly for delivery_only items
         $hasDeliveryOnly = $cart->items->contains('shipping_option', 'delivery_only');
-        if ($hasDeliveryOnly && $cart->shipping_cost > 0) {
+        if ($hasDeliveryOnly) {
+            // Get calculator cost (without area)
+            $monthlyShipments = auth()->check() ? (auth()->user()->shipment_count ?? 20) : 5;
+            $calculatorShipping = ShippingCalculatorService::calculate($cart, $monthlyShipments, null);
+            $calculatorCost = empty($calculatorShipping['error']) ? $calculatorShipping['total'] : 0;
+            
+            // Add area cost
             $area = \App\Models\Area::find($request->area_id);
             $areaShippingCost = $area?->shipping_cost ?? 0;
-            $newShippingCost = $cart->shipping_cost + $areaShippingCost;
-            $cart->update(['shipping_cost' => $newShippingCost]);
+            $totalShippingCost = $calculatorCost + $areaShippingCost;
+            
+            $cart->update(['shipping_cost' => $totalShippingCost]);
         }
         
         // Return updated cart summary with new shipping cost
