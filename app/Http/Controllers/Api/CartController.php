@@ -350,9 +350,10 @@ class CartController extends Controller
         ]);
         
         // Calculate shipping cost if delivery_only option is selected
-        if ($request->shipping_option === 'delivery_only' && $cart->area_id) {
+        if ($request->shipping_option === 'delivery_only') {
             $monthlyShipments = auth()->check() ? (auth()->user()->shipment_count ?? 20) : 5;
-            $shipping = ShippingCalculatorService::calculate($cart, $monthlyShipments);
+            $defaultAreaId = \App\Models\Area::first()?->id;
+            $shipping = ShippingCalculatorService::calculate($cart, $monthlyShipments, $defaultAreaId);
             if (empty($shipping['error'])) {
                 $cart->update(['shipping_cost' => $shipping['total']]);
             }

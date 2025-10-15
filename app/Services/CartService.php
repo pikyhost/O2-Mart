@@ -88,15 +88,14 @@ class CartService
             $installationFee = $installationFeeValue;
         }
 
-        // 🟢 Shipping Cost (only for delivery_only option and when area is selected)
-        $shippingCost = 0;
+        // 🟢 Shipping Cost (use saved shipping_cost from cart)
+        $shippingCost = $cart->shipping_cost ?? 0;
         $breakdown = [];
-        $hasDeliveryOnly = $cart->items->contains('shipping_option', 'delivery_only');
         
-        if ($hasDeliveryOnly && $cart->area_id) {
+        // Get breakdown if shipping cost exists
+        if ($shippingCost > 0 && $cart->area_id) {
             $monthlyShipments = auth()->check() ? (auth()->user()->shipment_count ?? 20) : 5;
             $shipping = ShippingCalculatorService::calculate($cart, $monthlyShipments);
-            $shippingCost = !empty($shipping['error']) ? 0 : ($shipping['total'] ?? 0);
             $breakdown = !empty($shipping['error']) ? [] : ($shipping['breakdown'] ?? []);
         }
 
