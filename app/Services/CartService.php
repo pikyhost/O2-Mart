@@ -120,7 +120,7 @@ class CartService
         // 🟢 VAT = cart-menu total - cart-menu subtotal
         $vat = round($menuTotal - $menuSubtotal, 2);
         
-        // Recalculate coupon discount if applied
+        // Recalculate coupon discount if applied (same logic as checkout)
         $discount = 0;
         if ($cart->applied_coupon) {
             $coupon = \App\Models\Coupon::where('code', $cart->applied_coupon)
@@ -131,13 +131,12 @@ class CartService
                 ->first();
                 
             if ($coupon) {
-                $totalBeforeDiscount = $subtotal + $shippingCost + $installationFee + $vat;
                 switch ($coupon->type) {
                     case 'discount_amount':
-                        $discount = min($coupon->value, $totalBeforeDiscount);
+                        $discount = min($coupon->value, $subtotal);
                         break;
                     case 'discount_percentage':
-                        $discount = round($totalBeforeDiscount * ($coupon->value / 100), 2);
+                        $discount = round($subtotal * ($coupon->value / 100), 2);
                         break;
                     case 'free_shipping':
                         $discount = $shippingCost;
@@ -149,7 +148,9 @@ class CartService
             }
         }
         
-        // Total = SubTotal + Shipping + Installation + VAT - Discount
+        // Total calculation exactly same as checkout
+        // In checkout: $total = $cartSummary['totals']['total'] - $discountAmount;
+        // Where cartSummary total = subtotal + shipping + installation + vat
         $totalBeforeDiscount = $subtotal + $shippingCost + $installationFee + $vat;
         $total = max(0, $totalBeforeDiscount - $discount);
 
@@ -209,7 +210,7 @@ class CartService
                 'installation' => $installationFee,
                 'discount' => $discount,
                 'vat' => $vat,
-                'total' => (float) number_format($total, 2, '.', ''),
+                'total' => (float) round($total, 2),
             ],
             'shipping_breakdown' => $breakdown,
             'applied_coupon' => $cart->applied_coupon,
