@@ -22,7 +22,7 @@ class CouponController extends Controller
         $cart = CartService::getCurrentCart()->load('items.buyable');
 
         if (!$cart || $cart->items->isEmpty()) {
-            return response()->json(['message' => 'Your cart is empty. Please add items before applying a coupon.'], 400);
+            return response()->json(['message' => 'Cart is empty.'], 400);
         }
 
         $coupon = Coupon::where('code', $request->coupon_code)
@@ -33,7 +33,7 @@ class CouponController extends Controller
             ->first();
 
         if (!$coupon) {
-            return response()->json(['message' => 'This coupon code is invalid or has expired. Please check the code and try again.'], 400);
+            return response()->json(['message' => 'Invalid or expired coupon.'], 400);
         }
 
         // Get current cart total from existing cart calculation
@@ -48,7 +48,7 @@ class CouponController extends Controller
         }
 
         if ($coupon->min_order_amount && $currentTotal < $coupon->min_order_amount) {
-            return response()->json(['message' => 'This coupon requires a minimum order of ' . number_format($coupon->min_order_amount, 2) . ' AED. Your current total is ' . number_format($currentTotal, 2) . ' AED.'], 400);
+            return response()->json(['message' => 'Minimum order amount required: ' . $coupon->min_order_amount], 400);
         }
 
         // Count total usage from both CouponUsage table and completed orders
@@ -75,11 +75,11 @@ class CouponController extends Controller
             ->count();
 
         if ($coupon->usage_limit && $totalUsedFromOrders >= $coupon->usage_limit) {
-            return response()->json(['message' => 'This coupon has reached its usage limit and is no longer available.'], 400);
+            return response()->json(['message' => 'Coupon usage limit reached.'], 400);
         }
 
         if ($coupon->usage_limit_per_user && $usedByCurrentFromOrders >= $coupon->usage_limit_per_user) {
-            return response()->json(['message' => 'You have already used this coupon the maximum number of times allowed.'], 400);
+            return response()->json(['message' => 'You have reached the usage limit for this coupon.'], 400);
         }
 
         // Calculate discount
@@ -119,11 +119,11 @@ class CouponController extends Controller
         $cart = CartService::getCurrentCart()->load('items.buyable');
 
         if (!$cart) {
-            return response()->json(['message' => 'Your cart could not be found. Please refresh the page and try again.'], 404);
+            return response()->json(['message' => 'Cart not found.'], 404);
         }
 
         if (!$cart->applied_coupon) {
-            return response()->json(['message' => 'No coupon is currently applied to your cart.'], 400);
+            return response()->json(['message' => 'No coupon applied.'], 400);
         }
 
         // Restore original total by adding back the discount
