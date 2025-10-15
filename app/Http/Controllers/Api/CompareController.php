@@ -236,7 +236,7 @@ class CompareController extends Controller
                     'warranty'       => $p->warranty ?? null,
                     'wheel_attribute' => $p->attributes->first()?->name ?? optional($p->rimAttribute)->name,
                     'weight_kg'      => $p->weight ?? null,
-                    'set_of_4'       => $setOf4Price,
+                    'set_of_4'       => $setOf4DiscountedPrice ?? $setOf4Price,
                     'offsets'        => $p->offsets ?? null,
                     
                     'colour'     => $p->colour ?? null,
