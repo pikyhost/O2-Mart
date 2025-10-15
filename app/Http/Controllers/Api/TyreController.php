@@ -803,7 +803,14 @@ class TyreController extends Controller
         
         $result = [];
         foreach ($attributes as $attr) {
-            // Add main attribute if exists
+            // Add the combined format (original)
+            $result[] = [
+                'main'  => $attr->tyre_attribute ?? '',
+                'rare'  => $attr->rare_attribute ?? '',
+                'is_oe' => (bool)($attr->tyre_oem ?? false),
+            ];
+            
+            // Add main attribute as individual option
             if ($attr->tyre_attribute) {
                 $result[] = [
                     'main'  => $attr->tyre_attribute,
@@ -811,7 +818,8 @@ class TyreController extends Controller
                     'is_oe' => (bool)($attr->tyre_oem ?? false),
                 ];
             }
-            // Add rare attribute if exists
+            
+            // Add rare attribute as individual option
             if ($attr->rare_attribute) {
                 $result[] = [
                     'main'  => $attr->rare_attribute,
@@ -821,7 +829,9 @@ class TyreController extends Controller
             }
         }
         
-        $attributes = collect($result)->unique('main')->values();
+        $attributes = collect($result)->unique(function ($item) {
+            return ($item['main'] ?? '') . '|' . ($item['rare'] ?? '');
+        })->values();
 
         // Get car make and model names
         $make = \App\Models\CarMake::find($request->make_id);
