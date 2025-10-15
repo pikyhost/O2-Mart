@@ -673,7 +673,7 @@ class TyreController extends Controller
     $result = [];
 
     foreach ($attributes as $attribute) {
-        if ($tyreAttribute && $attribute->tyre_attribute !== $tyreAttribute) {
+        if ($tyreAttribute && !str_contains($attribute->tyre_attribute, $tyreAttribute) && !str_contains($attribute->rare_attribute, $tyreAttribute)) {
             continue;
         }
 
