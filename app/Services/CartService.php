@@ -209,7 +209,7 @@ class CartService
             'with_installation' => $withInstallation,
             'installation_center' => $installationCenter,
             'totals' => [
-                'items_subtotal' => (float) $subtotal,
+                'items_subtotal' => (float) number_format($subtotal, 2, '.', ''),
                 'shipping' => $shippingCost,
                 'installation' => $installationFee,
                 'discount' => $discount,
