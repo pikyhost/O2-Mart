@@ -218,12 +218,8 @@ class CompareController extends Controller
             case 'rim':
                 $basePrice = $p->regular_price ?? null;
                 $discountedPrice = $p->discounted_price ?? null;
-                
-                // Multiply by 4 if it's a set of 4
-                if ($p->is_set_of_4) {
-                    $basePrice = $basePrice ? $basePrice * 4 : null;
-                    $discountedPrice = $discountedPrice ? $discountedPrice * 4 : null;
-                }
+                $setOf4Price = $basePrice ? $basePrice * 4 : null;
+                $setOf4DiscountedPrice = $discountedPrice ? $discountedPrice * 4 : null;
                 
                 return [
                     'category'   => optional($p->category)->name,
@@ -240,7 +236,7 @@ class CompareController extends Controller
                     'warranty'       => $p->warranty ?? null,
                     'wheel_attribute' => $p->attributes->first()?->name ?? optional($p->rimAttribute)->name,
                     'weight_kg'      => $p->weight ?? null,
-                    'set_of_4'       => $p->is_set_of_4 ? ($basePrice ? $basePrice * 4 : null) : null,
+                    'set_of_4'       => $setOf4Price,
                     'offsets'        => $p->offsets ?? null,
                     
                     'colour'     => $p->colour ?? null,

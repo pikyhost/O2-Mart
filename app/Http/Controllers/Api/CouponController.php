@@ -36,50 +36,38 @@ class CouponController extends Controller
             return response()->json(['message' => 'Coupon code not found or has expired.'], 400);
         }
 
-        // Get current cart total from existing cart calculation
-        $currentTotal = $cart->total ?? 0;
-        
-        // If no current total, calculate it simply
-        if ($currentTotal == 0) {
-            foreach ($cart->items as $item) {
-                if (!$item->buyable) continue;
-                $currentTotal += $item->subtotal;
-            }
-        }
+        // Get cart summary for proper total calculation
+        $cartSummary = \App\Services\CartService::generateCartSummary($cart);
+        $currentTotal = $cartSummary['totals']['items_subtotal'];
 
+        // Check min order amount
         if ($coupon->min_order_amount && $currentTotal < $coupon->min_order_amount) {
             return response()->json(['message' => 'Minimum order of ' . number_format($coupon->min_order_amount, 2) . ' AED required for this coupon.'], 400);
         }
 
-        // Count total usage from both CouponUsage table and completed orders
-        $totalUsedFromCoupons = CouponUsage::where('coupon_id', $coupon->id)->count();
-        $totalUsedFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)
-            ->whereIn('status', ['completed', 'delivered', 'paid'])
-            ->count();
-        $totalUsed = $totalUsedFromCoupons + $totalUsedFromOrders;
-        
-        // Use same logic as cart system for user/session identification
+        // User/session identification
         $user = auth('sanctum')->user();
         $sessionId = request()->header('X-Session-ID') ?? session()->getId();
         
-        // Count usage by current user/session only from completed orders (not cart applications)
-        $usedByCurrentFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)
-            ->whereIn('status', ['completed', 'delivered', 'paid'])
-            ->when($user, fn($q) => $q->where('user_id', $user->id))
-            ->when(!$user && $sessionId, fn($q) => $q->where('checkout_token', $sessionId))
-            ->count();
-        
-        // Count total usage only from completed orders
-        $totalUsedFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)
-            ->whereIn('status', ['completed', 'delivered', 'paid'])
-            ->count();
-
-        if ($coupon->usage_limit && $totalUsedFromOrders >= $coupon->usage_limit) {
-            return response()->json(['message' => 'This coupon is no longer available.'], 400);
+        // Check total usage limit
+        if ($coupon->usage_limit) {
+            $totalUsed = \App\Models\Order::where('coupon_id', $coupon->id)->count();
+            
+            if ($totalUsed >= $coupon->usage_limit) {
+                return response()->json(['message' => 'This coupon is no longer available.'], 400);
+            }
         }
 
-        if ($coupon->usage_limit_per_user && $usedByCurrentFromOrders >= $coupon->usage_limit_per_user) {
-            return response()->json(['message' => 'You have already used this coupon.'], 400);
+        // Check per user/session usage limit
+        if ($coupon->usage_limit_per_user) {
+            $userUsed = \App\Models\Order::where('coupon_id', $coupon->id)
+                ->when($user, fn($q) => $q->where('user_id', $user->id))
+                ->when(!$user && $sessionId, fn($q) => $q->where('checkout_token', 'like', $sessionId . '%'))
+                ->count();
+            
+            if ($userUsed >= $coupon->usage_limit_per_user) {
+                return response()->json(['message' => 'You have already used this coupon.'], 400);
+            }
         }
 
         // Calculate discount

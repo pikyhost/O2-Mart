@@ -57,7 +57,7 @@ class WishlistController extends Controller
                 $item['country'] = $buyable->rimCountry?->name;
                 $item['year_of_production'] = $buyable->year_of_production;
                 $item['condition'] = $buyable->condition;
-                $item['is_set_of_4'] = $buyable->regular_price ? $buyable->regular_price * 4 : 0;
+                $item['is_set_of_4'] = $price * 4;
                 $item['set_of_4'] = (bool) $buyable->is_set_of_4;
             }
 
@@ -177,10 +177,7 @@ class WishlistController extends Controller
             };
         }
 
-        // Multiply by 4 for set of 4 products (tyres and rims)
-        if (($buyable instanceof Tyre || $buyable instanceof Rim) && $buyable->is_set_of_4) {
-            $basePrice *= 4;
-        }
+        // Don't multiply by 4 - show unit price in wishlist and compare
 
         return $basePrice;
     }
