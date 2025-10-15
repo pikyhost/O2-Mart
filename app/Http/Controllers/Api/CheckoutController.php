@@ -696,6 +696,16 @@ class CheckoutController extends Controller
         
         $cart->update(['area_id' => $request->area_id]);
         
+        // Recalculate shipping cost if delivery_only items exist
+        $hasDeliveryOnly = $cart->items->contains('shipping_option', 'delivery_only');
+        if ($hasDeliveryOnly) {
+            $monthlyShipments = auth()->check() ? (auth()->user()->shipment_count ?? 20) : 5;
+            $shipping = ShippingCalculatorService::calculate($cart, $monthlyShipments);
+            if (empty($shipping['error'])) {
+                $cart->update(['shipping_cost' => $shipping['total']]);
+            }
+        }
+        
         // Return updated cart summary with new shipping cost
         $summary = CartService::generateCartSummary($cart);
         
