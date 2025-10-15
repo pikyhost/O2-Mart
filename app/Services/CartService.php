@@ -62,12 +62,7 @@ class CartService
 
     public static function generateCartSummary(Cart $cart): array
     {
-        if (!$cart->area_id) {
-            $validAreaId = \App\Models\Area::first()?->id ?? null;
-            if ($validAreaId) {
-                $cart->update(['area_id' => $validAreaId]);
-            }
-        }
+        // No default area - shipping cost will be 0 until user selects area
 
         // Calculate items total (same as cart menu)
         $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;

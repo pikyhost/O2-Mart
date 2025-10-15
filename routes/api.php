@@ -407,6 +407,13 @@ https://mk3bel.o2mart.net/api/cart/update-area
     "area_id": 1
 }
 
+{
+    "buyable_type":"rim",
+    "buyable_id": 12471,
+      "shipping_option": "delivery_only"
+
+}
+
 
 
     {
