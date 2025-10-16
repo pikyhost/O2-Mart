@@ -298,7 +298,7 @@ class CheckoutController extends Controller
         ]);
 
         $cart->delete();
-        // Mail::to($user->email)->send(new \App\Mail\OrderReceiptMail($order));
+        Mail::to($user->email)->send(new \App\Mail\OrderReceiptMail($order));
 
         \Log::info('Checkout Step 19: Checkout completed successfully');
         return response()->json([
@@ -585,6 +585,7 @@ class CheckoutController extends Controller
         ]);
 
         $cart->delete();
+        Mail::to($validated['email'])->send(new \App\Mail\OrderReceiptMail($order));
 
         return response()->json([
             'order_id' => $order->id,

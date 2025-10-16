@@ -176,6 +176,12 @@
                 <strong>Payment Method:</strong> {{ ucfirst($order->payment_method) }}
             </div>
 
+            @if ($order->tracking_number)
+            <div class="detail-row">
+                <strong>Tracking Number:</strong> {{ $order->tracking_number }}
+            </div>
+            @endif
+
             <div class="detail-row">
                 <strong>Subtotal:</strong> {{ number_format($order->subtotal, 2) }} AED
             </div>
