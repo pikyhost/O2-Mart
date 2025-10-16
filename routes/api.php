@@ -317,6 +317,9 @@ Route::get('/paymob/order-status/{orderId}', [PaymobController::class, 'checkOrd
 Route::get('/payment/messages', [PaymobController::class, 'getPaymentMessages']);
 Route::get('/track/{tracking_number}', [TrackingController::class, 'trackByNumber']);
 
+// Jeebly webhook endpoint
+Route::post('/webhooks/jeebly/status-update', [\App\Http\Controllers\JeeblyWebhookController::class, 'handleStatusUpdate']);
+
 
 Route::middleware('auth:sanctum')
 ->group(function () {

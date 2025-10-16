@@ -35,24 +35,10 @@ class UpdateShipmentStatus implements ShouldQueue
         }
 
         $jeebly = new JeeblyService();
-        $trackingData = $jeebly->trackShipment($this->order->tracking_number);
+        $updated = $jeebly->updateOrderStatus($this->order);
 
-        if (!$trackingData) {
-            Log::error('Failed to fetch tracking info', ['order_id' => $this->order->id]);
-            return;
-        }
-
-        $status = $trackingData['shipment_status'] ?? $trackingData['status'] ?? null;
-
-        if ($status) {
-            $this->order->update([
-                'shipping_status' => $status,
-            ]);
-
-            Log::info('Updated shipping status', [
-                'order_id' => $this->order->id,
-                'status'   => $status,
-            ]);
+        if (!$updated) {
+            Log::error('Failed to update order status from Jeebly', ['order_id' => $this->order->id]);
         }
     }
 }

@@ -4,17 +4,19 @@ namespace App\Services;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Services\ShippingCalculatorService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class JeeblyService
 {
-    protected string $baseUrl = 'https://demo.jeebly.com';
+    protected string $baseUrl;
     protected string $apiKey;
     protected string $clientKey;
 
     public function __construct()
     {
+        $this->baseUrl = config('services.jeebly.base_url', 'https://demo.jeebly.com');
         $this->apiKey = config('services.jeebly.api_key');
         $this->clientKey = config('services.jeebly.client_key');
     }
@@ -149,7 +151,7 @@ class JeeblyService
     public function trackShipment(string $shipmentNumber): ?array
     {
         $response = Http::withHeaders([
-            'x-api-key'  => $this->apiKey,
+            'X-API-KEY'  => $this->apiKey,
             'client_key' => $this->clientKey,
         ])->post("{$this->baseUrl}/customer/track_shipment", [
             'reference_number' => $shipmentNumber,
@@ -161,5 +163,71 @@ class JeeblyService
 
         Log::error('Jeebly shipment tracking failed', ['response' => $response->body()]);
         return null;
+    }
+
+    public function updateOrderStatus(Order $order): bool
+    {
+        if (!$order->tracking_number) {
+            return false;
+        }
+
+        $trackingData = $this->trackShipment($order->tracking_number);
+        
+        if (!$trackingData || $trackingData['success'] !== 'true') {
+            return false;
+        }
+
+        $tracking = $trackingData['Tracking'] ?? [];
+        $lastStatus = $tracking['last_status'] ?? null;
+        
+        if (!$lastStatus) {
+            return false;
+        }
+
+        $orderStatus = $this->mapJeeblyStatusToOrderStatus($lastStatus);
+        $shippingStatus = $this->mapJeeblyStatusToShippingStatus($lastStatus);
+        
+        $order->update([
+            'status' => $orderStatus,
+            'shipping_status' => $shippingStatus,
+            'shipping_response' => $trackingData,
+        ]);
+
+        Log::info('Updated order status from Jeebly', [
+            'order_id' => $order->id,
+            'jeebly_status' => $lastStatus,
+            'order_status' => $orderStatus,
+            'shipping_status' => $shippingStatus,
+        ]);
+
+        return true;
+    }
+
+    private function mapJeeblyStatusToOrderStatus(string $jeeblyStatus): string
+    {
+        return match (strtolower($jeeblyStatus)) {
+            'delivered' => 'completed',
+            'cancelled' => 'cancelled',
+            'rto_delivered' => 'refund',
+            default => 'shipping',
+        };
+    }
+
+    private function mapJeeblyStatusToShippingStatus(string $jeeblyStatus): string
+    {
+        return match (strtolower($jeeblyStatus)) {
+            'pickup scheduled' => 'pickup_scheduled',
+            'pickup completed', 'pickupcompleted' => 'pickup_completed',
+            'inscan at hub' => 'at_hub',
+            'reached at hub' => 'at_hub',
+            'out for delivery' => 'out_for_delivery',
+            'delivered' => 'delivered',
+            'undelivered' => 'delivery_failed',
+            'on – hold', 'on-hold' => 'on_hold',
+            'rto' => 'returning',
+            'rto delivered' => 'returned',
+            'cancelled' => 'cancelled',
+            default => strtolower(str_replace(' ', '_', $jeeblyStatus)),
+        };
     }
 }

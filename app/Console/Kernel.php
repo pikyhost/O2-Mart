@@ -12,17 +12,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->call(function () {
-            $orders = \App\Models\Order::whereNotNull('tracking_number')
-                ->where(function ($q) {
-                    $q->whereNull('shipping_status')
-                      ->orWhere('shipping_status', '!=', 'Delivered');
-                })->get();
-
-            foreach ($orders as $order) {
-                dispatch(new \App\Jobs\UpdateShipmentStatus($order));
-            }
-        })->everyTenMinutes();
+        // Sync Jeebly order statuses every 10 minutes
+        $schedule->command('jeebly:sync-status --limit=100')
+                 ->everyTenMinutes()
+                 ->withoutOverlapping();
 
         // Test cron job is working
         $schedule->call(function () {
