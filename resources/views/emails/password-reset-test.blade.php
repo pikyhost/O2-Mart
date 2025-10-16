@@ -1,254 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Password Reset – O2Mart</title>
-    <style>
-      /* بداية التنسيق العام */
-      body {
-        font-family: "Helvetica Neue", Arial, sans-serif;
-        line-height: 1.6;
-        color: #333333;
-        margin: 0;
-        padding: 0;
-        background-color: #f5f5f5;
-      }
+<head>
+  <meta charset="UTF-8">
+  <title>Password Reset – O2Mart</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f5f5f5; font-family:Arial, sans-serif; line-height:1.6; color:#333333;">
 
-      .email-container {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: #ffffff;
-      }
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f5f5">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:600px; max-width:600px;">
+          
+          <!-- Header -->
+          <tr>
+            <td bgcolor="#df2020" style="padding:15px 20px;">
+              <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td align="left" valign="middle" style="width:110px;">
+                    <a href="https://www.o2mart.net" target="_blank">
+                      <img src="https://i.ibb.co/0VXXGcfy/logo.png" alt="O2Mart" width="95" style="display:block; border:0;">
+                    </a>
+                  </td>
+                  <td align="left" valign="middle" style="color:#ffffff; font-size:20px; font-weight:bold;">
+                    – Your Trusted Auto Parts Partner
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-      /* تحسينات خاصة بالـ Outlook */
-      table {
-        border-spacing: 0;
-        width: 100%;
-        border-collapse: collapse;
-      }
-      td {
-        padding: 0;
-      }
+          <!-- Content -->
+          <tr>
+            <td style="padding:30px 20px;">
+              <p>Hello,</p>
+              <p>We received a request to reset the password for your O2Mart account.</p>
 
-      /* الهيدر */
-      .header {
-        background-color: #df2020;
-        padding: 15px 20px;
-        width: 100%;
-      }
-      .header img {
-        width: 95px;
-        height: auto;
-        display: block;
-        margin-bottom: 3px;
-      }
-      .header h2 {
-        color: #ffffff;
-        margin: 0;
-        font-size: 25px;
-        display: inline-block;
-      }
-      .header h1 {
-        color: #ffffff;
-        margin: 0;
-        font-size: 28px;
-      }
-      .header a {
-        color: #ffffff;
-        text-decoration: none;
-      }
-      .header a:hover {
-        text-decoration: underline;
-      }
+              <p>
+                <a href="{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}"
+                   style="background-color:#df2020; color:#ffffff; padding:12px 30px; text-decoration:none; border-radius:4px; display:inline-block; font-weight:bold;">
+                   Reset Password
+                </a>
+              </p>
 
-      /* المحتوى */
-      .content {
-        padding: 30px 20px;
-      }
-      .reset-button {
-        background-color: #df2020;
-        color: white !important;
-        padding: 12px 30px;
-        text-decoration: none;
-        border-radius: 5px;
-        display: inline-block;
-        margin: 20px 0;
-        font-weight: bold;
-      }
+              <p>Please note that this link will expire in 60 minutes.</p>
+              <p>If you did not request a password reset, you can safely ignore this email—no further action is needed.</p>
 
-      /* الفوتر */
-      .footer {
-        background-color: #df2020;
-        color: #ffffff;
-        padding: 10px 20px;
-        text-align: center;
-        font-size: 12px;
-      }
-      .footer a {
-        color: #ffffff;
-        text-decoration: underline;
-      }
-      .footer p {
-        margin: 10px 0;
-      }
+              <p>Best regards,<br>
+              The O2Mart Team<br>
+              <a href="https://www.o2mart.net" style="color:#df2020; text-decoration:none;">www.o2mart.net</a> | +971 56 178 7270</p>
 
-      /* الروابط الاجتماعية */
-      .social-links {
-        text-align: center;
-        margin: 15px 0;
-      }
-      .social-links a {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: inline-block;
-        text-decoration: none;
-        margin: 0 7px;
-      }
-      .social-links img {
-        width: 20px;
-        height: 20px;
-        display: block;
-        margin: 5px auto;
-      }
+              <p>If you're having trouble clicking the "Reset Password" button, copy and paste the link below into your web browser:</p>
+              <p style="background-color:#f8f9fa; padding:15px; border-radius:5px; word-break:break-all; font-size:14px;">
+                {{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}
+              </p>
+            </td>
+          </tr>
 
-      /* نص الرابط */
-      .link-text {
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 5px;
-        margin: 15px 0;
-        word-break: break-all;
-        font-size: 14px;
-      }
+          <!-- Footer -->
+          <tr>
+            <td bgcolor="#df2020" align="center" style="color:#ffffff; padding:20px;">
+              <p style="font-weight:bold; margin:0 0 10px 0;">Follow us:</p>
 
-      /* استعلامات الوسائط لتحسين العرض على الأجهزة الصغيرة */
-      @media only screen and (max-width: 600px) {
-        .header h2 {
-          font-size: 20px;
-        }
-        .header h1 {
-          font-size: 24px;
-        }
-        .header img {
-          width: 80px;
-        }
-        .content {
-          padding: 20px 10px;
-        }
-        .reset-button {
-          padding: 10px 20px;
-        }
-        .footer {
-          padding: 15px 10px;
-        }
-        .social-links a {
-          width: 25px;
-          height: 25px;
-        }
-        .social-links img {
-          width: 15px;
-          height: 15px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="email-container">
-      <!-- الهيدر -->
-      <table class="header" role="presentation">
-        <tr>
-          <td>
-            <a href="https://www.o2mart.net" target="_blank">
-              <img
-                src="https://i.ibb.co/0VXXGcfy/logo.png"
-                alt="logo"
-                border="0"
-              />
-            </a>
-          </td>
-          <td>
-            <h2>– Your Trusted Auto Parts Partner</h2>
-          </td>
-        </tr>
-      </table>
+              <table cellpadding="0" cellspacing="0" border="0" align="center">
+                <tr>
+                  <td align="center">
+                    <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
+                      <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" width="24" style="margin:0 5px;">
+                    </a>
+                    <a href="https://www.facebook.com/o2mart" target="_blank">
+                      <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" alt="Facebook" width="24" style="margin:0 5px;">
+                    </a>
+                    <a href="https://www.instagram.com/o2mart/" target="_blank">
+                      <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" alt="Instagram" width="24" style="margin:0 5px;">
+                    </a>
+                    <a href="https://wa.me/971561787270" target="_blank">
+                      <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" alt="WhatsApp" width="24" style="margin:0 5px;">
+                    </a>
+                  </td>
+                </tr>
+              </table>
 
-      <!-- المحتوى -->
-      <div class="content">
-        <p>Hello,</p>
-        <p>
-          We received a request to reset the password for your O2Mart account.
-        </p>
-        <a
-          href="{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}"
-          class="reset-button"
-          >Reset Password</a
-        >
-        <p>Please note that this link will expire in 60 minutes.</p>
-        <p>
-          If you did not request a password reset, you can safely ignore this
-          email—no further action is needed.
-        </p>
-        <p>
-          Best regards,<br />
-          The O2Mart Team<br />
-          <a href="https://www.o2mart.net">www.o2mart.net</a> | +971 56 178 7270
-        </p>
-        <p>
-          If you're having trouble clicking the "Reset Password" button, copy
-          and paste the link below into your web browser:
-        </p>
-        <div class="link-text">
-          {{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{
-          $email }}
-        </div>
-      </div>
+              <p style="margin-top:15px; font-size:12px;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
+            </td>
+          </tr>
 
-      <!-- الفوتر -->
-      <table class="footer" role="presentation">
-        <tr>
-          <td>
-            <p style="font-weight: bold; margin-bottom: 10px">Follow us:</p>
-            <div class="social-links">
-              <!-- LinkedIn -->
-              <a
-                href="https://www.linkedin.com/company/o2mart/"
-                target="_blank"
-              >
-                <img
-                  src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png"
-                  alt="LinkedIn"
-                />
-              </a>
-              <!-- Facebook -->
-              <a href="https://www.facebook.com/o2mart" target="_blank">
-                <img
-                  src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png"
-                  alt="Facebook"
-                />
-              </a>
-              <!-- Instagram -->
-              <a href="https://www.instagram.com/o2mart/" target="_blank">
-                <img
-                  src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png"
-                  alt="Instagram"
-                />
-              </a>
-              <!-- WhatsApp -->
-              <a href="https://wa.me/971561787270" target="_blank">
-                <img
-                  src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png"
-                  alt="WhatsApp"
-                />
-              </a>
-            </div>
-            <p style="margin-top: 10px">
-              &copy; {{ date('Y') }} O2Mart. All rights reserved.
-            </p>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </body>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
 </html>
