@@ -104,7 +104,6 @@ class CouponUsageResource extends Resource
 
                 TextColumn::make('email')
                     ->label(__('Email'))
-                    ->searchable()
                     ->getStateUsing(function ($record) {
                         // If user_id is set and user exists, return the user's email
                         if ($record->user) {
