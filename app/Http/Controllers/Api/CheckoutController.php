@@ -231,6 +231,8 @@ class CheckoutController extends Controller
             'title'             => $request->input('title'),
         ]);
 
+        // great point
+
         foreach ($cart->items as $cartItem) {
             $product = $cartItem->buyable;
             $unitPrice = $cartItem->price_per_unit;
