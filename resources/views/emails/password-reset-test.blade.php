@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset – O2Mart</title>
+    <style>
+        /* بداية التنسيق العام */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+
+        /* تحسينات خاصة بالـ Outlook */
+        table {
+            border-spacing: 0;
+            width: 100%;
+        }
+        td {
+            padding: 0;
+        }
+
+        /* الهيدر */
+        .header {
+            background-color: #df2020;
+            padding: 15px 20px;
+            display: table;
+            width: 100%;
+        }
+        .header img {
+            width: 95px;
+            height: auto;
+            display: inline-block;
+            vertical-align: middle;
+            margin-bottom: 3px;
+        }
+        .header h2 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 25px;
+            display: inline-block;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+        }
+        .header a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .header a:hover {
+            text-decoration: underline;
+        }
+
+        /* المحتوى */
+        .content {
+            padding: 30px 20px;
+        }
+        .reset-button {
+            background-color: #df2020;
+            color: white !important;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        /* الفوتر */
+        .footer {
+            background-color: #df2020;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 12px;
+        }
+        .footer a {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        .footer p {
+            margin: 10px 0;
+        }
+
+        /* الروابط الاجتماعية */
+        .social-links {
+            text-align: center;
+            margin: 15px 0;
+        }
+        .social-links a {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            text-decoration: none;
+            margin: 0 7px;
+        }
+        .social-links img {
+            width: 20px;
+            height: 20px;
+            display: block;
+            margin: 5px auto;
+        }
+
+        /* نص الرابط */
+        .link-text {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            word-break: break-all;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- الهيدر -->
+        <table class="header" role="presentation">
+            <tr>
+                <td>
+                    <a href="https://www.o2mart.net" target="_blank">
+                        <img src="https://i.ibb.co/0VXXGcfy/logo.png" alt="logo" border="0" />
+                    </a>
+                </td>
+                <td>
+                    <h2>– Your Trusted Auto Parts Partner</h2>
+                </td>
+            </tr>
+        </table>
+
+        <!-- المحتوى -->
+        <div class="content">
+            <p>Hello,</p>
+            <p>We received a request to reset the password for your O2Mart account.</p>
+            <a href="{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}" class="reset-button">Reset Password</a>
+            <p>Please note that this link will expire in 60 minutes.</p>
+            <p>If you did not request a password reset, you can safely ignore this email—no further action is needed.</p>
+            <p>Best regards,<br>
+            The O2Mart Team<br>
+            <a href="https://www.o2mart.net">www.o2mart.net</a> | +971 56 178 7270</p>
+            <p>If you're having trouble clicking the "Reset Password" button, copy and paste the link below into your web browser:</p>
+            <div class="link-text">{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}</div>
+        </div>
+
+        <!-- الفوتر -->
+        <table class="footer" role="presentation">
+            <tr>
+                <td>
+                    <p style="font-weight: bold; margin-bottom: 10px;">Follow us:</p>
+                    <div class="social-links">
+                        <!-- LinkedIn -->
+                        <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
+                            <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" />
+                        </a>
+                        <!-- Facebook -->
+                        <a href="https://www.facebook.com/o2mart" target="_blank">
+                            <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" alt="Facebook" />
+                        </a>
+                        <!-- Instagram -->
+                        <a href="https://www.instagram.com/o2mart/" target="_blank">
+                            <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" alt="Instagram" />
+                        </a>
+                        <!-- WhatsApp -->
+                        <a href="https://wa.me/971561787270" target="_blank">
+                            <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" alt="WhatsApp" />
+                        </a>
+                    </div>
+                    <p style="margin-top: 10px;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
