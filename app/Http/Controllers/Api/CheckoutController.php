@@ -121,20 +121,9 @@ class CheckoutController extends Controller
         \Log::info('Checkout Step 15: Updating cart area', ['area_id' => $areaId]);
         $cart->update(['area_id' => $areaId]);
         
-        \Log::info('Checkout Step 16: Starting shipping calculation');
-        $monthlyShipments = $user->shipment_count ?? 20;
-        try {
-            \Log::info('Checkout Step 17: Calling ShippingCalculatorService', ['monthly_shipments' => $monthlyShipments]);
-            $shipping = ShippingCalculatorService::calculate($cart, $monthlyShipments);
-            \Log::info('Checkout Step 18: Shipping calculated', ['shipping' => $shipping]);
-            if (!empty($shipping['error'])) {
-                \Log::error('Checkout Error: Shipping calculation failed', ['shipping' => $shipping]);
-                return response()->json(['status' => 'error', 'message' => $shipping['message'] ?? 'Shipping calculation failed.'], 400);
-            }
-        } catch (\Exception $e) {
-            \Log::error('Checkout Error: Shipping calculation exception', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            return response()->json(['status' => 'error', 'message' => 'Shipping calculation error: ' . $e->getMessage()], 400);
-        }
+        // Use cart summary for all calculations
+        $cartSummary = CartService::generateCartSummary($cart);
+        $shipping = ['breakdown' => $cartSummary['shipping_breakdown']];
 
         $installationGroups = [];
         foreach ($cart->items as $cartItem) {
@@ -214,8 +203,6 @@ class CheckoutController extends Controller
             $menuTotal += $paidQuantity * $item->price_per_unit;
         }
         $menuSubtotal = $menuTotal - ($menuTotal * $vatPercent);
-        // Use cart summary total to ensure exact match
-        $cartSummary = CartService::generateCartSummary($cart);
         $vatAmount = $cartSummary['totals']['vat'];
         $total = $cartSummary['totals']['total'];
 
