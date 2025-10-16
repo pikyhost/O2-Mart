@@ -104,6 +104,12 @@ class CouponUsageResource extends Resource
 
                 TextColumn::make('email')
                     ->label(__('Email'))
+                    ->searchable(query: function ($query, $search) {
+                        return $query->where(function ($q) use ($search) {
+                            $q->whereHas('user', fn($query) => $query->where('email', 'like', "%{$search}%"))
+                              ->orWhereHas('order', fn($query) => $query->where('contact_email', 'like', "%{$search}%"));
+                        });
+                    })
                     ->getStateUsing(function ($record) {
                         // If user_id is set and user exists, return the user's email
                         if ($record->user) {
