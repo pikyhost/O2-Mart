@@ -49,21 +49,30 @@ class CouponController extends Controller
         $user = auth('sanctum')->user();
         $sessionId = request()->header('X-Session-ID') ?? session()->getId();
         
-        // Check total usage limit
+        // Check total usage limit (both CouponUsage and Orders)
         if ($coupon->usage_limit) {
-            $totalUsed = \App\Models\Order::where('coupon_id', $coupon->id)->count();
+            $totalUsedFromCouponUsage = CouponUsage::where('coupon_id', $coupon->id)->count();
+            $totalUsedFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)->count();
+            $totalUsed = $totalUsedFromCouponUsage + $totalUsedFromOrders;
             
             if ($totalUsed >= $coupon->usage_limit) {
                 return response()->json(['message' => 'This coupon is no longer available.'], 400);
             }
         }
 
-        // Check per user/session usage limit
+        // Check per user/session usage limit (both CouponUsage and Orders)
         if ($coupon->usage_limit_per_user) {
-            $userUsed = \App\Models\Order::where('coupon_id', $coupon->id)
+            $userUsedFromCouponUsage = CouponUsage::where('coupon_id', $coupon->id)
+                ->when($user, fn($q) => $q->where('user_id', $user->id))
+                ->when(!$user && $sessionId, fn($q) => $q->where('session_id', $sessionId))
+                ->count();
+                
+            $userUsedFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)
                 ->when($user, fn($q) => $q->where('user_id', $user->id))
                 ->when(!$user && $sessionId, fn($q) => $q->where('checkout_token', 'like', $sessionId . '%'))
                 ->count();
+                
+            $userUsed = $userUsedFromCouponUsage + $userUsedFromOrders;
             
             if ($userUsed >= $coupon->usage_limit_per_user) {
                 return response()->json(['message' => 'You have already used this coupon.'], 400);
