@@ -10,7 +10,7 @@ class AttributeController extends Controller
     public function index()
     {
         return response()->json(
-            Attribute::all()->map(function ($attr) {
+            Attribute::orderBy('name')->get()->map(function ($attr) {
                 return [
                     'id' => $attr->id,
                     'name' => $attr->name,

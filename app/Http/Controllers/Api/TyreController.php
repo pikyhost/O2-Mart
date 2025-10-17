@@ -385,7 +385,7 @@ class TyreController extends Controller
             $query->where('model_year', $request->year);
         }
 
-        $trims = $query->select('trim')->distinct()->pluck('trim')->filter()->values();
+        $trims = $query->select('trim')->distinct()->pluck('trim')->filter()->sort()->values();
 
         return response()->json([
             'status' => 'success',
@@ -398,30 +398,30 @@ class TyreController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => [
-                'widths' => Tyre::select('width')->distinct()->pluck('width')->filter()->values(),
-                'heights' => Tyre::select('height')->distinct()->pluck('height')->filter()->values(),
+                'widths' => Tyre::select('width')->distinct()->pluck('width')->filter()->sort()->values(),
+                'heights' => Tyre::select('height')->distinct()->pluck('height')->filter()->sort()->values(),
                 'wheel_diameters' => Tyre::select('wheel_diameter')->distinct()->pluck('wheel_diameter')->filter()->map(function($diameter) {
                     $float = (float) $diameter;
                     return $float == intval($float) ? (string) intval($float) : (string) $float;
-                })->values(),
+                })->sort()->values(),
             ]
         ]);
     }
 
     public function brands()
     {
-        return response()->json(['status' => 'success', 'data' => TyreBrand::select('id', 'name')->get()]);
+        return response()->json(['status' => 'success', 'data' => TyreBrand::select('id', 'name')->orderBy('name')->get()]);
     }
 
     public function widths()
     {
-        $data = Tyre::select('width')->distinct()->pluck('width')->filter()->values();
+        $data = Tyre::select('width')->distinct()->pluck('width')->filter()->sort()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function heights()
     {
-        $data = Tyre::select('height')->distinct()->pluck('height')->filter()->values();
+        $data = Tyre::select('height')->distinct()->pluck('height')->filter()->sort()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
@@ -430,41 +430,41 @@ class TyreController extends Controller
         $data = Tyre::select('wheel_diameter')->distinct()->pluck('wheel_diameter')->filter()->map(function($diameter) {
             $float = (float) $diameter;
             return $float == intval($float) ? (string) intval($float) : (string) $float;
-        })->values();
+        })->sort()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function models()
     {
-        return response()->json(['status' => 'success', 'data' => TyreModel::select('id', 'name')->get()]);
+        return response()->json(['status' => 'success', 'data' => TyreModel::select('id', 'name')->orderBy('name')->get()]);
     }
 
     public function loadIndexes()
     {
-        $data = Tyre::select('load_index')->distinct()->pluck('load_index')->filter()->values();
+        $data = Tyre::select('load_index')->distinct()->pluck('load_index')->filter()->sort()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function speedRatings()
     {
-        $data = Tyre::select('speed_rating')->distinct()->pluck('speed_rating')->filter()->values();
+        $data = Tyre::select('speed_rating')->distinct()->pluck('speed_rating')->filter()->sort()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function productionYears()
     {
-        $data = Tyre::select('production_year')->distinct()->pluck('production_year')->filter()->values();
+        $data = Tyre::select('production_year')->distinct()->pluck('production_year')->filter()->sort()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
     public function countries()
     {
-        return response()->json(['status' => 'success', 'data' => TyreCountry::select('id', 'name')->get()]);
+        return response()->json(['status' => 'success', 'data' => TyreCountry::select('id', 'name')->orderBy('name')->get()]);
     }
 
     public function warranties()
     {
-        $data = Tyre::select('warranty')->distinct()->pluck('warranty')->filter()->values();
+        $data = Tyre::select('warranty')->distinct()->pluck('warranty')->filter()->sort()->values();
         return response()->json(['status' => 'success', 'data' => $data]);
     }
 
@@ -579,23 +579,23 @@ class TyreController extends Controller
             'data' => [
                 'brands' => TyreBrand::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
                     $q->whereIn('id', $filteredTyreIds);
-                })->get(),
-                'widths' => Tyre::whereIn('id', $filteredTyreIds)->select('width')->distinct()->whereNotNull('width')->pluck('width')->filter()->values(),
-                'heights' => Tyre::whereIn('id', $filteredTyreIds)->select('height')->distinct()->whereNotNull('height')->pluck('height')->filter()->values(),
+                })->orderBy('name')->get(),
+                'widths' => Tyre::whereIn('id', $filteredTyreIds)->select('width')->distinct()->whereNotNull('width')->pluck('width')->filter()->sort()->values(),
+                'heights' => Tyre::whereIn('id', $filteredTyreIds)->select('height')->distinct()->whereNotNull('height')->pluck('height')->filter()->sort()->values(),
                 'wheel_diameters' => Tyre::whereIn('id', $filteredTyreIds)->select('wheel_diameter')->distinct()->whereNotNull('wheel_diameter')->pluck('wheel_diameter')->filter()->map(function($diameter) {
                     $float = (float) $diameter;
                     return $float == intval($float) ? (string) intval($float) : (string) $float;
-                })->values(),
+                })->sort()->values(),
                 'models' => TyreModel::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
                     $q->whereIn('id', $filteredTyreIds);
-                })->get(),
-                'load_indexes' => Tyre::whereIn('id', $filteredTyreIds)->select('load_index')->distinct()->whereNotNull('load_index')->pluck('load_index')->filter()->values(),
-                'speed_ratings' => Tyre::whereIn('id', $filteredTyreIds)->select('speed_rating')->distinct()->whereNotNull('speed_rating')->pluck('speed_rating')->filter()->values(),
-                'production_years' => Tyre::whereIn('id', $filteredTyreIds)->select('production_year')->distinct()->whereNotNull('production_year')->pluck('production_year')->filter()->values(),
+                })->orderBy('name')->get(),
+                'load_indexes' => Tyre::whereIn('id', $filteredTyreIds)->select('load_index')->distinct()->whereNotNull('load_index')->pluck('load_index')->filter()->sort()->values(),
+                'speed_ratings' => Tyre::whereIn('id', $filteredTyreIds)->select('speed_rating')->distinct()->whereNotNull('speed_rating')->pluck('speed_rating')->filter()->sort()->values(),
+                'production_years' => Tyre::whereIn('id', $filteredTyreIds)->select('production_year')->distinct()->whereNotNull('production_year')->pluck('production_year')->filter()->sort()->values(),
                 'countries' => TyreCountry::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
                     $q->whereIn('id', $filteredTyreIds);
-                })->get(),
-                'warranties' => Tyre::whereIn('id', $filteredTyreIds)->select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter()->values(),
+                })->orderBy('name')->get(),
+                'warranties' => Tyre::whereIn('id', $filteredTyreIds)->select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter()->sort()->values(),
             ],
         ]);
     }

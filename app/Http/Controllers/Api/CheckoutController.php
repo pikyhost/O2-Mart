@@ -783,18 +783,25 @@ class CheckoutController extends Controller
 
     public function getOrderStatuses()
     {
+        $statuses = [
+            ['value' => 'pending', 'label' => 'Pending'],
+            ['value' => 'paid', 'label' => 'Paid'],
+            ['value' => 'preparing', 'label' => 'Preparing'],
+            ['value' => 'shipping', 'label' => 'Shipping'],
+            ['value' => 'completed', 'label' => 'Completed'],
+            ['value' => 'delayed', 'label' => 'Delayed'],
+            ['value' => 'cancelled', 'label' => 'Cancelled'],
+            ['value' => 'refund', 'label' => 'Refund'],
+            ['value' => 'payment_failed', 'label' => 'Payment Failed'],
+        ];
+        
+        // Sort by label alphabetically
+        usort($statuses, function($a, $b) {
+            return strcmp($a['label'], $b['label']);
+        });
+        
         return response()->json([
-            'statuses' => [
-                ['value' => 'pending', 'label' => 'Pending'],
-                ['value' => 'paid', 'label' => 'Paid'],
-                ['value' => 'preparing', 'label' => 'Preparing'],
-                ['value' => 'shipping', 'label' => 'Shipping'],
-                ['value' => 'completed', 'label' => 'Completed'],
-                ['value' => 'delayed', 'label' => 'Delayed'],
-                ['value' => 'cancelled', 'label' => 'Cancelled'],
-                ['value' => 'refund', 'label' => 'Refund'],
-                ['value' => 'payment_failed', 'label' => 'Payment Failed'],
-            ]
+            'statuses' => $statuses
         ]);
     }
     

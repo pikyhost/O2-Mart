@@ -311,15 +311,15 @@ class RimController extends Controller
         return response()->json([
             'status' => 'success',
             'filters' => [
-                'colours' => Rim::query()->select('colour')->distinct()->whereNotNull('colour')->pluck('colour')->filter(),
-                'conditions' => Rim::query()->select('condition')->distinct()->whereNotNull('condition')->pluck('condition')->filter(),
-                'bolt_patterns' => Rim::query()->select('bolt_pattern')->distinct()->whereNotNull('bolt_pattern')->pluck('bolt_pattern')->filter(),
-                'offsets' => Rim::query()->select('offsets')->distinct()->whereNotNull('offsets')->pluck('offsets')->filter(),
-                'warranties' => Rim::query()->select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter(),
-                'brands' => RimBrand::select('id', 'name')->whereHas('rims')->get(),
-                'countries' => RimCountry::select('id', 'name')->whereHas('rims')->get(),
-                'sizes' => RimSize::select('id', 'size')->whereHas('rims')->get(),
-                'categories' => Category::select('id', 'name')->whereHas('rims')->get(),
+                'colours' => Rim::query()->select('colour')->distinct()->whereNotNull('colour')->pluck('colour')->filter()->sort()->values(),
+                'conditions' => Rim::query()->select('condition')->distinct()->whereNotNull('condition')->pluck('condition')->filter()->sort()->values(),
+                'bolt_patterns' => Rim::query()->select('bolt_pattern')->distinct()->whereNotNull('bolt_pattern')->pluck('bolt_pattern')->filter()->sort()->values(),
+                'offsets' => Rim::query()->select('offsets')->distinct()->whereNotNull('offsets')->pluck('offsets')->filter()->sort()->values(),
+                'warranties' => Rim::query()->select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter()->sort()->values(),
+                'brands' => RimBrand::select('id', 'name')->whereHas('rims')->orderBy('name')->get(),
+                'countries' => RimCountry::select('id', 'name')->whereHas('rims')->orderBy('name')->get(),
+                'sizes' => RimSize::select('id', 'size')->whereHas('rims')->orderBy('size')->get(),
+                'categories' => Category::select('id', 'name')->whereHas('rims')->orderBy('name')->get(),
             ],
         ]);
     }

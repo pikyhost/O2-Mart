@@ -16,7 +16,7 @@ class BrandController extends Controller
 
     public function index()
     {
-        return response()->json(Brand::active()->get());
+        return response()->json(Brand::active()->orderBy('name')->get());
     }
 
     public function show($slug)
@@ -27,7 +27,7 @@ class BrandController extends Controller
 
     public function all()
     {
-        return response()->json(Brand::all());
+        return response()->json(Brand::orderBy('name')->get());
     }
 
     public function allByType(Request $request)
@@ -39,22 +39,22 @@ class BrandController extends Controller
         $type = $request->type;
 
         $brands = match ($type) {
-            'auto_part' => AutoPartBrand::all()->map(fn($b) => [
+            'auto_part' => AutoPartBrand::orderBy('name')->get()->map(fn($b) => [
                 'id' => $b->id,
                 'name' => $b->name,
                 'logo_url' => $b->logo_url,
             ]),
-            'tyre' => TyreBrand::all()->map(fn($b) => [
+            'tyre' => TyreBrand::orderBy('name')->get()->map(fn($b) => [
                 'id' => $b->id,
                 'name' => $b->name,
                 'logo_url' => $b->logo_url,
             ]),
-            'battery' => BatteryBrand::all()->map(fn($b) => [
+            'battery' => BatteryBrand::orderBy('value')->get()->map(fn($b) => [
                 'id' => $b->id,
                 'name' => $b->value,
                 'logo_url' => $b->logo_url,
             ]),
-            'rim' => RimBrand::all()->map(fn($b) => [
+            'rim' => RimBrand::orderBy('name')->get()->map(fn($b) => [
                 'id' => $b->id,
                 'name' => $b->name,
                 'logo_url' => $b->logo_url,
@@ -71,7 +71,7 @@ class BrandController extends Controller
 
     public function active()
     {
-        $brands = Brand::active()->get();
+        $brands = Brand::active()->orderBy('name')->get();
         return response()->json([
             'status' => true,
             'data' => $brands,

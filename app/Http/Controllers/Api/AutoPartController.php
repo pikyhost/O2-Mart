@@ -274,7 +274,7 @@ class AutoPartController extends Controller
 
     public function brands()
     {
-        $brands = AutoPartBrand::all();
+        $brands = AutoPartBrand::orderBy('name')->get();
 
         return response()->json([
             'status' => 'success',
@@ -284,7 +284,7 @@ class AutoPartController extends Controller
 
     public function countries()
     {
-        $countries = AutoPartCountry::all();
+        $countries = AutoPartCountry::orderBy('name')->get();
 
         return response()->json([
             'status' => 'success',
@@ -302,10 +302,10 @@ class AutoPartController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => [
-                'categories' => Category::with('children')->whereIn('id', $allCategoryIds)->whereNull('parent_id')->get(),
-                'brands' => AutoPartBrand::select('id', 'name')->whereHas('autoParts')->get(),
-                'countries' => AutoPartCountry::select('id', 'name')->whereHas('autoParts')->get(),
-                'viscosity_grades' => ViscosityGrade::select('id', 'name')->whereHas('autoParts')->get(),
+                'categories' => Category::with('children')->whereIn('id', $allCategoryIds)->whereNull('parent_id')->orderBy('name')->get(),
+                'brands' => AutoPartBrand::select('id', 'name')->whereHas('autoParts')->orderBy('name')->get(),
+                'countries' => AutoPartCountry::select('id', 'name')->whereHas('autoParts')->orderBy('name')->get(),
+                'viscosity_grades' => ViscosityGrade::select('id', 'name')->whereHas('autoParts')->orderBy('name')->get(),
             ]
         ]);
     }

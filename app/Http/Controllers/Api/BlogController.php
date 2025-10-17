@@ -101,6 +101,7 @@ class BlogController extends Controller
         }])
             ->where('is_active', true)
             ->whereNull('parent_id')
+            ->orderBy('name')
             ->get()
             ->map(function ($category) {
                 return [
@@ -500,6 +501,7 @@ class BlogController extends Controller
     {
         $tags = Tag::query()
             ->select('id', 'name')
+            ->orderBy('name')
             ->limit(12)
             ->get();
 

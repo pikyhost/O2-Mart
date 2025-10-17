@@ -162,10 +162,10 @@ public function index(Request $request)
         return response()->json([
             'status' => 'success',
             'data' => [
-                'brands' => BatteryBrand::select('id', 'value as name')->whereHas('batteries')->get(),
-                'capacities' => BatteryCapacity::select('id', 'value as name')->whereHas('batteries')->get(),
-                'countries' => BatteryCountry::select('id', 'name')->whereHas('batteries')->get(),
-                'warranties' => Battery::select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter()->values(),
+                'brands' => BatteryBrand::select('id', 'value as name')->whereHas('batteries')->orderBy('value')->get(),
+                'capacities' => BatteryCapacity::select('id', 'value as name')->whereHas('batteries')->orderBy('value')->get(),
+                'countries' => BatteryCountry::select('id', 'name')->whereHas('batteries')->orderBy('name')->get(),
+                'warranties' => Battery::select('warranty')->distinct()->whereNotNull('warranty')->pluck('warranty')->filter()->sort()->values(),
             ],
         ]);
     }

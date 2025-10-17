@@ -14,6 +14,7 @@ class VehicleController extends Controller
     {
         $makes = CarMake::where('is_active', true)
             ->select('id', 'name', 'slug', 'logo', 'country')
+            ->orderBy('name')
             ->get();
 
         return response()->json(['status' => 'success', 'data' => $makes]);
@@ -21,7 +22,7 @@ class VehicleController extends Controller
     public function getModelsByMake($id)
     {
         $make = CarMake::with(['models' => function ($query) {
-            $query->select('id', 'car_make_id', 'name', 'slug', 'year_from', 'year_to', 'is_active');
+            $query->select('id', 'car_make_id', 'name', 'slug', 'year_from', 'year_to', 'is_active')->orderBy('name');
         }])
         ->where('id', $id)
         ->where('is_active', true)
@@ -59,10 +60,11 @@ class VehicleController extends Controller
     public function carMakesWithModelsAndYears()
     {
         $makes = CarMake::with(['models' => function ($query) {
-            $query->select('id', 'car_make_id', 'name', 'slug', 'year_from', 'year_to', 'is_active');
+            $query->select('id', 'car_make_id', 'name', 'slug', 'year_from', 'year_to', 'is_active')->orderBy('name');
         }])
         ->where('is_active', true)
         ->select('id', 'name', 'slug', 'logo', 'country')
+        ->orderBy('name')
         ->get()
         ->map(function ($make) {
             $make->models = $make->models->filter(function ($model) {
@@ -109,6 +111,7 @@ public function getCompatibleMakes($type)
         ->pluck('make.name')
         ->filter()
         ->unique()
+        ->sort()
         ->values();
 
     return response()->json(['status' => 'success', 'data' => $makes]);
@@ -132,6 +135,7 @@ public function getCompatibleModels(Request $request, $type)
         ->pluck('model.name')
         ->filter()
         ->unique()
+        ->sort()
         ->values();
 
     return response()->json(['status' => 'success', 'data' => $models]);

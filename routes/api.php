@@ -201,7 +201,7 @@ Route::get('/search-by-size-options', [TyreController::class, 'searchBySizeOptio
 
 Route::get('/{id}', [TyreController::class, 'show']);
 });
-Route::get('/rim-sizes', fn () => \App\Models\RimSize::select('id', 'size')->get()->map(function($rimSize) {
+Route::get('/rim-sizes', fn () => \App\Models\RimSize::select('id', 'size')->orderBy('size')->get()->map(function($rimSize) {
     $rimSize->size = (string) intval($rimSize->size);
     return $rimSize;
 }));
@@ -342,8 +342,10 @@ Route::post('/addresses/transfer-to-user', [AddressBookController::class, 'trans
 Route::post('/inquiries', [InquiryController::class, 'store']);
 Route::get('/inquiries/debug', [InquiryController::class, 'debug']);
 Route::get('/inquiries/types', function () {
+$types = \App\Models\Inquiry::TYPES;
+asort($types); // Sort by values alphabetically
 return response()->json([
-    'types' => \App\Models\Inquiry::TYPES
+    'types' => $types
 ]);
 });
 
