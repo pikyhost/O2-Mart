@@ -340,14 +340,14 @@ class RimController extends Controller
                     'name' => $model->name,
                     'years' => $years
                 ];
-            })->values();
+            })->sortBy('name')->values();
 
             return [
                 'id' => $make->id,
                 'name' => $make->name,
                 'models' => $modelsGrouped
             ];
-        })->values();
+        })->sortBy('name')->values();
 
         return response()->json([
             'status' => 'success',

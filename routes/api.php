@@ -343,9 +343,9 @@ Route::post('/inquiries', [InquiryController::class, 'store']);
 Route::get('/inquiries/debug', [InquiryController::class, 'debug']);
 Route::get('/inquiries/types', function () {
 $types = \App\Models\Inquiry::TYPES;
-asort($types); // Sort by values alphabetically
+$sortedTypes = collect($types)->sort()->toArray();
 return response()->json([
-    'types' => $types
+    'types' => $sortedTypes
 ]);
 });
 
