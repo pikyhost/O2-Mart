@@ -18,7 +18,7 @@
                   <tr>
                     <td valign="middle" align="left">
                         <a href="https://www.o2mart.net" target="_blank" style="display: inline-block">
-            <img src="https://i.ibb.co/0VXXGcfy/logo.png" alt="logo" border="0" />
+            <img src="{{ \App\Models\Setting::getSetting('logo') ?? 'https://i.ibb.co/0VXXGcfy/logo.png' }}" alt="logo" border="0" />
         </a>
                     </td>
                     <td valign="middle" align="left" style="color:#ffffff; font-size:20px; font-family:Arial, sans-serif; padding-left:10px;">
@@ -63,23 +63,32 @@
             <tr>
               <td bgcolor="#df2020" align="center" style="color:#ffffff; padding:15px 20px; font-size:12px; font-family:Arial, sans-serif;">
                 <p style="margin:0; font-weight:bold;">Follow us:</p>
+@php
+$socialLinks = \App\Models\Setting::getSocialMediaLinks();
+@endphp
                 <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:10px auto;">
                   <tr>
+                    @if($socialLinks['x'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
+                      <a href="{{ $socialLinks['x'] }}" target="_blank">
                         <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" width="24" height="24" alt="LinkedIn" border="0" style="display:block;" />
                       </a>
                     </td>
+                    @endif
+                    @if($socialLinks['facebook'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="https://www.facebook.com/o2mart" target="_blank">
+                      <a href="{{ $socialLinks['facebook'] }}" target="_blank">
                         <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" width="24" height="24" alt="Facebook" border="0" style="display:block;" />
                       </a>
                     </td>
+                    @endif
+                    @if($socialLinks['instagram'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="https://www.instagram.com/o2mart/" target="_blank">
+                      <a href="{{ $socialLinks['instagram'] }}" target="_blank">
                         <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" width="24" height="24" alt="Instagram" border="0" style="display:block;" />
                       </a>
                     </td>
+                    @endif
                     <td align="center" style="padding:0 5px;">
                       <a href="https://wa.me/971561787270" target="_blank">
                         <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" width="24" height="24" alt="WhatsApp" border="0" style="display:block;" />
