@@ -695,17 +695,20 @@ class TyreController extends Controller
         foreach ($grouped as $group) {
             $first = $group->first();
             
-            // Always ensure we have quantities array with default value 2 for each tyre
+            // If no quantities provided, add default quantities to request
+            if (!$request->has('quantities')) {
+                $defaultQuantities = [];
+                for ($i = 0; $i < $group->count(); $i++) {
+                    $defaultQuantities[$i] = 2;
+                }
+                $request->merge(['quantities' => $defaultQuantities]);
+            }
+            
             $quantities = $request->input('quantities', []);
             
-            $tyreDetails = $group->map(function ($tyre, $index) use ($quantities, $group) {
-                // If quantities provided, use them; otherwise default based on group size
-                if (isset($quantities[$index])) {
-                    $individualQuantity = $quantities[$index];
-                } else {
-                    // Default: if 1 tyre in group = qty 4, if 2+ tyres = qty 2 each
-                    $individualQuantity = $group->count() == 1 ? 4 : 2;
-                }
+            $tyreDetails = $group->map(function ($tyre, $index) use ($quantities) {
+                // Use quantity from request (now always available) or fallback to 2
+                $individualQuantity = $quantities[$index] ?? 2;
                 
                 return [
                     'id'                => $tyre->id,
