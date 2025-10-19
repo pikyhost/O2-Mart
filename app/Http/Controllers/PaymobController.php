@@ -82,12 +82,12 @@ class PaymobController extends Controller
                 'current_status' => $order?->status
             ]);
 
-            if ($order && $order->status !== 'paid') {
-                $order->update(['status' => 'paid']);
+            if ($order && $order->status !== 'completed') {
+                $order->update(['status' => 'completed']);
                 
                 Log::info('ORDER_UPDATED', [
                     'order_id' => $order->id,
-                    'new_status' => 'paid'
+                    'new_status' => 'completed'
                 ]);
 
                 try {
@@ -137,7 +137,7 @@ class PaymobController extends Controller
         
         // Update order status if payment was successful (workaround for missing webhook)
         if ($success === 'true' && $order->status === 'pending') {
-            $order->update(['status' => 'paid']);
+            $order->update(['status' => 'completed']);
             Log::info('ORDER_UPDATED_VIA_REDIRECT', ['order_id' => $order->id]);
             
             // Create Jeebly shipment and send email
@@ -192,7 +192,7 @@ class PaymobController extends Controller
                 $attempt++;
             }
             
-            $status = $order->status === 'paid' ? 'success' : 'failed';
+            $status = $order->status === 'completed' ? 'success' : 'failed';
             $message = $this->getPaymentMessage($status);
             
             Log::info('ORDER_STATUS_RESPONSE', [
@@ -227,7 +227,7 @@ class PaymobController extends Controller
     private function getPaymentMessage($status)
     {
         return match($status) {
-            'success' => 'Thank You! Your order has been successfully placed. We\'ll get back to you shortly.',
+            'success' => 'Thank You! Your order has been successfully placed. We will get back to you shortly.',
             'failed' => 'Payment failed. Please try again or contact support.',
             'not_found' => 'Order not found. Please check your order details.',
             default => 'Payment is being processed. Please wait...'

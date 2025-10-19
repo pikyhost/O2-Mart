@@ -120,10 +120,26 @@ class JeeblyService
 
         Log::info('Jeebly Payload:', ['payload' => $payload]);
 
+        Log::info('Jeebly API Request', [
+            'url' => "{$this->baseUrl}/customer/create_shipment",
+            'headers' => [
+                'x-api-key' => $this->apiKey ? 'present' : 'missing',
+                'client_key' => $this->clientKey ? 'present' : 'missing',
+            ],
+            'payload_size' => strlen(json_encode($payload))
+        ]);
+
         $response = Http::withHeaders([
             'x-api-key'  => $this->apiKey,
             'client_key' => $this->clientKey,
         ])->post("{$this->baseUrl}/customer/create_shipment", $payload);
+
+        Log::info('Jeebly API Response', [
+            'status' => $response->status(),
+            'headers' => $response->headers(),
+            'body_length' => strlen($response->body()),
+            'body_preview' => substr($response->body(), 0, 500)
+        ]);
 
         if ($response->successful()) {
             $data = $response->json();
@@ -135,7 +151,13 @@ class JeeblyService
                 return null;
             }
 
-            $awb = $data['AWB No'] ?? $data['AWBNo'] ?? $data['awb'] ?? null;
+            // Check for various AWB field names
+            $awb = $data['AWB No'] ?? $data['AWBNo'] ?? $data['awb'] ?? $data['tracking_number'] ?? null;
+            
+            // Also check nested data structures
+            if (!$awb && isset($data['data'])) {
+                $awb = $data['data']['AWB No'] ?? $data['data']['AWBNo'] ?? $data['data']['awb'] ?? null;
+            }
 
             if ($awb) {
                 $order->update([
@@ -145,7 +167,10 @@ class JeeblyService
                 ]);
                 Log::info('Tracking number updated', ['order_id' => $order->id, 'tracking_number' => $awb]);
             } else {
-                Log::warning('No AWB number in Jeebly response', ['response' => $data]);
+                Log::warning('No AWB number in Jeebly response', [
+                    'response' => $data,
+                    'checked_fields' => ['AWB No', 'AWBNo', 'awb', 'tracking_number', 'data.AWB No', 'data.AWBNo', 'data.awb']
+                ]);
             }
 
             return $data;
@@ -155,6 +180,8 @@ class JeeblyService
             'status' => $response->status(),
             'body' => $response->body(),
             'payload' => $payload,
+            'api_key_present' => $this->apiKey ? true : false,
+            'client_key_present' => $this->clientKey ? true : false,
         ]);
 
         return null;

@@ -154,7 +154,7 @@ class PaymobPaymentService
         }
 
         if (isset($response['success']) && $response['success'] === 'true') {
-        $order->update(['status' => 'paid']);
+        $order->update(['status' => 'completed']);
 
         try {
             Log::info('Calling Jeebly after payment', ['order_id' => $order->id]);
