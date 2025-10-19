@@ -39,7 +39,7 @@
                     <td align="left" valign="middle" style="width: 110px">
                       <a href="https://www.o2mart.net" target="_blank">
                         <img
-                          src="{{ asset('emails/social_media_images/logo.png') }}"
+                          src="{{ url('emails/social_media_images/logo.png') }}"
                           alt="O2Mart"
                           width="95"
                           style="display: block; border: 0"
@@ -143,7 +143,7 @@
                         style="text-decoration: none"
                       >
                         <img
-                          src="{{ asset('emails/social_media_images/linkedin.png') }}"
+                          src="{{ url('emails/social_media_images/linkedin.png') }}"
                           alt="LinkedIn"
                           width="40"
                           height="40"
@@ -156,7 +156,7 @@
                         style="text-decoration: none"
                       >
                         <img
-                          src="{{ asset('emails/social_media_images/facebook.png') }}"
+                          src="{{ url('emails/social_media_images/facebook.png') }}"
                           alt="Facebook"
                           width="40"
                           height="40"
@@ -169,7 +169,7 @@
                         style="text-decoration: none"
                       >
                         <img
-                          src="{{ asset('emails/social_media_images/instagram.png') }}"
+                          src="{{ url('emails/social_media_images/instagram.png') }}"
                           alt="Instagram"
                           width="40"
                           height="40"
@@ -182,7 +182,7 @@
                         style="text-decoration: none"
                       >
                         <img
-                          src="{{ asset('emails/social_media_images/whatsapp.png') }}"
+                          src="{{ url('emails/social_media_images/whatsapp.png') }}"
                           alt="WhatsApp"
                           width="20"
                           height="26"
