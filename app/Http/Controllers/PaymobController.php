@@ -94,6 +94,7 @@ class PaymobController extends Controller
                     if (!$order->tracking_number) {
                         $shippingService = new JeeblyService();
                         $shippingService->createShipment($order);
+                        $order->refresh(); // Refresh to get updated tracking number
                     }
 
                     $email = $order->contact_email ?? $order->user?->email;
@@ -145,6 +146,7 @@ class PaymobController extends Controller
                 if (!$order->tracking_number) {
                     $shippingService = new JeeblyService();
                     $shippingService->createShipment($order);
+                    $order->refresh(); // Refresh to get updated tracking number
                     Log::info('JEEBLY_SHIPMENT_CREATED_VIA_REDIRECT', ['order_id' => $order->id]);
                 }
 
