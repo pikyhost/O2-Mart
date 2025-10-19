@@ -756,7 +756,7 @@ class TyreController extends Controller
                 'total_price'     => $totalPrice,
                 'set_of_4_price'  => $totalPrice, // Keep for backward compatibility
                 'cart_payload'    => $cartPayload,
-                'display_text'    => "Set of {$totalQuantity}", // Dynamic: "Set of 4", "Set of 3", etc.
+                'display_text'    => "Set of 4", // Always show Set of 4
             ];
         }
     }
