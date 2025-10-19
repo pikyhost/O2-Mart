@@ -82,12 +82,12 @@ class PaymobController extends Controller
                 'current_status' => $order?->status
             ]);
 
-            if ($order && $order->status !== 'completed') {
-                $order->update(['status' => 'completed']);
+            if ($order && $order->status !== 'paid') {
+                $order->update(['status' => 'paid']);
                 
                 Log::info('ORDER_UPDATED', [
                     'order_id' => $order->id,
-                    'new_status' => 'completed'
+                    'new_status' => 'paid'
                 ]);
 
                 try {
@@ -137,7 +137,7 @@ class PaymobController extends Controller
         
         // Update order status if payment was successful (workaround for missing webhook)
         if ($success === 'true' && $order->status === 'pending') {
-            $order->update(['status' => 'completed']);
+            $order->update(['status' => 'paid']);
             Log::info('ORDER_UPDATED_VIA_REDIRECT', ['order_id' => $order->id]);
             
             // Create Jeebly shipment and send email
@@ -192,7 +192,7 @@ class PaymobController extends Controller
                 $attempt++;
             }
             
-            $status = $order->status === 'completed' ? 'success' : 'failed';
+            $status = $order->status === 'paid' ? 'success' : 'failed';
             $message = $this->getPaymentMessage($status);
             
             Log::info('ORDER_STATUS_RESPONSE', [

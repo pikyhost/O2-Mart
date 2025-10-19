@@ -127,20 +127,32 @@ class JeeblyService
 
         if ($response->successful()) {
             $data = $response->json();
-            Log::info('Jeebly response data', ['data' => $data]);
+            Log::info('Jeebly response data', ['data' => $data, 'status' => $response->status()]);
 
-            $awb = $data['AWB No'] ?? $data['AWBNo'] ?? null;
+            // Check if response contains error or success indicator
+            if (isset($data['success']) && $data['success'] === false) {
+                Log::error('Jeebly API returned error', ['response' => $data]);
+                return null;
+            }
 
-            $order->update([
-                'tracking_number' => $awb,
-                'tracking_url'    => $awb ? "https://demo.jeebly.com/track-shipment?shipment_number={$awb}" : null,
-                'shipping_company' => 'Jeebly',
-            ]);
+            $awb = $data['AWB No'] ?? $data['AWBNo'] ?? $data['awb'] ?? null;
+
+            if ($awb) {
+                $order->update([
+                    'tracking_number' => $awb,
+                    'tracking_url'    => "https://demo.jeebly.com/track-shipment?shipment_number={$awb}",
+                    'shipping_company' => 'Jeebly',
+                ]);
+                Log::info('Tracking number updated', ['order_id' => $order->id, 'tracking_number' => $awb]);
+            } else {
+                Log::warning('No AWB number in Jeebly response', ['response' => $data]);
+            }
 
             return $data;
         }
 
         Log::error('Jeebly createShipment failed', [
+            'status' => $response->status(),
             'body' => $response->body(),
             'payload' => $payload,
         ]);

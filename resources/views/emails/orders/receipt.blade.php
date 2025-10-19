@@ -195,7 +195,7 @@
             </div>
         </div>
 
-        <p>We'll process your order and get back to you shortly with tracking information.</p>
+        <p>We will process your order and get back to you shortly with tracking information.</p>
         <a href="https://www.o2mart.net" class="whatsapp-link">Visit Our Store</a>
 
         <p>We appreciate your trust in O2Mart – making car care easy, reliable, and hassle-free in the UAE.</p>
