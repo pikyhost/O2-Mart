@@ -268,11 +268,7 @@ class CheckoutController extends Controller
             ]);
         }
 
-        try {
-            (new JeeblyService())->createShipment($order); 
-        } catch (\Exception $e) {
-            \Log::error('Failed to create shipment with Jeebly', ['error' => $e->getMessage()]);
-        }
+        // Jeebly shipment will be created after payment confirmation
         if ($coupon) {
             CouponUsage::create([
                 'coupon_id' => $coupon->id,
@@ -298,7 +294,7 @@ class CheckoutController extends Controller
         ]);
 
         $cart->delete();
-        Mail::to($user->email)->send(new \App\Mail\OrderReceiptMail($order));
+        // Email will be sent after payment confirmation in callback
 
         // \Log::info('Checkout Step 19: Checkout completed successfully');
         return response()->json([
@@ -554,11 +550,7 @@ class CheckoutController extends Controller
             'phone' => $validated['mobile'],
         ]);
 
-        try {
-            (new JeeblyService())->createShipment($order);
-        } catch (\Exception $e) {
-            \Log::error('Jeebly failed', ['error' => $e->getMessage()]);
-        }
+        // Jeebly shipment will be created after payment confirmation
         if ($coupon) {
             CouponUsage::create([
                 'coupon_id' => $coupon->id,
@@ -585,7 +577,7 @@ class CheckoutController extends Controller
         ]);
 
         $cart->delete();
-        Mail::to($validated['email'])->send(new \App\Mail\OrderReceiptMail($order));
+        // Email will be sent after payment confirmation in callback
 
         return response()->json([
             'order_id' => $order->id,

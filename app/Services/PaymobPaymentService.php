@@ -154,16 +154,20 @@ class PaymobPaymentService
         }
 
         if (isset($response['success']) && $response['success'] === 'true') {
-        $order->update(['status' => 'completed']);
+        $order->update(['status' => 'paid']);
 
         try {
             Log::info('Calling Jeebly after payment', ['order_id' => $order->id]);
-
-            (new \App\Services\JeeblyService())->createShipment($order);
-            Log::info('Jeebly service called', []);
+            
+            $jeeblyResult = (new \App\Services\JeeblyService())->createShipment($order);
+            if ($jeeblyResult) {
+                Log::info('Jeebly shipment created successfully', ['order_id' => $order->id, 'tracking' => $order->tracking_number]);
+            } else {
+                Log::warning('Jeebly shipment creation returned null', ['order_id' => $order->id]);
+            }
 
         } catch (\Exception $e) {
-            \Log::error('Jeebly failed after payment', ['e' => $e->getMessage()]);
+            \Log::error('Jeebly failed after payment', ['order_id' => $order->id, 'error' => $e->getMessage()]);
         }
 
         try {
