@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\EmailUpdateNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -95,6 +96,7 @@ class AccountController extends Controller
             $user->save();
 
             $user->sendEmailVerificationNotification();
+            $user->notify(new EmailUpdateNotification());
 
             return response()->json([
                 'message' => 'Account updated successfully. Verification email sent to new address.',
