@@ -695,12 +695,12 @@ class TyreController extends Controller
         foreach ($grouped as $group) {
             $first = $group->first();
             
-            // Get quantities from request (for testing) or use defaults
+            // Always ensure we have quantities array with default value 2 for each tyre
             $quantities = $request->input('quantities', []);
             
             $tyreDetails = $group->map(function ($tyre, $index) use ($quantities) {
-                // Use quantity from request or default to 2
-                $individualQuantity = $quantities[$index] ?? 2;
+                // Always default to 2 if not provided
+                $individualQuantity = isset($quantities[$index]) ? $quantities[$index] : 2;
                 
                 return [
                     'id'                => $tyre->id,
@@ -756,7 +756,7 @@ class TyreController extends Controller
                 'total_price'     => $totalPrice,
                 'set_of_4_price'  => $totalPrice, // Keep for backward compatibility
                 'cart_payload'    => $cartPayload,
-                'display_text'    => "Set of 4", // Always show Set of 4
+                'display_text'    => "Set of {$totalQuantity}", // Dynamic based on total quantity
             ];
         }
     }
