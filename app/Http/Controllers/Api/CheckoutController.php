@@ -123,7 +123,10 @@ class CheckoutController extends Controller
         
         // Use cart summary for all calculations
         $cartSummary = CartService::generateCartSummary($cart);
-        $shipping = ['breakdown' => $cartSummary['shipping_breakdown']];
+        $shipping = [
+            'breakdown' => $cartSummary['shipping_breakdown'],
+            'total' => $cartSummary['totals']['shipping']
+        ];
 
         $installationGroups = [];
         foreach ($cart->items as $cartItem) {
