@@ -123,8 +123,9 @@ class JeeblyService
         Log::info('Jeebly API Request', [
             'url' => "{$this->baseUrl}/customer/create_shipment",
             'headers' => [
-                'x-api-key' => $this->apiKey ? 'present' : 'missing',
+                'X-API-KEY' => $this->apiKey ? 'present' : 'missing',
                 'client_key' => $this->clientKey ? 'present' : 'missing',
+                'Content-Type' => 'application/json',
             ],
             'payload_size' => strlen(json_encode($payload))
         ]);
