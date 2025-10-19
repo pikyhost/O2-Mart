@@ -103,7 +103,7 @@ class SettingResource extends Resource
                     ->openUrlInNewTab(),
 
                 TextColumn::make('x')
-                    ->label(__('x'))
+                    ->label(__('LinkedIn'))
                     ->url(fn ($record) => $record->x, true)
                     ->openUrlInNewTab(),
 
@@ -207,8 +207,8 @@ class SettingResource extends Resource
                             ->url(),
 
                         Forms\Components\TextInput::make('x')
-                            ->label(__('x'))
-                            ->url(), // Twitter (X)
+                            ->label(__('LinkedIn'))
+                            ->url(),
 
                         Forms\Components\TextInput::make('snapchat')
                             ->label(__('snapchat'))
