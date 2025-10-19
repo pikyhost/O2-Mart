@@ -28,7 +28,7 @@ class CheckoutController extends Controller
     public function userCheckout(Request $request)
     {
         try {
-            \Log::info('Checkout Step 1: Starting userCheckout', []);
+            // \Log::info('Checkout Step 1: Starting userCheckout');
             $itemsData = $request->input('items', []);
             \Log::info('Checkout Step 2: Got items data', ['items_count' => count($itemsData)]);
             $validationErrors = [];
@@ -63,10 +63,10 @@ class CheckoutController extends Controller
             ], 422);
         }
 
-        \Log::info('Checkout Step 3: Getting user', []);
+        // \Log::info('Checkout Step 3: Getting user');
         $user = Auth::user();
         if (!$user) {
-            \Log::error('Checkout Error: User not authenticated', []);
+            // \Log::error('Checkout Error: User not authenticated');
             return response()->json(['status' => 'error', 'message' => 'User not authenticated'], 401);
         }
         \Log::info('Checkout Step 4: User found', ['user_id' => $user->id]);
@@ -75,7 +75,7 @@ class CheckoutController extends Controller
         if ($paymentMethod !== 'paymob') {
             return response()->json(['message' => 'Only Paymob payment is supported.'], 400);
         }
-        \Log::info('Checkout Step 5: Payment method validated', []);
+        // \Log::info('Checkout Step 5: Payment method validated');
 
         \Log::info('Checkout Step 6: Getting cart for user', ['user_id' => $user->id]);
         $cart = Cart::with('items.buyable')->where('user_id', $user->id)->first();
@@ -85,7 +85,7 @@ class CheckoutController extends Controller
         }
         \Log::info('Checkout Step 7: Cart found', ['cart_id' => $cart->id, 'items_count' => $cart->items->count()]);
         
-        \Log::info('Checkout Step 8: Handling address selection', []);
+        // \Log::info('Checkout Step 8: Handling address selection');
         // Handle address selection
         $selectedAddress = null;
         if ($request->has('address_id') && $request->address_id) {
@@ -94,12 +94,12 @@ class CheckoutController extends Controller
         }
         
         if (!$selectedAddress) {
-            \Log::info('Checkout Step 10: Looking for primary address', []);
+            // \Log::info('Checkout Step 10: Looking for primary address');
             $selectedAddress = UserAddress::where('user_id', $user->id)->where('is_primary', true)->first();
         }
         
         if (!$selectedAddress) {
-            \Log::error('Checkout Error: No address found', []);
+            // \Log::error('Checkout Error: No address found');
             return response()->json(['status' => 'error', 'message' => 'No address found for user'], 422);
         }
         
@@ -111,9 +111,9 @@ class CheckoutController extends Controller
         }
         \Log::info('Checkout Step 12: Area ID found', ['area_id' => $areaId]);
 
-        \Log::info('Checkout Step 13: Checking cart items', []);
+        // \Log::info('Checkout Step 13: Checking cart items');
         if ($cart->items->isEmpty()) {
-            \Log::error('Checkout Error: Cart is empty', []);
+            // \Log::error('Checkout Error: Cart is empty');
             return response()->json(['status' => 'error', 'message' => 'Cart is empty.'], 400);
         }
         \Log::info('Checkout Step 14: Cart has items', ['items_count' => $cart->items->count()]);
@@ -300,7 +300,7 @@ class CheckoutController extends Controller
         $cart->delete();
         Mail::to($user->email)->send(new \App\Mail\OrderReceiptMail($order));
 
-        \Log::info('Checkout Step 19: Checkout completed successfully', []);
+        // \Log::info('Checkout Step 19: Checkout completed successfully');
         return response()->json([
             'order_id'           => $order->id,
             'paymob_order_id'    => $order->paymob_order_id,
