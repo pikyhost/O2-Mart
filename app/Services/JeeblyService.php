@@ -79,7 +79,7 @@ class JeeblyService
             "consignment_type"                        => "FORWARD",
             "description"                             => "O2Mart Order #{$order->id}",
             "weight"                                  => $weight ?: 1.0,
-            "billing\payment_type"                   => $order->payment_method === 'cod' ? 'COD' : 'Prepaid',
+            "payment_type"                            => $order->payment_method === 'cod' ? 'COD' : 'Prepaid',
             "cod_amount"                              => $order->payment_method === 'cod' ? $order->total : 0,
             "num_pieces"                              => 1,
             "customer_reference_number"               => "ORDER_{$order->id}",
