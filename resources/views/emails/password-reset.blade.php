@@ -19,7 +19,7 @@
                     <td valign="middle" align="left">
 
                         <a href="https://www.o2mart.net" target="_blank" style="display: inline-block">
-            <img src="{{ \App\Models\Setting::getSetting('dark_logo') ? asset('storage/' . \App\Models\Setting::getSetting('dark_logo')) : 'https://i.ibb.co/0VXXGcfy/logo.png' }}" alt="logo" border="0" />
+            <img src="{{ \App\Models\Setting::getSetting('dark_logo') ? url('storage/' . \App\Models\Setting::getSetting('dark_logo')) : 'https://i.ibb.co/0VXXGcfy/logo.png' }}" alt="logo" border="0" />
         </a>
                      
                     </td>
