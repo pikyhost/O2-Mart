@@ -55,7 +55,7 @@ return [
     ],
 
     'jeebly' => [
-        'base_url'   => env('JEEBLY_BASE_URL', 'https://demo.jeebly.com'),
+        'base_url'   => env('JEEBLY_BASE_URL', 'https://demo.jeebly.com/api'),
         'username'   => env('JEEBLY_USERNAME'),
         'password'   => env('JEEBLY_PASSWORD'),
         'api_key'    => env('JEEBLY_API_KEY'),
