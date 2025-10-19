@@ -18,6 +18,6 @@ class TestQueueJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Log::info('✅ Queue is working!');
+        Log::info('✅ Queue is working!', []);
     }
 }

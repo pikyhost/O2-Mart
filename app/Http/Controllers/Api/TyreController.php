@@ -98,7 +98,7 @@ class TyreController extends Controller
         $query = Tyre::query();
         
         // Debug logging
-        \Log::info('Tyre filter request', $request->all());
+        \Log::info('Tyre filter request', ['request' => $request->all()]);
 
         if ($request->filled('tire_size')) {
             $query->where('tire_size', $request->tire_size);

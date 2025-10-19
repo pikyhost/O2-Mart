@@ -11,12 +11,12 @@ class JeeblyWebhookController extends Controller
 {
     public function handleStatusUpdate(Request $request)
     {
-        Log::info('Jeebly webhook received', $request->all());
+        Log::info('Jeebly webhook received', ['request' => $request->all()]);
 
         $trackingNumber = $request->input('reference_number') ?? $request->input('tracking_number');
         
         if (!$trackingNumber) {
-            Log::warning('Jeebly webhook missing tracking number');
+            Log::warning('Jeebly webhook missing tracking number', []);
             return response()->json(['error' => 'Missing tracking number'], 400);
         }
 

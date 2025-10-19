@@ -24,7 +24,7 @@ class JeeblyService
     public function createShipment(Order $order): ?array
     {
 
-        \Log::info('Running createShipment for order ' . $order->id);
+        \Log::info('Running createShipment for order ' . $order->id, []);
 
         $order->load('shippingAddress.city');
 
@@ -35,7 +35,7 @@ class JeeblyService
         //     ]);
         //     return null;
         // }
-        Log::info('Running createShipment for order ' . $order->id);
+        Log::info('Running createShipment for order ' . $order->id, []);
 
         $pickupDate = now()->addDay();
         if ($pickupDate->isSunday()) {
@@ -118,7 +118,7 @@ class JeeblyService
         ];
 
 
-        Log::info('Jeebly Payload:', $payload);
+        Log::info('Jeebly Payload:', ['payload' => $payload]);
 
         $response = Http::withHeaders([
             'x-api-key'  => $this->apiKey,
@@ -127,7 +127,7 @@ class JeeblyService
 
         if ($response->successful()) {
             $data = $response->json();
-            Log::info('Jeebly response data', $data);
+            Log::info('Jeebly response data', ['data' => $data]);
 
             $awb = $data['AWB No'] ?? $data['AWBNo'] ?? null;
 

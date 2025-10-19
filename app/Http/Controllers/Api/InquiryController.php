@@ -102,16 +102,16 @@ class InquiryController extends Controller
                 foreach ($files as $file) {
                     $inquiry->addMedia($file)->toMediaCollection('car_license_photos');
                 }
-                \Log::info('✅ CAR LICENSE PHOTOS UPLOADED');
+                \Log::info('✅ CAR LICENSE PHOTOS UPLOADED', []);
             }
 
             if ($request->hasFile('part_photos')) {
-                \Log::info('📁 UPLOADING PART PHOTOS');
+                \Log::info('📁 UPLOADING PART PHOTOS', []);
                 $files = is_array($request->file('part_photos')) ? $request->file('part_photos') : [$request->file('part_photos')];
                 foreach ($files as $file) {
                     $inquiry->addMedia($file)->toMediaCollection('part_photos');
                 }
-                \Log::info('✅ PART PHOTOS UPLOADED');
+                \Log::info('✅ PART PHOTOS UPLOADED', []);
             }
             \Log::info('✅ INQUIRY CREATED SUCCESSFULLY', [
                 'inquiry_id' => $inquiry->id,
@@ -122,7 +122,7 @@ class InquiryController extends Controller
             \Log::info('📧 ATTEMPTING TO SEND EMAIL', ['email' => $inquiry->email]);
             try {
                 $mailInstance = new InquiryConfirmation($inquiry);
-                \Log::info('📧 MAIL INSTANCE CREATED');
+                \Log::info('📧 MAIL INSTANCE CREATED', []);
                 
                 Mail::to($inquiry->email)->send($mailInstance);
                 \Log::info('✅ EMAIL SENT SUCCESSFULLY', [
@@ -139,7 +139,7 @@ class InquiryController extends Controller
             }
 
             DB::commit();
-            \Log::info('✅ DATABASE TRANSACTION COMMITTED');
+            \Log::info('✅ DATABASE TRANSACTION COMMITTED', []);
 
             $response = [
                 'message' => 'Inquiry submitted successfully',

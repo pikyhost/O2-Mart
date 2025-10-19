@@ -37,7 +37,7 @@ class ContactMessageController extends Controller
                 'data' => $message,
             ], 201);
         } catch (\Exception $e) {
-            Log::error('Contact Message API error: ' . $e->getMessage());
+            Log::error('Contact Message API error: ' . $e->getMessage(), []);
             return response()->json([
                 'error' => 'An unexpected error occurred while processing your message. Please try again.',
                 'error_desc' => $e->getMessage()

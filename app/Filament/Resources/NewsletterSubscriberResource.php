@@ -155,7 +155,7 @@ class NewsletterSubscriberResource extends Resource
                 Mail::to($user->email)->sendNow(new OfferEmail($user, $data));
             }
         } catch (\Exception $e) {
-            Log::error('Mail sending failed: ' . $e->getMessage());
+            Log::error('Mail sending failed: ' . $e->getMessage(), []);
         }
 
         Notification::make()

@@ -36,7 +36,7 @@ class PaymobController extends Controller
         
         $result = $service->sendPayment($paymentRequest);
         
-        Log::info('Payment initiation result', $result);
+        Log::info('Payment initiation result', ['result' => $result]);
         
         if ($result['success']) {
             return response()->json([
@@ -122,7 +122,7 @@ class PaymobController extends Controller
 
     public function handleRedirect(Request $request)
     {
-        Log::info('REDIRECT_RECEIVED', $request->all());
+        Log::info('REDIRECT_RECEIVED', ['request' => $request->all()]);
         
         $merchantOrderId = $request->query('merchant_order_id');
         $success = $request->query('success');
