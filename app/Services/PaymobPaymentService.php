@@ -100,7 +100,7 @@ class PaymobPaymentService
         Log::info('Payment Key Response', ['token' => $paymentToken]);
 
         if (!$paymentToken) {
-            Log::error('Payment key generation failed');
+            Log::error('Payment key generation failed', []);
             return ['success' => false, 'message' => 'Failed to generate payment key.'];
         }
 
@@ -142,7 +142,7 @@ class PaymobPaymentService
         $paymobOrderId = $response['order'] ?? null;
 
         if (!$paymobOrderId) {
-            \Log::error('Missing Paymob order ID in callback.');
+            \Log::error('Missing Paymob order ID in callback.', []);
             return false;
         }
 
@@ -160,7 +160,7 @@ class PaymobPaymentService
             Log::info('Calling Jeebly after payment', ['order_id' => $order->id]);
 
             (new \App\Services\JeeblyService())->createShipment($order);
-            Log::info('Jeebly service called');
+            Log::info('Jeebly service called', []);
 
         } catch (\Exception $e) {
             \Log::error('Jeebly failed after payment', ['e' => $e->getMessage()]);
