@@ -268,7 +268,12 @@ class CheckoutController extends Controller
             ]);
         }
 
-        // Jeebly shipment will be created after payment confirmation
+        try {
+            (new JeeblyService())->createShipment($order);
+        } catch (\Exception $e) {
+            \Log::error('Failed to create shipment with Jeebly', ['error' => $e->getMessage()]);
+        }
+
         if ($coupon) {
             CouponUsage::create([
                 'coupon_id' => $coupon->id,
@@ -550,7 +555,12 @@ class CheckoutController extends Controller
             'phone' => $validated['mobile'],
         ]);
 
-        // Jeebly shipment will be created after payment confirmation
+        try {
+            (new JeeblyService())->createShipment($order);
+        } catch (\Exception $e) {
+            \Log::error('Failed to create shipment with Jeebly', ['error' => $e->getMessage()]);
+        }
+
         if ($coupon) {
             CouponUsage::create([
                 'coupon_id' => $coupon->id,
