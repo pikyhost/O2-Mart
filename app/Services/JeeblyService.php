@@ -121,7 +121,7 @@ class JeeblyService
         Log::info('Jeebly Payload:', ['payload' => $payload]);
 
         Log::info('Jeebly API Request', [
-            'url' => "{$this->baseUrl}/customer/create_shipment",
+            'url' => "{$this->baseUrl}/api/customer/create_shipment",
             'headers' => [
                 'x-api-key' => $this->apiKey ? 'present' : 'missing',
                 'client_key' => $this->clientKey ? 'present' : 'missing',
@@ -132,7 +132,7 @@ class JeeblyService
         $response = Http::withHeaders([
             'x-api-key'  => $this->apiKey,
             'client_key' => $this->clientKey,
-        ])->post("{$this->baseUrl}/customer/create_shipment", $payload);
+        ])->post("{$this->baseUrl}/api/customer/create_shipment", $payload);
 
         Log::info('Jeebly API Response', [
             'status' => $response->status(),
@@ -192,7 +192,7 @@ class JeeblyService
         $response = Http::withHeaders([
             'X-API-KEY'  => $this->apiKey,
             'client_key' => $this->clientKey,
-        ])->post("{$this->baseUrl}/customer/track_shipment", [
+        ])->post("{$this->baseUrl}/api/customer/track_shipment", [
             'reference_number' => $shipmentNumber,
         ]);
 
