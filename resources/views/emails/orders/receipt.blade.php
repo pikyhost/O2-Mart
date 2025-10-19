@@ -191,6 +191,10 @@
             </div>
 
             <div class="detail-row">
+                <strong>VAT (AED):</strong> {{ number_format($order->tax_amount, 2) }} AED
+            </div>
+
+            <div class="detail-row">
                 <strong>Total Paid:</strong> {{ number_format($order->total, 2) }} AED
             </div>
         </div>
