@@ -698,7 +698,12 @@ class TyreController extends Controller
             // Always ensure we have quantities array with default value 2 for each tyre
             $quantities = $request->input('quantities', []);
             
-            $tyreDetails = $group->map(function ($tyre, $index) use ($quantities) {
+            // Duplicate each tyre to create pairs (2 identical tyres per group)
+            $duplicatedGroup = $group->flatMap(function($tyre) {
+                return [$tyre, $tyre]; // Duplicate each tyre
+            });
+            
+            $tyreDetails = $duplicatedGroup->map(function ($tyre, $index) use ($quantities) {
                 // Always default to 2 per tyre
                 $individualQuantity = $quantities[$index] ?? 2;
                 
