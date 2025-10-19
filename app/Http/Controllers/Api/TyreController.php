@@ -698,9 +698,14 @@ class TyreController extends Controller
             // Always ensure we have quantities array with default value 2 for each tyre
             $quantities = $request->input('quantities', []);
             
-            $tyreDetails = $group->map(function ($tyre, $index) use ($quantities) {
-                // Always default to 2 if not provided
-                $individualQuantity = isset($quantities[$index]) ? $quantities[$index] : 2;
+            $tyreDetails = $group->map(function ($tyre, $index) use ($quantities, $group) {
+                // If quantities provided, use them; otherwise default based on group size
+                if (isset($quantities[$index])) {
+                    $individualQuantity = $quantities[$index];
+                } else {
+                    // Default: if 1 tyre in group = qty 4, if 2+ tyres = qty 2 each
+                    $individualQuantity = $group->count() == 1 ? 4 : 2;
+                }
                 
                 return [
                     'id'                => $tyre->id,
