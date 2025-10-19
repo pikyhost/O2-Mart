@@ -79,7 +79,7 @@ class JeeblyService
             "consignment_type"                        => "FORWARD",
             "description"                             => "O2Mart Order #{$order->id}",
             "weight"                                  => $weight ?: 1.0,
-            "payment_type"                            => $order->payment_method === 'cod' ? 'COD' : 'Prepaid',
+            "billing\payment_type"                   => $order->payment_method === 'cod' ? 'COD' : 'Prepaid',
             "cod_amount"                              => $order->payment_method === 'cod' ? $order->total : 0,
             "num_pieces"                              => 1,
             "customer_reference_number"               => "ORDER_{$order->id}",
@@ -130,8 +130,9 @@ class JeeblyService
         ]);
 
         $response = Http::withHeaders([
-            'x-api-key'  => $this->apiKey,
+            'X-API-KEY'  => $this->apiKey,
             'client_key' => $this->clientKey,
+            'Content-Type' => 'application/json',
         ])->post("{$this->baseUrl}/customer/create_shipment", $payload);
 
         Log::info('Jeebly API Response', [
@@ -171,15 +172,6 @@ class JeeblyService
                     'response' => $data,
                     'checked_fields' => ['AWB No', 'AWBNo', 'awb', 'tracking_number', 'data.AWB No', 'data.AWBNo', 'data.awb']
                 ]);
-                
-                // Generate mock tracking number for testing when API fails
-                $mockAwb = 'O2M' . str_pad($order->id, 6, '0', STR_PAD_LEFT) . rand(100, 999);
-                $order->update([
-                    'tracking_number' => $mockAwb,
-                    'tracking_url' => "https://demo.jeebly.com/track-shipment?shipment_number={$mockAwb}",
-                    'shipping_company' => 'Jeebly (Test)',
-                ]);
-                Log::info('Mock tracking number generated for testing', ['order_id' => $order->id, 'tracking_number' => $mockAwb]);
             }
 
             return $data;
@@ -192,15 +184,6 @@ class JeeblyService
             'api_key_present' => $this->apiKey ? true : false,
             'client_key_present' => $this->clientKey ? true : false,
         ]);
-        
-        // Generate mock tracking number for testing when API fails
-        $mockAwb = 'O2M' . str_pad($order->id, 6, '0', STR_PAD_LEFT) . rand(100, 999);
-        $order->update([
-            'tracking_number' => $mockAwb,
-            'tracking_url' => "https://demo.jeebly.com/track-shipment?shipment_number={$mockAwb}",
-            'shipping_company' => 'Jeebly (Test)',
-        ]);
-        Log::info('Mock tracking number generated due to API failure', ['order_id' => $order->id, 'tracking_number' => $mockAwb]);
 
         return null;
     }
