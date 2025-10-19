@@ -32,8 +32,8 @@
             <!-- Body -->
             <tr>
               <td style="padding:30px 25px; font-family:Arial, sans-serif; color:#333333; font-size:15px; line-height:1.6;">
-                <p style="margin:0 0 15px 0;">Hello {{ $user->name }},</p>
-                <p style="margin:0 0 20px 0;">Please verify your email address by clicking the button below.</p>
+                <p style="margin:0 0 15px 0;">Hello!</p>
+                <p style="margin:0 0 20px 0;">Please click the button below to verify your email address.</p>
 
                 <!-- Button -->
                 <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:20px auto;">
@@ -47,14 +47,12 @@
                   </tr>
                 </table>
 
-                <p style="margin:0 0 15px 0;">This verification link will expire in 60 minutes.</p>
                 <p style="margin:0 0 20px 0;">If you did not create an account, no further action is required.</p>
 
-                <p style="margin:0 0 10px 0;">Best regards,<br/>The O2Mart Team<br/>
-                  <a href="https://www.o2mart.net" style="color:#df2020; text-decoration:none;">www.o2mart.net</a> | +971 56 178 7270
+                <p style="margin:0 0 10px 0;">Regards,<br/>O2Mart
                 </p>
 
-                <p style="margin:20px 0 10px 0;">If you're having trouble clicking the "Verify Email Address" button, copy and paste the link below into your browser:</p>
+                <p style="margin:20px 0 10px 0;">If you're having trouble clicking the "Verify Email Address" button, copy and paste the URL below into your web browser:</p>
                 <p style="background-color:#f8f9fa; padding:12px; border-radius:5px; word-break:break-all; font-size:13px;">
                   {{ $verificationUrl }}
                 </p>

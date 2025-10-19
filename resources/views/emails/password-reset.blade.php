@@ -19,7 +19,7 @@
                     <td valign="middle" align="left">
 
                         <a href="https://www.o2mart.net" target="_blank" style="display: inline-block">
-            <img src="https://i.ibb.co/0VXXGcfy/logo.png" alt="logo" border="0" />
+            <img src="{{ \App\Models\Setting::getSetting('logo') ?? 'https://i.ibb.co/0VXXGcfy/logo.png' }}" alt="logo" border="0" />
         </a>
                      
                     </td>
