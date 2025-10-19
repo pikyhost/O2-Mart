@@ -54,7 +54,8 @@ class AdminPanelProvider extends PanelProvider
                 'Vehicle Data',
                 'Business Hours',
                 'Blogs Management',
-                'Settings Management'
+                'Settings Management',
+                'System'
             ])
             ->userMenuItems([
                 'profile' => MenuItem::make()

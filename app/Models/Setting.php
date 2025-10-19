@@ -151,7 +151,7 @@ class Setting extends Model
             'facebook'  => self::getSetting('facebook'),
             'youtube'   => self::getSetting('youtube'),
             'instagram' => self::getSetting('instagram'),
-            'x'         => self::getSetting('x'),
+            'linkedin'  => self::getSetting('x'), // Use x column for LinkedIn
             'snapchat'  => self::getSetting('snapchat'),
             'tiktok'    => self::getSetting('tiktok'),
         ];

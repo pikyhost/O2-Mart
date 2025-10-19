@@ -69,12 +69,13 @@
                 <p style="margin:0; font-weight:bold;">Follow us:</p>
 @php
 $socialLinks = \App\Models\Setting::getSocialMediaLinks();
+$contactDetails = \App\Models\Setting::getContactDetails();
 @endphp
                 <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:10px auto;">
                   <tr>
-                    @if($socialLinks['x'])
+                    @if($socialLinks['linkedin'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="{{ $socialLinks['x'] }}" target="_blank">
+                      <a href="{{ $socialLinks['linkedin'] }}" target="_blank">
                         <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" width="24" height="24" alt="LinkedIn" border="0" style="display:block;" />
                       </a>
                     </td>
@@ -93,11 +94,13 @@ $socialLinks = \App\Models\Setting::getSocialMediaLinks();
                       </a>
                     </td>
                     @endif
+                    @if($contactDetails['phone'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="https://wa.me/971561787270" target="_blank">
+                      <a href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $contactDetails['phone']) }}" target="_blank">
                         <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" width="24" height="24" alt="WhatsApp" border="0" style="display:block;" />
                       </a>
                     </td>
+                    @endif
                   </tr>
                 </table>
                 <p style="margin:0;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
