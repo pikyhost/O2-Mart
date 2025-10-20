@@ -277,17 +277,7 @@ Route::post('/cart/shipping-breakdown', [CartController::class, 'getShippingBrea
 Route::middleware('auth:sanctum')->get('/orders/user', [CheckoutController::class, 'getUserOrders']);
 Route::middleware('auth:sanctum')->get('/orders/filter-by-status', [CheckoutController::class, 'getUserOrdersByStatus']);
 Route::middleware('auth:sanctum')->get('/orders/statuses', [CheckoutController::class, 'getOrderStatuses']);
-Route::middleware('auth:sanctum')->get('/orders/view/{id}', function ($id) {
-$order = \App\Models\Order::with('items')->findOrFail($id);
-
-if (auth()->id() !== $order->user_id) {
-    return response()->json(['message' => 'Unauthorized'], 403);
-}
-
-return response()->json([
-    'order' => $order,
-]);
-})->name('api.orders.view');
+Route::middleware('auth:sanctum')->get('/orders/view/{id}', [CheckoutController::class, 'getOrderDetails'])->name('api.orders.view');
 Route::get('/track', [TrackingController::class, 'track']);
 
 // Route::post('/payment/paymob/callback', function (\Illuminate\Http\Request $request) {

@@ -919,5 +919,61 @@ class CheckoutController extends Controller
         ]);
     }
 
+    public function getOrderDetails($id)
+    {
+        $order = Order::with([
+            'items', 
+            'shippingAddress.area', 
+            'shippingAddress.city', 
+            'user'
+        ])->findOrFail($id);
+
+        // Check if user owns this order
+        if (auth()->id() !== $order->user_id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // Format order data similar to email receipt
+        $orderData = [
+            'order' => [
+                'id' => $order->id,
+                'created_at' => $order->created_at->format('d M Y, h:i A'),
+                'status' => $order->status,
+                'payment_method' => ucfirst($order->payment_method ?? 'N/A'),
+                'tracking_number' => $order->tracking_number,
+            ],
+            'customer' => [
+                'name' => $order->user->name ?? $order->contact_name ?? 'Guest',
+                'email' => $order->user->email ?? $order->contact_email,
+                'phone' => $order->user->phone ?? $order->contact_phone,
+            ],
+            'shipping_address' => $order->shippingAddress ? [
+                'address_line' => $order->shippingAddress->address_line,
+                'area' => $order->shippingAddress->area->name ?? '-',
+                'city' => $order->shippingAddress->city->name ?? '-',
+                'phone' => $order->shippingAddress->phone,
+            ] : null,
+            'items' => $order->items->map(function ($item) {
+                return [
+                    'product_name' => $item->product_name,
+                    'quantity' => $item->quantity,
+                    'price_per_unit' => number_format($item->price_per_unit, 2),
+                    'subtotal' => number_format($item->subtotal, 2),
+                ];
+            }),
+            'cost_breakdown' => [
+                'subtotal' => number_format($order->subtotal, 2),
+                'shipping_cost' => number_format($order->shipping_cost, 2),
+                'installation_fees' => number_format($order->installation_fees ?? 0, 2),
+                'tax_amount' => number_format($order->tax_amount, 2),
+                'discount' => number_format($order->discount ?? 0, 2),
+                'total' => number_format($order->total, 2),
+            ],
+            'currency' => 'AED',
+        ];
+
+        return response()->json($orderData);
+    }
+
 
 }
