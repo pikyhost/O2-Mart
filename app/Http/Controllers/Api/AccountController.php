@@ -20,13 +20,57 @@ class AccountController extends Controller
     public function show()
     {
         $user = Auth::guard('sanctum')->user();
+        
+        // Load addresses with relationships
+        $addresses = $user->addressBooks()
+            ->with(['country', 'governorate', 'city', 'area'])
+            ->get()
+            ->map(function ($address) {
+                return [
+                    'id' => $address->id,
+                    'user_id' => $address->user_id,
+                    'session_id' => $address->session_id,
+                    'label' => $address->label,
+                    'full_name' => $address->full_name,
+                    'phone' => $address->phone,
+                    'address_line_1' => $address->address_line_1,
+                    'address_line_2' => $address->address_line_2,
+                    'country_id' => $address->country_id,
+                    'governorate_id' => $address->governorate_id,
+                    'city_id' => $address->city_id,
+                    'area_id' => $address->area_id,
+                    'postal_code' => $address->postal_code,
+                    'additional_info' => $address->additional_info,
+                    'is_primary' => $address->is_primary,
+                    'created_at' => $address->created_at,
+                    'updated_at' => $address->updated_at,
+                    'house_no' => $address->house_no,
+                    'building_name' => $address->building_name,
+                    'landmark' => $address->landmark,
+                    'area_text' => $address->area_text,
+                    'full_location' => $address->full_location,
+                    'country' => $address->country,
+                    'governorate' => $address->governorate,
+                    'city' => $address->city,
+                    'area' => $address->area,
+                ];
+            });
+        
+        $primaryAddress = $addresses->firstWhere('is_primary', true);
 
         return response()->json([
-            'first_name' => $this->extractFirstName($user->name),
-            'last_name' => $this->extractLastName($user->name),
-            'display_name' => $user->desc_for_comment,
-            'phone' => $user->phone,
-            'email' => $user->email,
+            'success' => true,
+            'data' => [
+                'user' => [
+                    'first_name' => $this->extractFirstName($user->name),
+                    'last_name' => $this->extractLastName($user->name),
+                    'display_name' => $user->desc_for_comment,
+                    'phone' => $user->phone,
+                    'email' => $user->email,
+                ],
+                'primary_address' => $primaryAddress,
+                'addresses' => $addresses,
+            ]
         ]);
     }
 
@@ -97,9 +141,42 @@ class AccountController extends Controller
 
             $user->sendEmailVerificationNotification();
             $user->notify(new EmailUpdateNotification());
+            
+            // Reload addresses
+            $addresses = $user->addressBooks()->with(['country', 'governorate', 'city', 'area'])->get();
+            $primaryAddress = $addresses->firstWhere('is_primary', true);
 
             return response()->json([
+                'success' => true,
                 'message' => 'Account updated successfully. Verification email sent to new address.',
+                'data' => [
+                    'user' => [
+                        'first_name' => $this->extractFirstName($user->name),
+                        'last_name' => $this->extractLastName($user->name),
+                        'display_name' => $user->desc_for_comment,
+                        'phone' => $user->phone,
+                        'email' => $user->email,
+                        'country_id' => $user->country_id,
+                        'governorate_id' => $user->governorate_id,
+                        'city_id' => $user->city_id,
+                        'area_id' => $user->area_id,
+                    ],
+                    'primary_address' => $primaryAddress,
+                    'addresses' => $addresses,
+                ]
+            ]);
+        }
+
+        $user->save();
+        
+        // Reload addresses
+        $addresses = $user->addressBooks()->with(['country', 'governorate', 'city', 'area'])->get();
+        $primaryAddress = $addresses->firstWhere('is_primary', true);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Account updated successfully',
+            'data' => [
                 'user' => [
                     'first_name' => $this->extractFirstName($user->name),
                     'last_name' => $this->extractLastName($user->name),
@@ -110,24 +187,9 @@ class AccountController extends Controller
                     'governorate_id' => $user->governorate_id,
                     'city_id' => $user->city_id,
                     'area_id' => $user->area_id,
-                ]
-            ]);
-        }
-
-        $user->save();
-
-        return response()->json([
-            'message' => 'Account updated successfully',
-            'user' => [
-                'first_name' => $this->extractFirstName($user->name),
-                'last_name' => $this->extractLastName($user->name),
-                'display_name' => $user->desc_for_comment,
-                'phone' => $user->phone,
-                'email' => $user->email,
-                'country_id' => $user->country_id,
-                'governorate_id' => $user->governorate_id,
-                'city_id' => $user->city_id,
-                'area_id' => $user->area_id,
+                ],
+                'primary_address' => $primaryAddress,
+                'addresses' => $addresses,
             ]
         ]);
     }
