@@ -1,4 +1,4 @@
-<\!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
@@ -8,9 +8,9 @@
     <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F5F5F5">
       <tr>
         <td align="center">
-          <\!-- Main Container -->
+          <!-- Main Container -->
           <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFFFFF" style="width:600px; max-width:600px; margin:0 auto;">
-            <\!-- Header -->
+            <!-- Header -->
             <tr>
               <td bgcolor="#DF2020" style="padding:15px 20px;" align="left">
                 <table cellpadding="0" cellspacing="0" border="0">
@@ -28,15 +28,56 @@
               </td>
             </tr>
 
-            <\!-- Body -->
+            <!-- Body -->
             <tr>
               <td style="padding:30px 25px; font-family:Arial, sans-serif; color:#333333; font-size:15px; line-height:1.6;">
                 <p style="margin:0 0 15px 0;">Hi {{ explode(' ', $inquiry->full_name)[0] }},</p>
                 <p style="margin:0 0 20px 0;">Thanks for reaching out to O2Mart\! We've received your inquiry # {{ $inquiry->id }} and our team is already working on it.</p>
 
+                <!-- Inquiry Details -->
+                <table width="100%" cellpadding="15" cellspacing="0" border="0" style="background-color:#f8f9fa; border-radius:8px; margin:20px 0;">
+                  <tr>
+                    <td>
+                      <p style="margin:0 0 15px 0;"><strong style="color:#df2020;">Inquiry Details:</strong></p>
+                      <p style="margin:0 0 10px 0;"><strong>Type:</strong> {{ ucfirst(str_replace('_', ' ', $inquiry->type)) }}</p>
+                      
+                      @if($inquiry->car_make || $inquiry->car_model || $inquiry->car_year || $inquiry->vin_chassis_number)
+                      <p style="margin:10px 0 5px 0;"><strong style="color:#df2020;">Vehicle Information:</strong></p>
+                      @if($inquiry->car_make)
+                      <p style="margin:0 0 5px 0;"><strong>Car Make:</strong> {{ $inquiry->car_make }}</p>
+                      @endif
+                      @if($inquiry->car_model)
+                      <p style="margin:0 0 5px 0;"><strong>Car Model:</strong> {{ $inquiry->car_model }}</p>
+                      @endif
+                      @if($inquiry->car_year)
+                      <p style="margin:0 0 5px 0;"><strong>Car Year:</strong> {{ $inquiry->car_year }}</p>
+                      @endif
+                      @if($inquiry->vin_chassis_number)
+                      <p style="margin:0 0 10px 0;"><strong>VIN/Chassis Number:</strong> {{ $inquiry->vin_chassis_number }}</p>
+                      @endif
+                      @endif
+
+                      @if($inquiry->required_parts && count($inquiry->required_parts) > 0)
+                      <p style="margin:10px 0 5px 0;"><strong style="color:#df2020;">Required Parts:</strong></p>
+                      @foreach($inquiry->required_parts as $part)
+                      <p style="margin:0 0 5px 0;">• {{ $part }}</p>
+                      @endforeach
+                      @endif
+
+                      @if($inquiry->quantity)
+                      <p style="margin:10px 0 5px 0;"><strong>Quantity:</strong> {{ $inquiry->quantity }}</p>
+                      @endif
+
+                      @if($inquiry->description)
+                      <p style="margin:10px 0 5px 0;"><strong>Description:</strong> {{ $inquiry->description }}</p>
+                      @endif
+                    </td>
+                  </tr>
+                </table>
+
                 <p style="margin:0 0 10px 0;"><strong>Here's what happens next:</strong></p>
 
-                <\!-- Steps -->
+                <!-- Steps -->
                 <table width="100%" cellpadding="20" cellspacing="0" border="0" style="background-color:#f8f9fa; border-radius:8px; margin:20px 0;">
                   <tr>
                     <td>
@@ -49,7 +90,7 @@
 
                 <p style="margin:0 0 20px 0;">In the meantime, if you'd like faster service, you can also reach us directly on WhatsApp:</p>
 
-                <\!-- Button -->
+                <!-- Button -->
                 <table cellpadding="0" cellspacing="0" border="0" align="left" style="margin:20px 0;">
                   <tr>
                     <td bgcolor="#DF2020" align="center" style="border-radius:5px; padding:12px 30px;">
@@ -70,7 +111,7 @@
               </td>
             </tr>
 
-            <\!-- Footer -->
+            <!-- Footer -->
             <tr>
               <td bgcolor="#DF2020" align="center" style="color:#ffffff; padding:15px 20px; font-size:12px; font-family:Arial, sans-serif;">
                 <p style="margin:0; font-weight:bold;">Follow us:</p>
