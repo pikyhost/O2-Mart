@@ -38,7 +38,7 @@
                   <tr>
                     <td valign="middle" align="left" style="padding:0;">
                       <a href="https://www.o2mart.net" target="_blank" style="display:block; text-decoration:none;">
-                        <img src="https://o2mart.to7fa.online/email-assets/logo.png" width="120" height="40" alt="O2Mart Logo" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:40px; width:120px;" />
+                        <img src="https://o2mart.to7fa.online/email-assets/logo.png" width="170" height="50" alt="O2Mart Logo" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:50px; width:170px; max-width:170px;" />
                       </a>
                     </td>
                     <td valign="middle" align="left" style="color:#ffffff; font-size:20px; font-family:Arial, sans-serif; padding-left:10px;">
