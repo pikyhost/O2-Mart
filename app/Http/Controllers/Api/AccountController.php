@@ -22,7 +22,7 @@ class AccountController extends Controller
         $user = Auth::guard('sanctum')->user();
         
         // Load addresses with relationships
-        $addresses = $user->addressBooks()
+        $addresses = $user->addresses()
             ->with(['country', 'governorate', 'city', 'area'])
             ->get()
             ->map(function ($address) {
@@ -143,7 +143,7 @@ class AccountController extends Controller
             $user->notify(new EmailUpdateNotification());
             
             // Reload addresses
-            $addresses = $user->addressBooks()->with(['country', 'governorate', 'city', 'area'])->get();
+            $addresses = $user->addresses()->with(['country', 'governorate', 'city', 'area'])->get();
             $primaryAddress = $addresses->firstWhere('is_primary', true);
 
             return response()->json([
@@ -170,7 +170,7 @@ class AccountController extends Controller
         $user->save();
         
         // Reload addresses
-        $addresses = $user->addressBooks()->with(['country', 'governorate', 'city', 'area'])->get();
+        $addresses = $user->addresses()->with(['country', 'governorate', 'city', 'area'])->get();
         $primaryAddress = $addresses->firstWhere('is_primary', true);
 
         return response()->json([
