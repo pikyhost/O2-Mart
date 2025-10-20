@@ -38,7 +38,7 @@
                   <tr>
                     <td valign="middle" align="left" style="padding:0;">
                       <a href="https://www.o2mart.net" target="_blank" style="display:block; text-decoration:none;">
-                        <img src="https://i.ibb.co/0VXXGcfy/logo.png" width="120" height="40" alt="O2Mart Logo" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:40px; width:120px;" />
+                        <img src="https://o2mart.to7fa.online/email-assets/logo.png" width="120" height="40" alt="O2Mart Logo" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:40px; width:120px;" />
                       </a>
                     </td>
                     <td valign="middle" align="left" style="color:#ffffff; font-size:20px; font-family:Arial, sans-serif; padding-left:10px;">
@@ -89,22 +89,22 @@
                   <tr>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://www.linkedin.com/company/o2mart/" target="_blank" style="display:block; text-decoration:none;">
-                        <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" width="24" height="24" alt="LinkedIn" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                        <img src="https://o2mart.to7fa.online/email-assets/linkedin.png" width="24" height="24" alt="LinkedIn" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
                       </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://www.facebook.com/o2mart" target="_blank" style="display:block; text-decoration:none;">
-                        <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" width="24" height="24" alt="Facebook" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                        <img src="https://o2mart.to7fa.online/email-assets/facebook.png" width="24" height="24" alt="Facebook" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
                       </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://www.instagram.com/o2mart/" target="_blank" style="display:block; text-decoration:none;">
-                        <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" width="24" height="24" alt="Instagram" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                        <img src="https://o2mart.to7fa.online/email-assets/instagram.png" width="24" height="24" alt="Instagram" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
                       </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://wa.me/971561787270" target="_blank" style="display:block; text-decoration:none;">
-                        <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" width="24" height="24" alt="WhatsApp" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                        <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png" width="24" height="24" alt="WhatsApp" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
                       </a>
                     </td>
                   </tr>

@@ -18,7 +18,7 @@
                 <tr>
                   <td align="left" valign="middle" style="width:110px;">
                     <a href="https://www.o2mart.net" target="_blank">
-                      <img src="https://i.ibb.co/0VXXGcfy/logo.png" alt="O2Mart" width="95" style="display:block; border:0;">
+                      <img src="https://o2mart.to7fa.online/email-assets/logo.png" alt="O2Mart" width="95" style="display:block; border:0;">
                     </a>
                   </td>
                   <td align="left" valign="middle" style="color:#ffffff; font-size:20px; font-weight:bold;">
@@ -65,16 +65,16 @@
                 <tr>
                   <td align="center">
                     <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
-                      <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" width="24" style="margin:0 5px;">
+                      <img src="https://o2mart.to7fa.online/email-assets/linkedin.png" alt="LinkedIn" width="24" style="margin:0 5px;">
                     </a>
                     <a href="https://www.facebook.com/o2mart" target="_blank">
-                      <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" alt="Facebook" width="24" style="margin:0 5px;">
+                      <img src="https://o2mart.to7fa.online/email-assets/facebook.png" alt="Facebook" width="24" style="margin:0 5px;">
                     </a>
                     <a href="https://www.instagram.com/o2mart/" target="_blank">
-                      <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" alt="Instagram" width="24" style="margin:0 5px;">
+                      <img src="https://o2mart.to7fa.online/email-assets/instagram.png" alt="Instagram" width="24" style="margin:0 5px;">
                     </a>
                     <a href="https://wa.me/971561787270" target="_blank">
-                      <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" alt="WhatsApp" width="24" style="margin:0 5px;">
+                      <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png" alt="WhatsApp" width="24" style="margin:0 5px;">
                     </a>
                   </td>
                 </tr>

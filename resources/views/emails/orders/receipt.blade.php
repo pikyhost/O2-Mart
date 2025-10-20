@@ -121,7 +121,7 @@
 <div class="email-container">
     <div class="header">
         <a href="https://www.o2mart.net" target="_blank" style="display: inline-block">
-            <img src="https://i.ibb.co/0VXXGcfy/logo.png" alt="logo" border="0" />
+            <img src="https://o2mart.to7fa.online/email-assets/logo.png" alt="logo" border="0" />
         </a>
         <h2>– Order Receipt</h2>
     </div>
@@ -215,22 +215,22 @@
         <div style="display: flex; justify-content: center; align-items: center; gap: 10px">
             <!-- LinkedIn -->
             <a href="https://www.linkedin.com/company/o2mart/" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" style="width: 16px; height: 16px; display: block" />
+                <img src="https://o2mart.to7fa.online/email-assets/linkedin.png" alt="LinkedIn" style="width: 16px; height: 16px; display: block" />
             </a>
             
             <!-- Facebook -->
             <a href="https://www.facebook.com/o2mart" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" alt="Facebook" style="width: 16px; height: 16px; display: block" />
+                <img src="https://o2mart.to7fa.online/email-assets/facebook.png" alt="Facebook" style="width: 16px; height: 16px; display: block" />
             </a>
             
             <!-- Instagram -->
             <a href="https://www.instagram.com/o2mart/" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" alt="Instagram" style="width: 16px; height: 16px; display: block" />
+                <img src="https://o2mart.to7fa.online/email-assets/instagram.png" alt="Instagram" style="width: 16px; height: 16px; display: block" />
             </a>
             
             <!-- WhatsApp -->
             <a href="https://wa.me/971561787270" target="_blank" style="width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center;">
-                <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" alt="WhatsApp" style="width: 16px; height: 16px; display: block" />
+                <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png" alt="WhatsApp" style="width: 16px; height: 16px; display: block" />
             </a>
         </div>
         

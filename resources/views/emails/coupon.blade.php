@@ -122,7 +122,7 @@
 <div class="email-container">
     <div class="header">
         <a href="https://www.o2mart.net" target="_blank" style="display: inline-block">
-            <img src="https://i.ibb.co/0VXXGcfy/logo.png" alt="logo" border="0" />
+            <img src="https://o2mart.to7fa.online/email-assets/logo.png" alt="logo" border="0" />
         </a>
         <h2>– Your Special Discount</h2>
     </div>
@@ -191,22 +191,22 @@
         <div class="social-links">
             <!-- LinkedIn -->
             <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
-                <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" alt="LinkedIn" />
+                <img src="https://o2mart.to7fa.online/email-assets/linkedin.png" alt="LinkedIn" />
             </a>
             
             <!-- Facebook -->
             <a href="https://www.facebook.com/o2mart" target="_blank">
-                <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" alt="Facebook" />
+                <img src="https://o2mart.to7fa.online/email-assets/facebook.png" alt="Facebook" />
             </a>
             
             <!-- Instagram -->
             <a href="https://www.instagram.com/o2mart/" target="_blank">
-                <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" alt="Instagram" />
+                <img src="https://o2mart.to7fa.online/email-assets/instagram.png" alt="Instagram" />
             </a>
             
             <!-- WhatsApp -->
             <a href="https://wa.me/971561787270" target="_blank">
-                <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" alt="WhatsApp" />
+                <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png" alt="WhatsApp" />
             </a>
         </div>
         
