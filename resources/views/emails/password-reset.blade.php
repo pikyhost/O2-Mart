@@ -1,43 +1,23 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!--[if !mso]><!-->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!--<![endif]-->
     <title>Password Reset – O2Mart</title>
-    <!--[if mso]>
-    <noscript>
-      <xml>
-        <o:OfficeDocumentSettings>
-          <o:AllowPNG/>
-          <o:PixelsPerInch>96</o:PixelsPerInch>
-        </o:OfficeDocumentSettings>
-      </xml>
-    </noscript>
-    <style type="text/css">
-      table {border-collapse: collapse; border-spacing: 0; margin: 0;}
-      div, td {padding: 0;}
-      div {margin: 0 !important;}
-    </style>
-    <![endif]-->
   </head>
   <body style="margin:0; padding:0; background-color:#f5f5f5;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f5f5" style="border-collapse:collapse;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F5F5F5">
       <tr>
-        <td align="center" style="padding:0;">
+        <td align="center">
           <!-- Main Container -->
-          <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:600px; max-width:600px; margin:0 auto; border-collapse:collapse;">
+          <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFFFFF" style="width:600px; max-width:600px; margin:0 auto;">
             
             <!-- Header -->
             <tr>
-              <td bgcolor="#df2020" style="padding:15px 20px;" align="left">
-                <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+              <td bgcolor="#DF2020" style="padding:15px 20px;" align="left">
+                <table cellpadding="0" cellspacing="0" border="0">
                   <tr>
-                    <td valign="middle" align="left" style="padding:0;">
-                        <img src="https://o2mart.to7fa.online/email-assets/logo.png?v=2" width="170" height="50" alt="O2Mart Logo" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:50px; width:170px; max-width:170px;" />
+                    <td valign="middle" align="left">
+                        <img src="https://o2mart.to7fa.online/email-assets/logo.png?v=4" alt="O2Mart Logo" width="170" height="50" border="0" style="display:block;" />
                     </td>
                     <td valign="middle" align="left" style="color:#ffffff; font-size:20px; font-family:Arial, sans-serif; padding-left:10px;">
                       – Your Trusted Auto Parts Partner
@@ -54,11 +34,11 @@
                 <p style="margin:0 0 20px 0;">We received a request to reset the password for your O2Mart account.</p>
 
                 <!-- Button -->
-                <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:20px auto; border-collapse:collapse;">
+                <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:20px auto;">
                   <tr>
-                    <td bgcolor="#df2020" align="center" style="border-radius:5px; padding:12px 30px; mso-padding-alt:12px 30px;">
+                    <td bgcolor="#DF2020" align="center" style="border-radius:5px; padding:12px 30px;">
                       <a href="{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}"
-                        style="font-family:Arial, sans-serif; font-size:16px; color:#ffffff; text-decoration:none; display:inline-block; font-weight:bold; mso-line-height-rule:exactly;">
+                        style="font-family:Arial, sans-serif; font-size:16px; color:#ffffff; text-decoration:none; display:inline-block; font-weight:bold;">
                         Reset Password
                       </a>
                     </td>
@@ -81,25 +61,33 @@
 
             <!-- Footer -->
             <tr>
-              <td bgcolor="#df2020" align="center" style="color:#ffffff; padding:15px 20px; font-size:12px; font-family:Arial, sans-serif;">
-                <p style="margin:0 0 10px 0; font-weight:bold;">Follow us:</p>
-                <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:10px auto; border-collapse:collapse;">
+              <td bgcolor="#DF2020" align="center" style="color:#ffffff; padding:15px 20px; font-size:12px; font-family:Arial, sans-serif;">
+                <p style="margin:0; font-weight:bold;">Follow us:</p>
+                <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:10px auto;">
                   <tr>
                     <td align="center" style="padding:0 5px;">
-                        <img src="https://o2mart.to7fa.online/email-assets/linkedin.png?v=3" width="24" height="24" alt="LinkedIn" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                      <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/linkedin.png?v=4" width="24" height="24" alt="LinkedIn" border="0" style="display:block;" />
+                      </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
-                        <img src="https://o2mart.to7fa.online/email-assets/facebook.png?v=3" width="24" height="24" alt="Facebook" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                      <a href="https://www.facebook.com/o2mart" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/facebook.png?v=4" width="24" height="24" alt="Facebook" border="0" style="display:block;" />
+                      </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
-                        <img src="https://o2mart.to7fa.online/email-assets/instagram.png?v=3" width="24" height="24" alt="Instagram" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                      <a href="https://www.instagram.com/o2mart/" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/instagram.png?v=4" width="24" height="24" alt="Instagram" border="0" style="display:block;" />
+                      </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
-                        <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png?v=3" width="24" height="24" alt="WhatsApp" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                      <a href="https://wa.me/971561787270" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png?v=4" width="24" height="24" alt="WhatsApp" border="0" style="display:block;" />
+                      </a>
                     </td>
                   </tr>
                 </table>
-                <p style="margin:10px 0 0 0;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
+                <p style="margin:0;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
               </td>
             </tr>
           </table>
