@@ -49,6 +49,7 @@ class StoreInquiryRequest extends FormRequest
             'description' => 'nullable|string|max:1000',
 
             'rim_size' => 'nullable|string|max:50',
+            'rim_size_id' => 'nullable|exists:rim_sizes,id',
             'front_width' => ['nullable', 'string'],
             'front_height' => ['nullable', 'string'],
             'front_diameter' => ['nullable', 'string'],

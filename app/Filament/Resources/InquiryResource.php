@@ -92,7 +92,7 @@ class InquiryResource extends Resource
                                             ->maxLength(50),
                                         Forms\Components\Select::make('rim_size_id')
                                             ->label('Rim Size')
-                                            ->options(\App\Models\RimSize::all()->pluck('size', 'id'))
+                                            ->relationship('rimSize', 'size')
                                             ->searchable()
                                             ->preload()
                                             ->visible(fn (Forms\Get $get) => $get('type') === 'rims'),
@@ -194,6 +194,16 @@ class InquiryResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('full_name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('car_make')
+                    ->label('Vehicle')
+                    ->formatStateUsing(fn ($record) => 
+                        trim(implode(' ', array_filter([
+                            $record->car_make,
+                            $record->car_model,
+                            $record->car_year
+                        ]))) ?: '-'
+                    )
+                    ->searchable(['car_make', 'car_model', 'car_year']),
                 Tables\Columns\TextColumn::make('type')
                     ->formatStateUsing(fn (string $state): string => Str::title($state))
                     ->badge()

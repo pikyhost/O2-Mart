@@ -19,7 +19,7 @@ class Inquiry extends Model implements HasMedia
         'car_make', 'car_model', 'car_year', 'vin_chassis_number',
         'required_parts', 'quantity', 'battery_specs', 'description',
         'admin_notes', 'quoted_price', 'quoted_at', 'assigned_to', 'source', 'page_source',
-        'ip_address', 'user_agent', 'rim_size', 'front_width', 'front_height', 'front_diameter',
+        'ip_address', 'user_agent', 'rim_size', 'rim_size_id', 'front_width', 'front_height', 'front_diameter',
         'rear_tyres'
     ];
 
@@ -70,6 +70,11 @@ class Inquiry extends Model implements HasMedia
     public function assignedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function rimSize(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\RimSize::class, 'rim_size_id');
     }
 
     // Accessors & Mutators
