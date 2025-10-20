@@ -25,10 +25,15 @@ class StoreInquiryRequest extends FormRequest
             'phone_number' => 'required|string|max:20|regex:/^[\+]?[0-9\s\-\(\)]+$/',
             'email' => 'required|email|max:200',
 
-            // Vehicle Information
+            // Vehicle Information (backend field names)
             'car_make' => 'nullable|string|max:50',
             'car_model' => 'nullable|string|max:50',
             'car_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
+            
+            // Vehicle Information (frontend field names - will be mapped)
+            'make' => 'nullable|string|max:50',
+            'model' => 'nullable|string|max:50',
+            'year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'vin_chassis_number' => [
                 'nullable',
                 'string',
@@ -45,6 +50,8 @@ class StoreInquiryRequest extends FormRequest
             'required_parts' => 'nullable|array|max:10',
             'required_parts.*' => 'string|max:100',
             'quantity' => 'nullable|integer|min:1|max:1000',
+            'quantities' => 'nullable|array|max:10',
+            'quantities.*' => 'integer|min:1|max:1000',
             'battery_specs' => 'nullable|string|max:500',
             'description' => 'nullable|string|max:1000',
 
@@ -89,9 +96,29 @@ class StoreInquiryRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $this->merge([
+        // Map frontend field names to backend field names
+        $mappedData = [
             'source' => $this->source ?? 'api',
             'priority' => $this->priority ?? 'medium',
-        ]);
+        ];
+
+        // Handle vehicle info field mapping
+        if ($this->has('make')) {
+            $mappedData['car_make'] = $this->input('make');
+        }
+        if ($this->has('model')) {
+            $mappedData['car_model'] = $this->input('model');
+        }
+        if ($this->has('year')) {
+            $mappedData['car_year'] = $this->input('year');
+        }
+
+        // Handle quantities array to quantity field
+        if ($this->has('quantities') && is_array($this->input('quantities'))) {
+            $quantities = $this->input('quantities');
+            $mappedData['quantity'] = !empty($quantities) ? (int)$quantities[0] : 1;
+        }
+
+        $this->merge($mappedData);
     }
 }
