@@ -17,7 +17,9 @@
                 <table cellpadding="0" cellspacing="0" border="0">
                   <tr>
                     <td valign="middle" align="left">
-                        <img src="https://o2mart.to7fa.online/email-assets/logo.png?v=4" alt="O2Mart Logo" width="170" height="50" border="0" style="display:block;" />
+                      <a href="https://www.o2mart.net" target="_blank" style="display:inline-block;">
+                        <img src="https://i.ibb.co/0VXXGcfy/logo.png" alt="O2Mart Logo" border="0" />
+                      </a>
                     </td>
                     <td valign="middle" align="left" style="color:#ffffff; font-size:20px; font-family:Arial, sans-serif; padding-left:10px;">
                       – Your Trusted Auto Parts Partner
@@ -67,22 +69,22 @@
                   <tr>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
-                        <img src="https://o2mart.to7fa.online/email-assets/linkedin.png?v=4" width="24" height="24" alt="LinkedIn" border="0" style="display:block;" />
+                        <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" width="24" height="24" alt="LinkedIn" border="0" style="display:block;" />
                       </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://www.facebook.com/o2mart" target="_blank">
-                        <img src="https://o2mart.to7fa.online/email-assets/facebook.png?v=4" width="24" height="24" alt="Facebook" border="0" style="display:block;" />
+                        <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" width="24" height="24" alt="Facebook" border="0" style="display:block;" />
                       </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://www.instagram.com/o2mart/" target="_blank">
-                        <img src="https://o2mart.to7fa.online/email-assets/instagram.png?v=4" width="24" height="24" alt="Instagram" border="0" style="display:block;" />
+                        <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" width="24" height="24" alt="Instagram" border="0" style="display:block;" />
                       </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://wa.me/971561787270" target="_blank">
-                        <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png?v=4" width="24" height="24" alt="WhatsApp" border="0" style="display:block;" />
+                        <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" width="24" height="24" alt="WhatsApp" border="0" style="display:block;" />
                       </a>
                     </td>
                   </tr>

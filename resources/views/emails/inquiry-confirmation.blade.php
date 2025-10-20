@@ -1,178 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>We've received your inquiry # {{ $inquiry->id }} – O2Mart is on it!</title>
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333333;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        .email-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-        }
-        .header {
-            background-color: #df2020;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 15px;
-        }
-        .header img {
-            width: 95px;
-            height: auto;
-            display: inline-block;
-            vertical-align: middle;
-            margin-bottom: 3px;
-        }
-        .header h2 {
-            color: #ffffff;
-            margin: 0;
-            font-size: 25px;
-        }
-        .header h1 {
-            color: #ffffff;
-            margin: 0;
-            font-size: 28px;
-        }
-        .header a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        .header a:hover {
-            text-decoration: underline;
-        }
-        .content {
-            padding: 30px 20px;
-        }
-        .steps {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-        .step {
-            margin-bottom: 15px;
-        }
-        .step strong {
-            color: #df2020;
-        }
-        .whatsapp-link {
-            background-color: #df2020;
-            color: white !important;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
-            margin: 10px 0;
-        }
-        .footer {
-            background-color: #df2020;
-            color: #ffffff;
-            padding: 10px 20px;
-            text-align: center;
-            font-size: 12px;
-        }
-        .footer a {
-            color: #ffffff;
-            text-decoration: underline;
-        }
-        .footer p {
-            margin: 10px 0;
-        }
-        .social-links {
-            text-align: center;
-            margin: 15px 0;
-        }
-        .social-links a {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-block;
-            text-decoration: none;
-            margin: 0 7px;
-        }
-        .social-links img {
-            width: 20px;
-            height: 20px;
-            display: block;
-            margin: 5px auto;
-        }
-    </style>
-</head>
-<body>
-<div class="email-container">
-    <div class="header">
-        <a href="https://www.o2mart.net" target="_blank" style="display: inline-block">
-            <img src="https://o2mart.to7fa.online/email-assets/logo.png" alt="logo" border="0" />
-        </a>
-        <h2>– Your Trusted Auto Parts Partner</h2>
-    </div>
+<\!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>We've received your inquiry – O2Mart</title>
+  </head>
+  <body style="margin:0; padding:0; background-color:#F5F5F5;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F5F5F5">
+      <tr>
+        <td align="center">
+          <\!-- Main Container -->
+          <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFFFFF" style="width:600px; max-width:600px; margin:0 auto;">
+            <\!-- Header -->
+            <tr>
+              <td bgcolor="#DF2020" style="padding:15px 20px;" align="left">
+                <table cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td valign="middle" align="left">
+                      <a href="https://www.o2mart.net" target="_blank" style="display:inline-block;">
+                        <img src="https://o2mart.to7fa.online/email-assets/logo.png?v=5" alt="O2Mart Logo" width="170" height="50" border="0" style="display:block;" />
+                      </a>
+                    </td>
+                    <td valign="middle" align="left" style="color:#ffffff; font-size:20px; font-family:Arial, sans-serif; padding-left:10px;">
+                      – Your Trusted Auto Parts Partner
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
 
-    <div class="content">
-        <p>Hi {{ explode(' ', $inquiry->full_name)[0] }},</p>
-        
-        <p>Thanks for reaching out to O2Mart! We've received your inquiry # {{ $inquiry->id }} and our team is already working on it.</p>
-        
-        <p><strong>Here's what happens next:</strong></p>
-        
-        <div class="steps">
-            <div class="step">
-                <strong>Review</strong> – Our specialists will check your request against our supplier network.
-            </div>
-            <div class="step">
-                <strong>Match</strong> – We'll find the best options for your part(s).
-            </div>
-            <div class="step">
-                <strong>Reply</strong> – You'll receive a response as soon as possible with availability, pricing, and delivery options.
-            </div>
-        </div>
-        
-        <p>In the meantime, if you'd like faster service, you can also reach us directly on WhatsApp:</p>
-        <a href="https://wa.me/971561787270" class="whatsapp-link">Contact us on WhatsApp</a>
-        
-        <p>We appreciate your trust in O2Mart – making car care easy, reliable, and hassle-free in the UAE.</p>
-        
-        <p>Best regards,<br>
-        The O2Mart Team<br>
-        <a href="https://www.o2mart.net">www.o2mart.net</a> | +971 56 178 7270</p>
-    </div>
+            <\!-- Body -->
+            <tr>
+              <td style="padding:30px 25px; font-family:Arial, sans-serif; color:#333333; font-size:15px; line-height:1.6;">
+                <p style="margin:0 0 15px 0;">Hi {{ explode(' ', $inquiry->full_name)[0] }},</p>
+                <p style="margin:0 0 20px 0;">Thanks for reaching out to O2Mart\! We've received your inquiry # {{ $inquiry->id }} and our team is already working on it.</p>
 
-    <div class="footer">
-        <p style="font-weight: bold; margin-bottom: 10px;">Follow us:</p>
-        
-        <div class="social-links">
-            <!-- LinkedIn -->
-            <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
-                <img src="https://o2mart.to7fa.online/email-assets/linkedin.png" alt="LinkedIn" />
-            </a>
-            
-            <!-- Facebook -->
-            <a href="https://www.facebook.com/o2mart" target="_blank">
-                <img src="https://o2mart.to7fa.online/email-assets/facebook.png" alt="Facebook" />
-            </a>
-            
-            <!-- Instagram -->
-            <a href="https://www.instagram.com/o2mart/" target="_blank">
-                <img src="https://o2mart.to7fa.online/email-assets/instagram.png" alt="Instagram" />
-            </a>
-            
-            <!-- WhatsApp -->
-            <a href="https://wa.me/971561787270" target="_blank">
-                <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png" alt="WhatsApp" />
-            </a>
-        </div>
-        
-        <p style="margin-top: 10px;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
-    </div>
-</div>
-</body>
+                <p style="margin:0 0 10px 0;"><strong>Here's what happens next:</strong></p>
+
+                <\!-- Steps -->
+                <table width="100%" cellpadding="20" cellspacing="0" border="0" style="background-color:#f8f9fa; border-radius:8px; margin:20px 0;">
+                  <tr>
+                    <td>
+                      <p style="margin:0 0 15px 0;"><strong style="color:#df2020;">Review</strong> – Our specialists will check your request against our supplier network.</p>
+                      <p style="margin:0 0 15px 0;"><strong style="color:#df2020;">Match</strong> – We'll find the best options for your part(s).</p>
+                      <p style="margin:0;"><strong style="color:#df2020;">Reply</strong> – You'll receive a response as soon as possible with availability, pricing, and delivery options.</p>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:0 0 20px 0;">In the meantime, if you'd like faster service, you can also reach us directly on WhatsApp:</p>
+
+                <\!-- Button -->
+                <table cellpadding="0" cellspacing="0" border="0" align="left" style="margin:20px 0;">
+                  <tr>
+                    <td bgcolor="#DF2020" align="center" style="border-radius:5px; padding:12px 30px;">
+                      <a href="https://wa.me/971561787270" style="font-family:Arial, sans-serif; font-size:16px; color:#ffffff; text-decoration:none; display:inline-block; font-weight:bold;">
+                        Contact us on WhatsApp
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <div style="clear:both; height:10px;"></div>
+
+                <p style="margin:0 0 20px 0;">We appreciate your trust in O2Mart – making car care easy, reliable, and hassle-free in the UAE.</p>
+
+                <p style="margin:0 0 10px 0;">Best regards,<br/>The O2Mart Team<br/>
+                  <a href="https://www.o2mart.net" style="color:#df2020; text-decoration:none;">www.o2mart.net</a> | +971 56 178 7270
+                </p>
+              </td>
+            </tr>
+
+            <\!-- Footer -->
+            <tr>
+              <td bgcolor="#DF2020" align="center" style="color:#ffffff; padding:15px 20px; font-size:12px; font-family:Arial, sans-serif;">
+                <p style="margin:0; font-weight:bold;">Follow us:</p>
+                <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:10px auto;">
+                  <tr>
+                    <td align="center" style="padding:0 5px;">
+                      <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/linkedin.png?v=5" width="24" height="24" alt="LinkedIn" border="0" style="display:block;" />
+                      </a>
+                    </td>
+                    <td align="center" style="padding:0 5px;">
+                      <a href="https://www.facebook.com/o2mart" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/facebook.png?v=5" width="24" height="24" alt="Facebook" border="0" style="display:block;" />
+                      </a>
+                    </td>
+                    <td align="center" style="padding:0 5px;">
+                      <a href="https://www.instagram.com/o2mart/" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/instagram.png?v=5" width="24" height="24" alt="Instagram" border="0" style="display:block;" />
+                      </a>
+                    </td>
+                    <td align="center" style="padding:0 5px;">
+                      <a href="https://wa.me/971561787270" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png?v=5" width="24" height="24" alt="WhatsApp" border="0" style="display:block;" />
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                <p style="margin:0;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>

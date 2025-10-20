@@ -17,9 +17,9 @@
                 <table cellpadding="0" cellspacing="0" border="0">
                   <tr>
                     <td valign="middle" align="left">
-                        <a href="https://www.o2mart.net" target="_blank" style="display: inline-block">
-            <img src="{{ \App\Models\Setting::getSetting('logo') ?? 'https://o2mart.to7fa.online/email-assets/logo.png' }}" alt="logo" border="0" />
-        </a>
+                      <a href="https://www.o2mart.net" target="_blank" style="display:inline-block;">
+                        <img src="https://o2mart.to7fa.online/email-assets/logo.png?v=5" alt="O2Mart Logo" width="170" height="50" border="0" style="display:block;" />
+                      </a>
                     </td>
                     <td valign="middle" align="left" style="color:#ffffff; font-size:20px; font-family:Arial, sans-serif; padding-left:10px;">
                       – Your Trusted Auto Parts Partner
@@ -61,42 +61,30 @@
 
             <!-- Footer -->
             <tr>
-              <td bgcolor="#df2020" align="center" style="color:#ffffff; padding:15px 20px; font-size:12px; font-family:Arial, sans-serif;">
+              <td bgcolor="#DF2020" align="center" style="color:#ffffff; padding:15px 20px; font-size:12px; font-family:Arial, sans-serif;">
                 <p style="margin:0; font-weight:bold;">Follow us:</p>
-@php
-$socialLinks = \App\Models\Setting::getSocialMediaLinks();
-$contactDetails = \App\Models\Setting::getContactDetails();
-@endphp
                 <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:10px auto;">
                   <tr>
-                    @if($socialLinks['linkedin'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="{{ $socialLinks['linkedin'] }}" target="_blank">
-                        <img src="https://o2mart.to7fa.online/email-assets/linkedin.png" width="24" height="24" alt="LinkedIn" border="0" style="display:block;" />
+                      <a href="https://www.linkedin.com/company/o2mart/" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/linkedin.png?v=5" width="24" height="24" alt="LinkedIn" border="0" style="display:block;" />
                       </a>
                     </td>
-                    @endif
-                    @if($socialLinks['facebook'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="{{ $socialLinks['facebook'] }}" target="_blank">
-                        <img src="https://o2mart.to7fa.online/email-assets/facebook.png" width="24" height="24" alt="Facebook" border="0" style="display:block;" />
+                      <a href="https://www.facebook.com/o2mart" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/facebook.png?v=5" width="24" height="24" alt="Facebook" border="0" style="display:block;" />
                       </a>
                     </td>
-                    @endif
-                    @if($socialLinks['instagram'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="{{ $socialLinks['instagram'] }}" target="_blank">
-                        <img src="https://o2mart.to7fa.online/email-assets/instagram.png" width="24" height="24" alt="Instagram" border="0" style="display:block;" />
+                      <a href="https://www.instagram.com/o2mart/" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/instagram.png?v=5" width="24" height="24" alt="Instagram" border="0" style="display:block;" />
                       </a>
                     </td>
-                    @endif
-                    @if($contactDetails['phone'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $contactDetails['phone']) }}" target="_blank">
-                        <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png" width="24" height="24" alt="WhatsApp" border="0" style="display:block;" />
+                      <a href="https://wa.me/971561787270" target="_blank">
+                        <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png?v=5" width="24" height="24" alt="WhatsApp" border="0" style="display:block;" />
                       </a>
                     </td>
-                    @endif
                   </tr>
                 </table>
                 <p style="margin:0;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
