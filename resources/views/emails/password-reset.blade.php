@@ -37,9 +37,7 @@
                 <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
                   <tr>
                     <td valign="middle" align="left" style="padding:0;">
-                      <a href="https://www.o2mart.net" target="_blank" style="display:block; text-decoration:none;">
                         <img src="https://o2mart.to7fa.online/email-assets/logo.png?v=2" width="170" height="50" alt="O2Mart Logo" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:50px; width:170px; max-width:170px;" />
-                      </a>
                     </td>
                     <td valign="middle" align="left" style="color:#ffffff; font-size:20px; font-family:Arial, sans-serif; padding-left:10px;">
                       – Your Trusted Auto Parts Partner
@@ -88,24 +86,16 @@
                 <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:10px auto; border-collapse:collapse;">
                   <tr>
                     <td align="center" style="padding:0 5px;">
-                      <a href="https://www.linkedin.com/company/o2mart/" target="_blank" style="display:block; text-decoration:none;">
                         <img src="https://o2mart.to7fa.online/email-assets/linkedin.png?v=3" width="24" height="24" alt="LinkedIn" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
-                      </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
-                      <a href="https://www.facebook.com/o2mart" target="_blank" style="display:block; text-decoration:none;">
                         <img src="https://o2mart.to7fa.online/email-assets/facebook.png?v=3" width="24" height="24" alt="Facebook" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
-                      </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
-                      <a href="https://www.instagram.com/o2mart/" target="_blank" style="display:block; text-decoration:none;">
                         <img src="https://o2mart.to7fa.online/email-assets/instagram.png?v=3" width="24" height="24" alt="Instagram" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
-                      </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
-                      <a href="https://wa.me/971561787270" target="_blank" style="display:block; text-decoration:none;">
                         <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png?v=3" width="24" height="24" alt="WhatsApp" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
-                      </a>
                     </td>
                   </tr>
                 </table>
