@@ -118,24 +118,24 @@ class OrderResource extends Resource
                     ]),
                 ]),
                 Tab::make('Shipping Cost')->schema([
-                    Section::make('Total Shipping Cost')->schema([
-                        TextEntry::make('shipping_cost')->label('Shipping (AED)')
+                    Section::make('Shipping Cost')->schema([
+                        TextEntry::make('shipping_cost')->label('Total (Calculator + Area)')
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED')
                             ->color('primary'),
                         TextEntry::make('shippingAddress.area.shipping_cost')
-                            ->label('Area Shipping Cost (AED)')
-                            ->formatStateUsing(fn ($state) => $state ? number_format((float)$state, 2) . ' AED' : 'N/A')
-                            ->visible(fn ($record) => $record->shippingAddress?->area?->shipping_cost),
-                    ])->columns(2),
-                    
-                    Section::make('Shipping Breakdown Details')->schema([
-                        TextEntry::make('shipping_breakdown.base_cost')->label('Base Cost')->money('AED')->default(0),
-                        TextEntry::make('shipping_breakdown.weight_charges')->label('Weight Charges')->money('AED')->default(0),
-                        TextEntry::make('shipping_breakdown.fuel_surcharge')->label('Fuel Surcharge')->money('AED')->default(0),
-                        TextEntry::make('shipping_breakdown.packaging')->label('Packaging')->money('AED')->default(0),
-                        TextEntry::make('shipping_breakdown.epg')->label('EPG(Emirates Post Group)')->money('AED')->default(0),
-                        TextEntry::make('shipping_breakdown.vat')->label('VAT')->money('AED')->default(0),
-                    ])->columns(2),
+                            ->label('Area Cost Alone')
+                            ->formatStateUsing(fn ($state) => $state ? number_format((float)$state, 2) . ' AED' : '0.00 AED')
+                            ->color('warning'),
+                        TextEntry::make('calculator_cost')
+                            ->label('Calculator Alone (Without Area)')
+                            ->formatStateUsing(function ($record) {
+                                $totalShipping = (float)$record->shipping_cost;
+                                $areaCost = (float)($record->shippingAddress?->area?->shipping_cost ?? 0);
+                                $calculatorAlone = $totalShipping - $areaCost;
+                                return number_format($calculatorAlone, 2) . ' AED';
+                            })
+                            ->color('success'),
+                    ])->columns(3),
                 ]),
 
                 Tab::make('Payment Info')->schema([
