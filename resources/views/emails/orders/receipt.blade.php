@@ -87,6 +87,25 @@
                       <p style="margin:10px 0;"><strong style="color:#df2020;">Tracking Number:</strong> {{ $order->tracking_number }}</p>
                       @endif
 
+                      @php
+                        $installationCenterItems = $order->items->where('shipping_option', 'installation_center');
+                      @endphp
+                      
+                      @if ($installationCenterItems->count() > 0)
+                      <p style="margin:15px 0 10px 0;"><strong style="color:#df2020;">Center Shipping:</strong></p>
+                      @foreach ($installationCenterItems as $item)
+                        @if ($item->installationCenter)
+                        <div style="background-color:#fff3cd; border:1px solid #ffeaa7; border-radius:5px; padding:10px; margin:5px 0;">
+                          <p style="margin:0 0 5px 0;"><strong>Name:</strong> {{ $item->installationCenter->name }}</p>
+                          <p style="margin:0 0 5px 0;"><strong>Location:</strong> {{ $item->installationCenter->location }}</p>
+                          @if ($item->installation_date)
+                          <p style="margin:0;"><strong>Scheduled Date:</strong> {{ \Carbon\Carbon::parse($item->installation_date)->format('d M Y, h:i A') }}</p>
+                          @endif
+                        </div>
+                        @endif
+                      @endforeach
+                      @endif
+
                       <p style="margin:10px 0;"><strong style="color:#df2020;">Subtotal:</strong> {{ number_format($order->subtotal, 2) }} AED</p>
                       <p style="margin:10px 0;"><strong style="color:#df2020;">Shipping:</strong> {{ number_format($order->shipping_cost, 2) }} AED</p>
                       <p style="margin:10px 0;"><strong style="color:#df2020;">VAT (AED):</strong> {{ number_format($order->tax_amount, 2) }} AED</p>
