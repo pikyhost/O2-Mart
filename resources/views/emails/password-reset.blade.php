@@ -2,26 +2,33 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Password Reset – O2Mart</title>
+    <!--[if mso]>
+    <style type="text/css">
+      table {border-collapse: collapse; border-spacing: 0; margin: 0;}
+      div, td {padding: 0;}
+      div {margin: 0 !important;}
+    </style>
+    <![endif]-->
   </head>
   <body style="margin:0; padding:0; background-color:#f5f5f5;">
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f5f5">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f5f5f5" style="border-collapse:collapse;">
       <tr>
-        <td align="center">
+        <td align="center" style="padding:0;">
           <!-- Main Container -->
-          <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:600px; max-width:600px; margin:0 auto;">
+          <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="width:600px; max-width:600px; margin:0 auto; border-collapse:collapse;">
             
             <!-- Header -->
             <tr>
               <td bgcolor="#df2020" style="padding:15px 20px;" align="left">
-                <table cellpadding="0" cellspacing="0" border="0">
+                <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
                   <tr>
-                    <td valign="middle" align="left">
-
-                        <a href="https://www.o2mart.net" target="_blank" style="display: inline-block">
-            <img src="{{ \App\Models\Setting::getSetting('dark_logo') ? url('storage/' . \App\Models\Setting::getSetting('dark_logo')) : 'https://i.ibb.co/0VXXGcfy/logo.png' }}" alt="logo" border="0" />
-        </a>
-                     
+                    <td valign="middle" align="left" style="padding:0;">
+                      <a href="https://www.o2mart.net" target="_blank" style="display:block; text-decoration:none;">
+                        <img src="https://i.ibb.co/0VXXGcfy/logo.png" width="120" height="auto" alt="O2Mart Logo" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic;" />
+                      </a>
                     </td>
                     <td valign="middle" align="left" style="color:#ffffff; font-size:20px; font-family:Arial, sans-serif; padding-left:10px;">
                       – Your Trusted Auto Parts Partner
@@ -38,11 +45,11 @@
                 <p style="margin:0 0 20px 0;">We received a request to reset the password for your O2Mart account.</p>
 
                 <!-- Button -->
-                <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:20px auto;">
+                <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:20px auto; border-collapse:collapse;">
                   <tr>
-                    <td bgcolor="#df2020" align="center" style="border-radius:5px; padding:12px 30px;">
+                    <td bgcolor="#df2020" align="center" style="border-radius:5px; padding:12px 30px; mso-padding-alt:12px 30px;">
                       <a href="{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}"
-                        style="font-family:Arial, sans-serif; font-size:16px; color:#ffffff; text-decoration:none; display:inline-block; font-weight:bold;">
+                        style="font-family:Arial, sans-serif; font-size:16px; color:#ffffff; text-decoration:none; display:inline-block; font-weight:bold; mso-line-height-rule:exactly;">
                         Reset Password
                       </a>
                     </td>
@@ -66,44 +73,32 @@
             <!-- Footer -->
             <tr>
               <td bgcolor="#df2020" align="center" style="color:#ffffff; padding:15px 20px; font-size:12px; font-family:Arial, sans-serif;">
-                <p style="margin:0; font-weight:bold;">Follow us:</p>
-@php
-$socialLinks = \App\Models\Setting::getSocialMediaLinks();
-$contactDetails = \App\Models\Setting::getContactDetails();
-@endphp
-                <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:10px auto;">
+                <p style="margin:0 0 10px 0; font-weight:bold;">Follow us:</p>
+                <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin:10px auto; border-collapse:collapse;">
                   <tr>
-                    @if($socialLinks['linkedin'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="{{ $socialLinks['linkedin'] }}" target="_blank">
-                        <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" width="24" height="24" alt="LinkedIn" border="0" style="display:block;" />
+                      <a href="https://www.linkedin.com/company/o2mart/" target="_blank" style="display:block; text-decoration:none;">
+                        <img src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png" width="24" height="24" alt="LinkedIn" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic;" />
                       </a>
                     </td>
-                    @endif
-                    @if($socialLinks['facebook'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="{{ $socialLinks['facebook'] }}" target="_blank">
-                        <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" width="24" height="24" alt="Facebook" border="0" style="display:block;" />
+                      <a href="https://www.facebook.com/o2mart" target="_blank" style="display:block; text-decoration:none;">
+                        <img src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png" width="24" height="24" alt="Facebook" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic;" />
                       </a>
                     </td>
-                    @endif
-                    @if($socialLinks['instagram'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="{{ $socialLinks['instagram'] }}" target="_blank">
-                        <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" width="24" height="24" alt="Instagram" border="0" style="display:block;" />
+                      <a href="https://www.instagram.com/o2mart/" target="_blank" style="display:block; text-decoration:none;">
+                        <img src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png" width="24" height="24" alt="Instagram" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic;" />
                       </a>
                     </td>
-                    @endif
-                    @if($contactDetails['phone'])
                     <td align="center" style="padding:0 5px;">
-                      <a href="https://wa.me/{{ str_replace(['+', ' ', '-'], '', $contactDetails['phone']) }}" target="_blank">
-                        <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" width="24" height="24" alt="WhatsApp" border="0" style="display:block;" />
+                      <a href="https://wa.me/971561787270" target="_blank" style="display:block; text-decoration:none;">
+                        <img src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png" width="24" height="24" alt="WhatsApp" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic;" />
                       </a>
                     </td>
-                    @endif
                   </tr>
                 </table>
-                <p style="margin:0;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
+                <p style="margin:10px 0 0 0;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
               </td>
             </tr>
           </table>
