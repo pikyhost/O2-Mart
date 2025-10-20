@@ -1,4 +1,4 @@
-<\!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
@@ -8,9 +8,9 @@
     <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#F5F5F5">
       <tr>
         <td align="center">
-          <\!-- Main Container -->
+          <!-- Main Container -->
           <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFFFFF" style="width:600px; max-width:600px; margin:0 auto;">
-            <\!-- Header -->
+            <!-- Header -->
             <tr>
               <td bgcolor="#DF2020" style="padding:15px 20px;" align="left">
                 <table cellpadding="0" cellspacing="0" border="0">
@@ -28,13 +28,13 @@
               </td>
             </tr>
 
-            <\!-- Body -->
+            <!-- Body -->
             <tr>
               <td style="padding:30px 25px; font-family:Arial, sans-serif; color:#333333; font-size:15px; line-height:1.6;">
                 <p style="margin:0 0 15px 0;">Hello {{ $order->user->name ?? $order->contact_name ?? 'Guest' }},</p>
                 <p style="margin:0 0 20px 0;">Thank you for your order\! Here's your receipt:</p>
 
-                <\!-- Order Box -->
+                <!-- Order Box -->
                 <table width="100%" cellpadding="20" cellspacing="0" border="0" style="background-color:#f8f9fa; border:2px solid #df2020; border-radius:8px; margin:20px 0;">
                   <tr>
                     <td align="center">
@@ -45,13 +45,13 @@
                   </tr>
                 </table>
 
-                <\!-- Details -->
+                <!-- Details -->
                 <table width="100%" cellpadding="15" cellspacing="0" border="0" style="background-color:#f8f9fa; border-radius:8px; margin:20px 0;">
                   <tr>
                     <td>
                       <p style="margin:0 0 15px 0;"><strong style="color:#df2020;">Items Ordered:</strong></p>
                       
-                      <\!-- Items Table -->
+                      <!-- Items Table -->
                       <table width="100%" cellpadding="10" cellspacing="0" border="0" style="margin:15px 0;">
                         <thead>
                           <tr style="background-color:#df2020; color:#ffffff;">
@@ -95,13 +95,11 @@
                       <p style="margin:15px 0 10px 0;"><strong style="color:#df2020;">Center Shipping:</strong></p>
                       @foreach ($installationCenterItems as $item)
                         @if ($item->installationCenter)
-                        <div style="background-color:#fff3cd; border:1px solid #ffeaa7; border-radius:5px; padding:10px; margin:5px 0;">
-                          <p style="margin:0 0 5px 0;"><strong>Name:</strong> {{ $item->installationCenter->name }}</p>
-                          <p style="margin:0 0 5px 0;"><strong>Location:</strong> {{ $item->installationCenter->location }}</p>
-                          @if ($item->installation_date)
-                          <p style="margin:0;"><strong>Scheduled Date:</strong> {{ \Carbon\Carbon::parse($item->installation_date)->format('d M Y, h:i A') }}</p>
-                          @endif
-                        </div>
+                        <p style="margin:10px 0;"><strong style="color:#df2020;">Name:</strong> {{ $item->installationCenter->name }}</p>
+                        <p style="margin:10px 0;"><strong style="color:#df2020;">Location:</strong> {{ $item->installationCenter->location }}</p>
+                        @if ($item->installation_date)
+                        <p style="margin:10px 0;"><strong style="color:#df2020;">Scheduled Date:</strong> {{ \Carbon\Carbon::parse($item->installation_date)->format('d M Y, h:i A') }}</p>
+                        @endif
                         @endif
                       @endforeach
                       @endif
@@ -116,7 +114,7 @@
 
                 <p style="margin:0 0 20px 0;">We will process your order and get back to you shortly with tracking information.</p>
 
-                <\!-- Button -->
+                <!-- Button -->
                 <table cellpadding="0" cellspacing="0" border="0" align="left" style="margin:20px 0;">
                   <tr>
                     <td bgcolor="#DF2020" align="center" style="border-radius:5px; padding:12px 30px;">
@@ -137,7 +135,7 @@
               </td>
             </tr>
 
-            <\!-- Footer -->
+            <!-- Footer -->
             <tr>
               <td bgcolor="#DF2020" align="center" style="color:#ffffff; padding:15px 20px; font-size:12px; font-family:Arial, sans-serif;">
                 <p style="margin:0; font-weight:bold;">Follow us:</p>
