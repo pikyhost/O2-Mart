@@ -126,13 +126,13 @@ class OrderResource extends Resource
                             ->label('Area Cost Alone')
                             ->formatStateUsing(fn ($state) => $state ? number_format((float)$state, 2) . ' AED' : '0.00 AED')
                             ->color('warning'),
-                        TextEntry::make('calculator_cost')
+                        TextEntry::make('calculator_alone')
                             ->label('Calculator Alone (Without Area)')
                             ->formatStateUsing(function ($record) {
-                                $totalShipping = (float)$record->shipping_cost;
+                                $totalShipping = (float)($record->shipping_cost ?? 0);
                                 $areaCost = (float)($record->shippingAddress?->area?->shipping_cost ?? 0);
                                 $calculatorAlone = $totalShipping - $areaCost;
-                                return number_format($calculatorAlone, 2) . ' AED';
+                                return number_format(max(0, $calculatorAlone), 2) . ' AED';
                             })
                             ->color('success'),
                     ])->columns(3),
