@@ -134,22 +134,45 @@
 
         <div class="coupon-box">
             <div>Use this code at checkout:</div>
-            <div class="coupon-code">SAVE20</div>
-            <div>for 20% off</div>
+            <div class="coupon-code">{{ $coupon->code }}</div>
+            <div>
+                @if($coupon->type === 'discount_percentage')
+                    for {{ $coupon->value }}% off
+                @elseif($coupon->type === 'discount_amount')
+                    for {{ $coupon->value }} AED off
+                @elseif($coupon->type === 'free_shipping')
+                    for Free Shipping
+                @endif
+            </div>
         </div>
 
         <div class="details">
             <div class="detail-row">
-                <strong>Discount Value:</strong> 20% off your order
+                <strong>Discount Value:</strong> 
+                @if($coupon->type === 'discount_percentage')
+                    {{ $coupon->value }}% off your order
+                @elseif($coupon->type === 'discount_amount')
+                    {{ $coupon->value }} AED off your order
+                @elseif($coupon->type === 'free_shipping')
+                    Free Shipping on your order
+                @endif
             </div>
 
+            @if($coupon->min_order_amount)
             <div class="detail-row">
-                <strong>Minimum Order:</strong> 100 AED
+                <strong>Minimum Order:</strong> {{ $coupon->min_order_amount }} AED
             </div>
+            @endif
 
+            @if($coupon->expires_at)
             <div class="detail-row">
-                <strong>Expiration Date:</strong> December 31, 2025
+                <strong>Expiration Date:</strong> {{ $coupon->expires_at->format('F j, Y') }}
             </div>
+            @else
+            <div class="detail-row">
+                <strong>Expiration:</strong> No expiration date
+            </div>
+            @endif
         </div>
 
         <p>Simply enter the code at checkout to apply your discount. Start shopping now:</p>
@@ -187,7 +210,7 @@
             </a>
         </div>
         
-        <p style="margin-top: 10px;">&copy; 2025 O2Mart. All rights reserved.</p>
+        <p style="margin-top: 10px;">&copy; {{ date('Y') }} O2Mart. All rights reserved.</p>
     </div>
 </div>
 </body>
