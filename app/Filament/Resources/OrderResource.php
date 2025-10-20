@@ -117,7 +117,17 @@ class OrderResource extends Resource
                     ]),
                 ]),
                 Tab::make('Shipping Cost')->schema([
-                    Section::make()->schema([
+                    Section::make('Total Shipping Cost')->schema([
+                        TextEntry::make('shipping_cost')->label('Shipping (AED)')
+                            ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED')
+                            ->color('primary'),
+                        TextEntry::make('shippingAddress.area.shipping_cost')
+                            ->label('Area Shipping Cost (AED)')
+                            ->formatStateUsing(fn ($state) => $state ? number_format((float)$state, 2) . ' AED' : 'N/A')
+                            ->visible(fn ($record) => $record->shippingAddress?->area?->shipping_cost),
+                    ])->columns(2),
+                    
+                    Section::make('Shipping Breakdown Details')->schema([
                         TextEntry::make('shipping_breakdown.base_cost')->label('Base Cost')->money('AED')->default(0),
                         TextEntry::make('shipping_breakdown.weight_charges')->label('Weight Charges')->money('AED')->default(0),
                         TextEntry::make('shipping_breakdown.fuel_surcharge')->label('Fuel Surcharge')->money('AED')->default(0),
