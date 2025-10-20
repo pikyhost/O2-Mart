@@ -89,22 +89,22 @@
                   <tr>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://www.linkedin.com/company/o2mart/" target="_blank" style="display:block; text-decoration:none;">
-                        <img src="https://o2mart.to7fa.online/email-assets/linkedin.png" width="24" height="24" alt="LinkedIn" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                        <img src="https://o2mart.to7fa.online/email-assets/linkedin.png?v=3" width="24" height="24" alt="LinkedIn" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
                       </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://www.facebook.com/o2mart" target="_blank" style="display:block; text-decoration:none;">
-                        <img src="https://o2mart.to7fa.online/email-assets/facebook.png" width="24" height="24" alt="Facebook" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                        <img src="https://o2mart.to7fa.online/email-assets/facebook.png?v=3" width="24" height="24" alt="Facebook" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
                       </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://www.instagram.com/o2mart/" target="_blank" style="display:block; text-decoration:none;">
-                        <img src="https://o2mart.to7fa.online/email-assets/instagram.png" width="24" height="24" alt="Instagram" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                        <img src="https://o2mart.to7fa.online/email-assets/instagram.png?v=3" width="24" height="24" alt="Instagram" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
                       </a>
                     </td>
                     <td align="center" style="padding:0 5px;">
                       <a href="https://wa.me/971561787270" target="_blank" style="display:block; text-decoration:none;">
-                        <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png" width="24" height="24" alt="WhatsApp" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
+                        <img src="https://o2mart.to7fa.online/email-assets/whatsapp.png?v=3" width="24" height="24" alt="WhatsApp" border="0" style="display:block; border:0; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic; height:24px; width:24px;" />
                       </a>
                     </td>
                   </tr>
