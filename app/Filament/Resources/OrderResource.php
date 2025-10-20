@@ -126,7 +126,7 @@ class OrderResource extends Resource
                             ->label('Area Cost Alone')
                             ->formatStateUsing(fn ($state) => $state ? number_format((float)$state, 2) . ' AED' : '0.00 AED')
                             ->color('warning'),
-                        TextEntry::make('calculator_alone')
+                        TextEntry::make('id')
                             ->label('Calculator Alone (Without Area)')
                             ->formatStateUsing(function ($record) {
                                 $totalShipping = (float)($record->shipping_cost ?? 0);
