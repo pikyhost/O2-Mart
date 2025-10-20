@@ -102,6 +102,24 @@ class StoreInquiryRequest extends FormRequest
             'priority' => $this->priority ?? 'medium',
         ];
 
+        // Handle type field mapping for frontend variations
+        if ($this->has('type')) {
+            $type = $this->input('type');
+            // Map frontend type variations to backend types
+            $typeMapping = [
+                'Tires by Size' => 'tires',
+                'tires_by_size' => 'tires',
+                'Auto Parts' => 'auto_parts',
+                'Battery' => 'battery',
+                'Rims' => 'rims',
+                'Tires' => 'tires',
+            ];
+            
+            if (isset($typeMapping[$type])) {
+                $mappedData['type'] = $typeMapping[$type];
+            }
+        }
+
         // Handle vehicle info field mapping
         if ($this->has('make')) {
             $mappedData['car_make'] = $this->input('make');
