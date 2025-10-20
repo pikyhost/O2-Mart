@@ -62,10 +62,11 @@ class ShippingCalculatorService
             );
             $subtotal += $epg;
 
-            // $vat = round($subtotal * ($setting->vat_percent ?? 0.05), 2);
+            $vat = round($subtotal * ($setting->vat_percent ?? 0.05), 2);
+            $finalTotal = $subtotal + $vat;
 
             return [
-                'total' => round($subtotal , 2),
+                'total' => round($finalTotal, 2),
                 'breakdown' => [
                     'base_cost' => $baseCost - $areaShippingCost,
                     'area_shipping_cost' => $areaShippingCost,
@@ -73,7 +74,7 @@ class ShippingCalculatorService
                     'fuel_surcharge' => $fuel,
                     'packaging' => $setting->packaging_fee ?? 5.25,
                     'epg' => $epg,
-                    // 'vat' => $vat,
+                    'vat' => $vat,
                     'total_weight' => round($totalWeight, 2),
                 ]
             ];
