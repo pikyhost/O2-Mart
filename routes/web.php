@@ -117,3 +117,87 @@ Route::get('/check-rim/{id}', function($id) {
         })
     ];
 });
+
+// Email Preview Routes
+Route::prefix('test-email')->group(function () {
+    
+    // Password Reset Email
+    Route::get('/password-reset', function () {
+        $token = 'sample-token-123456';
+        $email = 'test@example.com';
+        
+        return view('emails.password-reset', compact('token', 'email'));
+    });
+    
+    // Verify Email
+    Route::get('/verify-email', function () {
+        $verificationUrl = config('app.frontend_url') . '/verify-email?token=sample-token';
+        
+        return view('emails.verify-email', compact('verificationUrl'));
+    });
+    
+    // Coupon Email
+    Route::get('/coupon', function () {
+        $coupon = (object)[
+            'code' => 'SAVE20',
+            'type' => 'discount_percentage',
+            'value' => 20,
+            'min_order_amount' => 100,
+            'expires_at' => now()->addDays(30)
+        ];
+        
+        return view('emails.coupon', compact('coupon'));
+    });
+    
+    // Inquiry Confirmation Email
+    Route::get('/inquiry-confirmation', function () {
+        $inquiry = (object)[
+            'id' => 12345,
+            'full_name' => 'John Doe'
+        ];
+        
+        return view('emails.inquiry-confirmation', compact('inquiry'));
+    });
+    
+    // Order Receipt Email
+    Route::get('/receipt', function () {
+        $order = \App\Models\Order::with(['items', 'shippingAddress.area', 'shippingAddress.city', 'user'])->latest()->first();
+        
+        if (!$order) {
+            // Create sample order data if no orders exist
+            $order = (object)[
+                'id' => 'SAMPLE-001',
+                'created_at' => now(),
+                'user' => (object)['name' => 'John Doe'],
+                'contact_name' => 'John Doe',
+                'payment_method' => 'cash_on_delivery',
+                'tracking_number' => 'TRACK123456',
+                'subtotal' => 500.00,
+                'shipping_cost' => 35.00,
+                'tax_amount' => 26.75,
+                'total' => 561.75,
+                'items' => [
+                    (object)[
+                        'product_name' => 'Michelin Pilot Sport 4',
+                        'quantity' => 4,
+                        'price_per_unit' => 125.00,
+                        'subtotal' => 500.00
+                    ]
+                ],
+                'shippingAddress' => (object)[
+                    'address_line' => '123 Test Street, Building 5, Apt 12',
+                    'phone' => '+971501234567',
+                    'area' => (object)['name' => 'Dubai Marina'],
+                    'city' => (object)['name' => 'Dubai']
+                ]
+            ];
+        }
+        
+        return view('emails.orders.receipt', compact('order'));
+    });
+    
+    // List all available email templates
+    Route::get('/', function () {
+        return view('emails.test-index');
+    });
+});
