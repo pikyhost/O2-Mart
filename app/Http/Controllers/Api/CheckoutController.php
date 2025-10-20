@@ -238,6 +238,10 @@ class CheckoutController extends Controller
 
         foreach ($cart->items as $cartItem) {
             $product = $cartItem->buyable;
+            if (!$product) {
+                \Log::error('Product not found for cart item', ['cart_item_id' => $cartItem->id]);
+                continue;
+            }
             $unitPrice = $cartItem->price_per_unit;
             $itemData = collect($itemsData)->first(fn($i) => $i['buyable_type'] === strtolower(class_basename($cartItem->buyable_type)) && $i['buyable_id'] == $product->id);
 
