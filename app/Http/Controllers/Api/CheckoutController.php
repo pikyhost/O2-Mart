@@ -213,6 +213,7 @@ class CheckoutController extends Controller
 
         $order = Order::create([
             'user_id'           => $user->id,
+            'coupon_id'         => $coupon?->id,
             'subtotal'          => round($cartSummary['totals']['items_subtotal'], 2),
             'shipping_cost'     => round($cartSummary['totals']['shipping'], 2),
             'installation_fees' => round($cartSummary['totals']['installation'], 2),
@@ -500,6 +501,7 @@ class CheckoutController extends Controller
 
         $order = Order::create([
             'user_id' => null,
+            'coupon_id' => $coupon?->id,
             'contact_name' => $validated['first_name'] . ' ' . $validated['last_name'],
             'contact_email' => $validated['email'],
             'contact_phone' => $validated['mobile'],
@@ -925,7 +927,8 @@ class CheckoutController extends Controller
             'items', 
             'shippingAddress.area', 
             'shippingAddress.city', 
-            'user'
+            'user',
+            'coupon'
         ])->findOrFail($id);
 
         // Check if user owns this order
@@ -969,6 +972,12 @@ class CheckoutController extends Controller
                 'discount' => number_format($order->discount ?? 0, 2),
                 'total' => number_format($order->total, 2),
             ],
+            'coupon' => $order->coupon ? [
+                'code' => $order->coupon->code,
+                'name' => $order->coupon->name,
+                'type' => $order->coupon->type,
+                'value' => $order->coupon->value,
+            ] : null,
             'currency' => 'AED',
         ];
 
