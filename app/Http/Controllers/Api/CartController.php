@@ -563,6 +563,8 @@ class CartController extends Controller
                         'quantity' => $item->quantity,
                         'sub' => (float) ($paidQuantity * ($item->price_per_unit / (1 + $vatPercent))), // VAT-exclusive subtotal with paid quantity
                         'image' => $this->resolveImage($buyable),
+                        'buy_3_get_1_free' => $isOfferActive,
+                        'buy_3_get_1_price_for_4' => $isOfferActive ? (float) (3 * $item->price_per_unit) : null,
                         'shipping_option' => $item->shipping_option,
                         'mobile_van_id' => $item->mobile_van_id ? [
                             'id' => $item->mobile_van_id,
