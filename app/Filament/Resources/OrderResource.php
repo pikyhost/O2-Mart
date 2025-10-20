@@ -46,6 +46,7 @@ class OrderResource extends Resource
             'items.buyable',
             'items.mobileVan',
             'items.installationCenter',
+            'coupon',
         ]);
     }
 
@@ -157,7 +158,17 @@ class OrderResource extends Resource
                 ]),
 
                 Tab::make('Cost Breakdown')->schema([
-                    Section::make()->schema([
+                    Section::make('Coupon Information')->schema([
+                        TextEntry::make('coupon.code')->label('Coupon Code')
+                            ->badge()
+                            ->color('success')
+                            ->visible(fn ($record) => $record->coupon_id),
+                        TextEntry::make('coupon.name')->label('Coupon Name')
+                            ->visible(fn ($record) => $record->coupon_id),
+                    ])->columns(2)
+                    ->visible(fn ($record) => $record->coupon_id),
+                    
+                    Section::make('Cost Details')->schema([
                         TextEntry::make('subtotal')->label('Subtotal (AED)')
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
                         TextEntry::make('shipping_cost')->label('Shipping (AED)')
@@ -168,7 +179,8 @@ class OrderResource extends Resource
                         TextEntry::make('tax_amount')->label('VAT (AED)')
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
                         TextEntry::make('discount')->label('Discount (AED)')->default(0)
-                            ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
+                            ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED')
+                            ->color(fn ($state) => $state > 0 ? 'success' : 'gray'),
                         TextEntry::make('total')->label('Total (AED)')->color('primary')
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
                     ])->columns(2),

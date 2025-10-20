@@ -78,5 +78,10 @@ class Order extends Model
         return $this->hasOne(OrderAddress::class)->where('type', 'shipping');
     }
 
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
+
 
 }
