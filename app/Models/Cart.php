@@ -14,6 +14,14 @@ class Cart extends Model
         'discount_amount', 
     ];
 
+    protected $casts = [
+        'shipping_cost' => 'decimal:2',
+        'subtotal' => 'decimal:2',
+        'total' => 'decimal:2',
+        'tax_amount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+    ];
+
     public function items(): HasMany
     {
         return $this->hasMany(CartItem::class);
