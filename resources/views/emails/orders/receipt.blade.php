@@ -74,7 +74,7 @@
                       </table>
 
                       @if ($order->shippingAddress)
-                      <p style="margin:15px 0 10px 0;"><strong style="color:#df2020;">Shipping Address:</strong><br/>
+                      <p style="margin:15px 0 10px 0;"><strong style="color:#df2020;">Customer Address:</strong><br/>
                         {{ $order->shippingAddress->address_line }}<br/>
                         {{ $order->shippingAddress->area->name ?? '-' }}, {{ $order->shippingAddress->city->name ?? '-' }}<br/>
                         Phone: {{ $order->shippingAddress->phone }}
@@ -86,6 +86,11 @@
                       @if ($order->tracking_number)
                       <p style="margin:10px 0;"><strong style="color:#df2020;">Tracking Number:</strong> {{ $order->tracking_number }}</p>
                       @endif
+
+                      <p style="margin:10px 0;"><strong style="color:#df2020;">Subtotal:</strong> {{ number_format($order->subtotal, 2) }} AED</p>
+                      <p style="margin:10px 0;"><strong style="color:#df2020;">Shipping:</strong> {{ number_format($order->shipping_cost, 2) }} AED</p>
+                      <p style="margin:10px 0;"><strong style="color:#df2020;">VAT (AED):</strong> {{ number_format($order->tax_amount, 2) }} AED</p>
+                      <p style="margin:10px 0;"><strong style="color:#df2020;">Total Paid:</strong> {{ number_format($order->total, 2) }} AED</p>
 
                       @php
                         $installationCenterItems = $order->items->where('shipping_option', 'installation_center');
@@ -103,11 +108,6 @@
                         @endif
                       @endforeach
                       @endif
-
-                      <p style="margin:10px 0;"><strong style="color:#df2020;">Subtotal:</strong> {{ number_format($order->subtotal, 2) }} AED</p>
-                      <p style="margin:10px 0;"><strong style="color:#df2020;">Shipping:</strong> {{ number_format($order->shipping_cost, 2) }} AED</p>
-                      <p style="margin:10px 0;"><strong style="color:#df2020;">VAT (AED):</strong> {{ number_format($order->tax_amount, 2) }} AED</p>
-                      <p style="margin:10px 0;"><strong style="color:#df2020;">Total Paid:</strong> {{ number_format($order->total, 2) }} AED</p>
                     </td>
                   </tr>
                 </table>
