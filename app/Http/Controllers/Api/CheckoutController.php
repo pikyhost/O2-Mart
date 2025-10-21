@@ -1097,6 +1097,64 @@ class CheckoutController extends Controller
                 'discount_amount_formatted' => number_format($order->discount ?? 0, 2) . ' AED',
             ] : null,
             'currency' => 'AED',
+            'shipping_options_summary' => [
+                'delivery_only' => [
+                    'count' => $order->items->where('shipping_option', 'delivery_only')->count(),
+                    'items' => $order->items->where('shipping_option', 'delivery_only')->map(fn($item) => [
+                        'id' => $item->id,
+                        'product_name' => $item->buyable->name ?? $item->buyable->title ?? $item->product_name,
+                        'quantity' => $item->quantity,
+                    ])->values(),
+                ],
+                'with_installation' => [
+                    'count' => $order->items->where('shipping_option', 'with_installation')->count(),
+                    'mobile_vans' => $order->items->where('shipping_option', 'with_installation')
+                        ->whereNotNull('mobile_van_id')
+                        ->groupBy('mobile_van_id')
+                        ->map(function($items) {
+                            $van = $items->first()->mobileVan;
+                            return [
+                                'id' => $van?->id,
+                                'name' => $van?->name,
+                                'location' => $van?->location,
+                                'phone' => $van?->phone,
+                                'items_count' => $items->count(),
+                                'items' => $items->map(fn($item) => [
+                                    'id' => $item->id,
+                                    'product_name' => $item->buyable->name ?? $item->buyable->title ?? $item->product_name,
+                                    'quantity' => $item->quantity,
+                                    'installation_date' => $item->installation_date,
+                                    'installation_date_formatted' => $item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('d M Y, h:i A') : null,
+                                ])->values(),
+                            ];
+                        })->values(),
+                ],
+                'installation_center' => [
+                    'count' => $order->items->where('shipping_option', 'installation_center')->count(),
+                    'centers' => $order->items->where('shipping_option', 'installation_center')
+                        ->whereNotNull('installation_center_id')
+                        ->groupBy('installation_center_id')
+                        ->map(function($items) {
+                            $center = $items->first()->installationCenter;
+                            return [
+                                'id' => $center?->id,
+                                'name' => $center?->name,
+                                'location' => $center?->location,
+                                'city' => $center?->city,
+                                'phone' => $center?->phone,
+                                'google_maps_link' => $center?->google_maps_link,
+                                'items_count' => $items->count(),
+                                'items' => $items->map(fn($item) => [
+                                    'id' => $item->id,
+                                    'product_name' => $item->buyable->name ?? $item->buyable->title ?? $item->product_name,
+                                    'quantity' => $item->quantity,
+                                    'installation_date' => $item->installation_date,
+                                    'installation_date_formatted' => $item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('d M Y, h:i A') : null,
+                                ])->values(),
+                            ];
+                        })->values(),
+                ],
+            ],
             'metadata' => [
                 'items_count' => $order->items->count(),
                 'total_quantity' => $order->items->sum('quantity'),
