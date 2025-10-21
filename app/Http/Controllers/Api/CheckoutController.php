@@ -121,6 +121,7 @@ class CheckoutController extends Controller
                 ?? $request->input('street_address');
             
             $phoneValue = $request->input('phone') 
+                ?? $request->input('mobile')  // Frontend sends this!
                 ?? $request->input('mobile_number') 
                 ?? $request->input('contact_phone')
                 ?? $request->input('phone_number')
@@ -343,7 +344,7 @@ class CheckoutController extends Controller
             // Create order address from manual input (using flexible field names)
             $areaIdValue = $request->input('area_id') ?? $request->input('area');
             $addressLineValue = $request->input('address_line') ?? $request->input('address') ?? $request->input('address_line_1');
-            $phoneValue = $request->input('phone') ?? $request->input('mobile_number') ?? $request->input('contact_phone');
+            $phoneValue = $request->input('phone') ?? $request->input('mobile') ?? $request->input('mobile_number') ?? $request->input('contact_phone');
             
             $area = \App\Models\Area::find($areaIdValue);
             OrderAddress::create([
@@ -377,6 +378,7 @@ class CheckoutController extends Controller
         $paymob = new PaymobPaymentService();
         $phoneForPayment = $selectedAddress?->phone 
             ?? $request->input('phone') 
+            ?? $request->input('mobile')
             ?? $request->input('mobile_number') 
             ?? $request->input('contact_phone')
             ?? $user->phone 
