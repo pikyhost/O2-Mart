@@ -140,33 +140,32 @@ class InquiryResource extends Resource
 
                         Forms\Components\Tabs\Tab::make('Media')
                             ->schema([
-                                Forms\Components\Section::make('Media')
+                                Forms\Components\Section::make('Car License Photos')
                                     ->schema([
                                         SpatieMediaLibraryFileUpload::make('car_license_photos')
                                             ->label('Car License Photos')
                                             ->collection('car_license_photos')
                                             ->multiple()
+                                            ->maxFiles(5)
                                             ->image()
-                                            ->imagePreviewHeight('150')
-                                            ->loadingIndicatorPosition('left')
-                                            ->panelAspectRatio('2:1')
-                                            ->panelLayout('integrated')
-                                            ->removeUploadedFileButtonPosition('right')
-                                            ->uploadButtonPosition('left')
-                                            ->uploadProgressIndicatorPosition('left')
+                                            ->imagePreviewHeight('250')
+                                            ->panelLayout('grid')
+                                            ->downloadable()
+                                            ->openable()
                                             ->columnSpanFull(),
+                                    ]),
+                                Forms\Components\Section::make('Part Photos')
+                                    ->schema([
                                         SpatieMediaLibraryFileUpload::make('part_photos')
                                             ->label('Part Photos')
                                             ->collection('part_photos')
                                             ->multiple()
+                                            ->maxFiles(10)
                                             ->image()
-                                            ->imagePreviewHeight('150')
-                                            ->loadingIndicatorPosition('left')
-                                            ->panelAspectRatio('2:1')
-                                            ->panelLayout('integrated')
-                                            ->removeUploadedFileButtonPosition('right')
-                                            ->uploadButtonPosition('left')
-                                            ->uploadProgressIndicatorPosition('left')
+                                            ->imagePreviewHeight('250')
+                                            ->panelLayout('grid')
+                                            ->downloadable()
+                                            ->openable()
                                             ->columnSpanFull(),
                                     ]),
                             ]),
