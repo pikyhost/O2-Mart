@@ -96,9 +96,9 @@ class CartController extends Controller
         if ($existingItem) {
             $newTotalQuantity = $existingItem->quantity + $quantity;
             
-            // Calculate paid quantity: if >= 3, pay for quantity - 1
-            $paidQuantity = $isOfferActive && $newTotalQuantity >= 3 
-                ? $newTotalQuantity - 1 
+            // Calculate paid quantity: Buy 3 Get 1 (need 4+ items to get discount)
+            $paidQuantity = $isOfferActive && $newTotalQuantity >= 4 
+                ? $newTotalQuantity - floor($newTotalQuantity / 4) 
                 : $newTotalQuantity;
 
             $existingItem->update([
@@ -107,9 +107,9 @@ class CartController extends Controller
             ]);
 
         } else {
-            // Calculate paid quantity: if >= 3, pay for quantity - 1
-            $paidQuantity = $isOfferActive && $quantity >= 3 
-                ? $quantity - 1 
+            // Calculate paid quantity: Buy 3 Get 1 (need 4+ items to get discount)
+            $paidQuantity = $isOfferActive && $quantity >= 4 
+                ? $quantity - floor($quantity / 4) 
                 : $quantity;
 
             $cartItem = $cart->items()->create([
@@ -298,9 +298,9 @@ class CartController extends Controller
         // Check if this is a tyre with buy 3 get 1 free offer
         $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
         
-        // Calculate paid quantity: if >= 3, pay for quantity - 1
-        $paidQuantity = $isOfferActive && $request->quantity >= 3 
-            ? $request->quantity - 1 
+        // Calculate paid quantity: Buy 3 Get 1 (need 4+ items to get discount)
+        $paidQuantity = $isOfferActive && $request->quantity >= 4 
+            ? $request->quantity - floor($request->quantity / 4) 
             : $request->quantity;
 
         $item->update([
@@ -510,25 +510,24 @@ class CartController extends Controller
         
         // Subtotal = sum of item subtotals (without VAT)
         $subtotal = 0;
-        $originalSubtotal = 0; // NEW: Original subtotal without discount
+        $originalSubtotal = 0; // Original subtotal without Buy 3 Get 1 discount
+        $originalCartTotal = 0; // Original total without Buy 3 Get 1 discount
+        
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
             $priceWithoutVat = $item->price_per_unit / (1 + $vatPercent);
+            
             // Calculate paid quantity for buy 3 get 1 free (tyres only)
             $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
-            $paidQuantity = $isOfferActive && $item->quantity >= 3 
-                ? $item->quantity - 1 
+            $paidQuantity = $isOfferActive && $item->quantity >= 4 
+                ? $item->quantity - floor($item->quantity / 4) 
                 : $item->quantity;
+            
+            // Discounted subtotal (with Buy 3 Get 1 applied)
             $subtotal += $paidQuantity * $priceWithoutVat;
             
-            // NEW: Calculate original subtotal (without discount)
+            // Original subtotal and total (NO Buy 3 Get 1 discount)
             $originalSubtotal += $item->quantity * $priceWithoutVat;
-        }
-        
-        // NEW: Calculate original total (without discount)
-        $originalCartTotal = 0;
-        foreach ($cart->items as $item) {
-            if (!$item->buyable) continue;
             $originalCartTotal += $item->quantity * $item->price_per_unit;
         }
         
@@ -549,8 +548,8 @@ class CartController extends Controller
 
                     // Calculate paid quantity for buy 3 get 1 free (tyres only)
                     $isOfferActive = ($buyable instanceof \App\Models\Tyre) && ($buyable->buy_3_get_1_free ?? false);
-                    $paidQuantity = $isOfferActive && $item->quantity >= 3 
-                        ? $item->quantity - 1 
+                    $paidQuantity = $isOfferActive && $item->quantity >= 4 
+                        ? $item->quantity - floor($item->quantity / 4) 
                         : $item->quantity;
                     
                     \Log::info('Individual Item Subtotal Debug', [
@@ -977,8 +976,8 @@ class CartController extends Controller
 
             // Calculate paid quantity for buy 3 get 1 free (tyres only)
             $isOfferActive = ($item->buyable instanceof \App\Models\Tyre) && ($item->buyable->buy_3_get_1_free ?? false);
-            $paidQuantity = $isOfferActive && $item->quantity >= 3 
-                ? $item->quantity - 1 
+            $paidQuantity = $isOfferActive && $item->quantity >= 4 
+                ? $item->quantity - floor($item->quantity / 4) 
                 : $item->quantity;
             
             $itemTotal = $paidQuantity * $item->price_per_unit;
@@ -1046,8 +1045,8 @@ class CartController extends Controller
             
             // Calculate paid quantity for buy 3 get 1 free (tyres only)
             $isOfferActive = $tyre->buy_3_get_1_free ?? false;
-            $paidQuantity = $isOfferActive && $quantity >= 3 
-                ? $quantity - 1 
+            $paidQuantity = $isOfferActive && $quantity >= 4 
+                ? $quantity - floor($quantity / 4) 
                 : $quantity;
 
             // Check if item already exists in cart
