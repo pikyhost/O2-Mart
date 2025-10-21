@@ -1080,5 +1080,50 @@ class CheckoutController extends Controller
         return response()->json($orderData);
     }
 
+    private function resolveImage($buyable): ?string
+    {
+        return match (get_class($buyable)) {
+            \App\Models\AutoPart::class => $this->normalizePhotoLink($buyable->photo_link)
+                ?? $buyable->getAutoPartFeatureImageUrl()
+                ?? $buyable->getAutoPartSecondaryImageUrl()
+                ?? $this->normalizePhotoLink($buyable->image ?? null)
+                ?? $buyable->getFirstMediaUrl('auto_part_feature_image')
+                ?? $buyable->getFirstMediaUrl('auto_part_secondary_image')
+                ?? $buyable->getFirstMediaUrl('feature')
+                ?? ($buyable->getFirstMediaUrl() ?: null),
+
+            \App\Models\Tyre::class => $buyable->tyre_feature_image_url
+                ?? $buyable->tyre_secondary_image_url
+                ?? $this->normalizePhotoLink($buyable->image)
+                ?? ($buyable->getFirstMediaUrl() ?: null),
+
+            \App\Models\Battery::class => $buyable->getFirstMediaUrl('battery_feature_image')
+                ?? $buyable->getFirstMediaUrl('battery_secondary_image')
+                ?? $buyable->feature_image_url
+                ?? $buyable->image_url
+                ?? $this->normalizePhotoLink($buyable->photo_link)
+                ?? ($buyable->getFirstMediaUrl() ?: null),
+
+            \App\Models\Rim::class => $buyable->rim_feature_image_url
+                ?? $buyable->rim_secondary_image_url
+                ?? $this->normalizePhotoLink($buyable->photo_link)
+                ?? ($buyable->getFirstMediaUrl() ?: null),
+
+            default => ($buyable->getFirstMediaUrl() ?: null),
+        };
+    }
+
+    private function normalizePhotoLink(?string $photoLink): ?string
+    {
+        if (!$photoLink || trim($photoLink) === '') return null;
+        
+        // If it's already a full URL (http/https), return as is
+        if (str_starts_with($photoLink, 'http')) {
+            return $photoLink;
+        }
+        
+        // Otherwise, treat as storage path
+        return asset('storage/' . ltrim($photoLink, '/'));
+    }
 
 }
