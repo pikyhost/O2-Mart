@@ -186,8 +186,16 @@ class CompareController extends Controller
             case 'tyre':
                 $basePrice = $p->price_vat_inclusive ?? null;
                 $discountedPrice = $p->discounted_price ?? null;
-                $setOf4Price = $basePrice ? $basePrice * 4 : null;
-                $setOf4DiscountedPrice = $discountedPrice ? $discountedPrice * 4 : null;
+                
+                // Check if Buy 3 Get 1 offer is active
+                $hasBuy3Get1 = $p->buy_3_get_1_free ?? false;
+                
+                // Calculate set of 4 prices
+                $setOf4OriginalPrice = $basePrice ? $basePrice * 4 : null; // Always show original price for 4
+                
+                // If Buy 3 Get 1, calculate for 3 tires, otherwise 4
+                $setOf4Price = $basePrice ? ($hasBuy3Get1 ? $basePrice * 3 : $basePrice * 4) : null;
+                $setOf4DiscountedPrice = $discountedPrice ? ($hasBuy3Get1 ? $discountedPrice * 3 : $discountedPrice * 4) : null;
                 
                 return [
                     'brand'       => optional($p->tyreBrand)->name,
@@ -207,7 +215,9 @@ class CompareController extends Controller
                     'price_including_vat' => $basePrice,
                     'discount_percentage' => $p->discount_percentage ?? null,
                     'discounted_price'    => $discountedPrice,
-                    'set_of_4'           => $setOf4Price,
+                    'set_of_4'           => $setOf4DiscountedPrice ?? $setOf4Price,
+                    'set_of_4_original'  => $setOf4OriginalPrice, // NEW: Original price before Buy 3 Get 1
+                    'buy_3_get_1_free'   => $hasBuy3Get1, // NEW: Flag for frontend
 
                     'slug'        => $p->slug,
                     'alt_text'    => $p->alt_text ?? null,
