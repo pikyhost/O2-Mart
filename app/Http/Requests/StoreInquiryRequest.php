@@ -73,7 +73,11 @@ class StoreInquiryRequest extends FormRequest
             'rear_tyres.*.diameter' => 'required_with:rear_tyres|string|max:10',
             'rear_tyres.*.quantity' => 'required_with:rear_tyres|integer|min:1|max:10',
 
-
+            // File uploads
+            'car_license_photos' => 'nullable|array|max:5',
+            'car_license_photos.*' => 'file|mimes:jpeg,jpg,png,pdf,webp|max:10240',
+            'part_photos' => 'nullable|array|max:10',
+            'part_photos.*' => 'file|mimes:jpeg,jpg,png,pdf,webp|max:10240',
 
             // Source tracking
             'source' => 'nullable|string|max:50',
