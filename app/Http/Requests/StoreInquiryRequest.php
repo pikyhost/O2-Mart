@@ -109,6 +109,8 @@ class StoreInquiryRequest extends FormRequest
             $typeMapping = [
                 'Tires by Size' => 'tires',
                 'tires_by_size' => 'tires',
+                'tires-by-size' => 'tires',
+                'tires-by-car' => 'tires',
                 'Auto Parts' => 'auto_parts',
                 'Battery' => 'battery',
                 'Rims' => 'rims',
