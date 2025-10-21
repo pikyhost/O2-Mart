@@ -26,15 +26,18 @@ class JeeblyService
 
         \Log::info('Running createShipment for order ' . $order->id, []);
 
-        $order->load('shippingAddress.city');
+        $order->load('addresses.city');
 
-        // if (!$order->shippingAddress?->city?->is_supported_by_jeebly) {
+        // Check if city is supported by Jeebly (if you want to enable this later)
+        // $shippingAddr = $order->addresses()->where('type', 'shipping')->first();
+        // if (!$shippingAddr?->city?->is_supported_by_jeebly) {
         //     \Log::info('⛔ City not supported by Jeebly. Skipping shipment.', [
         //         'order_id' => $order->id,
-        //         'city' => $order->shippingAddress?->city?->name
+        //         'city' => $shippingAddr?->city?->name
         //     ]);
         //     return null;
         // }
+        
         Log::info('Running createShipment for order ' . $order->id, []);
 
         $pickupDate = now()->addDay();
@@ -48,10 +51,13 @@ class JeeblyService
             ->with(['area', 'city'])
             ->first();
 
-        if (!$shippingAddress) return null;
+        if (!$shippingAddress) {
+            Log::warning('No shipping address found for order', ['order_id' => $order->id]);
+            return null;
+        }
 
         $cartFake = new \App\Models\Cart([
-            'area_id' => $order->shippingAddress->area_id,
+            'area_id' => $shippingAddress->area_id,
         ]);
         $deliveryOnlyItems = $order->items->where('shipping_option', 'delivery_only');
 

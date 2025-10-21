@@ -1021,8 +1021,8 @@ class CheckoutController extends Controller
             'items.buyable', 
             'items.mobileVan',
             'items.installationCenter',
-            'shippingAddress.area', 
-            'shippingAddress.city', 
+            'addresses.area', 
+            'addresses.city', 
             'user',
             'coupon'
         ])->findOrFail($id);
@@ -1031,6 +1031,9 @@ class CheckoutController extends Controller
         if (auth()->id() !== $order->user_id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
+        
+        // Get shipping address from OrderAddress
+        $shippingAddress = $order->addresses()->where('type', 'shipping')->first();
 
         // Format order data with complete details
         $orderData = [
@@ -1056,15 +1059,15 @@ class CheckoutController extends Controller
                 'plate_number' => $order->plate_number,
                 'vin' => $order->vin,
             ],
-            'shipping_address' => $order->shippingAddress ? [
-                'id' => $order->shippingAddress->id,
-                'address_line' => $order->shippingAddress->address_line,
-                'area' => $order->shippingAddress->area->name ?? '-',
-                'city' => $order->shippingAddress->city->name ?? '-',
-                'phone' => $order->shippingAddress->phone,
-                'notes' => $order->shippingAddress->notes,
-                'latitude' => $order->shippingAddress->latitude,
-                'longitude' => $order->shippingAddress->longitude,
+            'shipping_address' => $shippingAddress ? [
+                'id' => $shippingAddress->id,
+                'address_line' => $shippingAddress->address_line,
+                'area' => $shippingAddress->area->name ?? '-',
+                'city' => $shippingAddress->city->name ?? '-',
+                'phone' => $shippingAddress->phone,
+                'notes' => $shippingAddress->notes,
+                'latitude' => $shippingAddress->latitude ?? null,
+                'longitude' => $shippingAddress->longitude ?? null,
             ] : null,
             'items' => $order->items->map(function ($item) {
                 $product = $item->buyable;
