@@ -102,10 +102,35 @@ class CheckoutController extends Controller
         
         // If no saved address, check if manual address data is provided
         if (!$selectedAddress) {
-            // Accept various field name formats
-            $areaIdValue = $request->input('area_id') ?? $request->input('area');
-            $addressLineValue = $request->input('address_line') ?? $request->input('address') ?? $request->input('address_line_1');
-            $phoneValue = $request->input('phone') ?? $request->input('mobile_number') ?? $request->input('contact_phone');
+            // Log all request data for debugging
+            \Log::info('Checkout: No saved address, checking manual input', [
+                'all_request_keys' => array_keys($request->all()),
+                'all_request_data' => $request->all()
+            ]);
+            
+            // Accept various field name formats - be very flexible
+            $areaIdValue = $request->input('area_id') 
+                ?? $request->input('area') 
+                ?? $request->input('city_id')
+                ?? $request->input('governorate_id');
+            
+            $addressLineValue = $request->input('address_line') 
+                ?? $request->input('address') 
+                ?? $request->input('address_line_1')
+                ?? $request->input('address_name')
+                ?? $request->input('street_address');
+            
+            $phoneValue = $request->input('phone') 
+                ?? $request->input('mobile_number') 
+                ?? $request->input('contact_phone')
+                ?? $request->input('phone_number')
+                ?? $user->phone;
+            
+            \Log::info('Checkout: Extracted address values', [
+                'area_id' => $areaIdValue,
+                'address_line' => $addressLineValue,
+                'phone' => $phoneValue
+            ]);
             
             if ($areaIdValue && $addressLineValue && $phoneValue) {
                 \Log::info('Checkout Step 10b: Using manual address data', [
@@ -120,9 +145,20 @@ class CheckoutController extends Controller
                     'has_area_id' => !empty($areaIdValue),
                     'has_address_line' => !empty($addressLineValue),
                     'has_phone' => !empty($phoneValue),
-                    'request_data' => $request->all()
+                    'all_fields' => $request->all()
                 ]);
-                return response()->json(['status' => 'error', 'message' => 'Please provide address details (area_id, address_line, phone)'], 422);
+                return response()->json([
+                    'status' => 'error', 
+                    'message' => 'Please provide address details (area_id, address_line, phone)',
+                    'debug' => [
+                        'received_fields' => array_keys($request->all()),
+                        'missing' => [
+                            'area' => empty($areaIdValue) ? 'missing' : 'found',
+                            'address' => empty($addressLineValue) ? 'missing' : 'found',
+                            'phone' => empty($phoneValue) ? 'missing' : 'found',
+                        ]
+                    ]
+                ], 422);
             }
         } else {
             \Log::info('Checkout Step 11: Address found', ['address_id' => $selectedAddress->id]);
