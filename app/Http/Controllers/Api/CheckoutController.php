@@ -1015,6 +1015,8 @@ class CheckoutController extends Controller
         ]);
     }
 
+    // done ...
+
     public function getOrderDetails($id)
     {
         $order = Order::with([
