@@ -510,6 +510,7 @@ class CartController extends Controller
         
         // Subtotal = sum of item subtotals (without VAT)
         $subtotal = 0;
+        $originalSubtotal = 0; // NEW: Original subtotal without discount
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
             $priceWithoutVat = $item->price_per_unit / (1 + $vatPercent);
@@ -519,6 +520,16 @@ class CartController extends Controller
                 ? $item->quantity - 1 
                 : $item->quantity;
             $subtotal += $paidQuantity * $priceWithoutVat;
+            
+            // NEW: Calculate original subtotal (without discount)
+            $originalSubtotal += $item->quantity * $priceWithoutVat;
+        }
+        
+        // NEW: Calculate original total (without discount)
+        $originalCartTotal = 0;
+        foreach ($cart->items as $item) {
+            if (!$item->buyable) continue;
+            $originalCartTotal += $item->quantity * $item->price_per_unit;
         }
         
         // Update cart totals
@@ -613,6 +624,8 @@ class CartController extends Controller
                 'coupon_code'         => $cart->applied_coupon,
                 'coupon_applied'      => !empty($cart->applied_coupon),
                 'coupon_savings'      => $discount,
+                'original_subtotal'   => (float) $originalSubtotal, // NEW: For strikethrough
+                'original_total'      => (float) $originalCartTotal, // NEW: For strikethrough
             ]
         ]);
     }
