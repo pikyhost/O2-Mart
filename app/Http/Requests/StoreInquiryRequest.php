@@ -60,6 +60,11 @@ class StoreInquiryRequest extends FormRequest
             'front_width' => ['nullable', 'string'],
             'front_height' => ['nullable', 'string'],
             'front_diameter' => ['nullable', 'string'],
+            
+            // Frontend tire dimension fields (will be mapped to front_*)
+            'width' => ['nullable', 'string'],
+            'height' => ['nullable', 'string'],
+            'diameter' => ['nullable', 'string'],
 
             // ✅ Rear Tyres
             'rear_tyres' => 'nullable|array|max:4',
@@ -131,6 +136,17 @@ class StoreInquiryRequest extends FormRequest
         }
         if ($this->has('year')) {
             $mappedData['car_year'] = $this->input('year');
+        }
+
+        // Handle tire dimensions field mapping
+        if ($this->has('width')) {
+            $mappedData['front_width'] = $this->input('width');
+        }
+        if ($this->has('height')) {
+            $mappedData['front_height'] = $this->input('height');
+        }
+        if ($this->has('diameter')) {
+            $mappedData['front_diameter'] = $this->input('diameter');
         }
 
         // Handle quantities array to quantity field
