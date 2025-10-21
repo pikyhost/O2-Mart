@@ -106,6 +106,36 @@ class Inquiry extends Model implements HasMedia
         );
     }
 
+    protected function carMake(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $value = $this->attributes['car_make'] ?? null;
+                // If value is numeric (ID), look up the name
+                if ($value && is_numeric($value)) {
+                    $carMake = \App\Models\CarMake::find($value);
+                    return $carMake?->name ?? $value;
+                }
+                return $value;
+            }
+        );
+    }
+    
+    protected function carModel(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $value = $this->attributes['car_model'] ?? null;
+                // If value is numeric (ID), look up the name
+                if ($value && is_numeric($value)) {
+                    $carModel = \App\Models\CarModel::find($value);
+                    return $carModel?->name ?? $value;
+                }
+                return $value;
+            }
+        );
+    }
+
     protected function typeLabel(): Attribute
     {
         return Attribute::make(
