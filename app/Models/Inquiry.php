@@ -35,10 +35,24 @@ class Inquiry extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('car_license_photos')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+            ->acceptsMimeTypes(['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/pdf']);
             
         $this->addMediaCollection('part_photos')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+            ->acceptsMimeTypes(['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/pdf']);
+    }
+
+    public function registerMediaConversions(\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(350)
+            ->height(350)
+            ->sharpen(10)
+            ->performOnCollections('car_license_photos', 'part_photos');
+            
+        $this->addMediaConversion('preview')
+            ->width(800)
+            ->height(800)
+            ->performOnCollections('car_license_photos', 'part_photos');
     }
 
     protected $hidden = ['ip_address', 'user_agent'];
