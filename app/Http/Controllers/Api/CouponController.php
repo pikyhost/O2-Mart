@@ -49,30 +49,24 @@ class CouponController extends Controller
         $user = auth('sanctum')->user();
         $sessionId = request()->header('X-Session-ID') ?? session()->getId();
         
-        // Check total usage limit (both CouponUsage and Orders)
+        // Check total usage limit (only check CouponUsage since it's created when orders are placed)
         if ($coupon->usage_limit) {
-            $totalUsedFromCouponUsage = CouponUsage::where('coupon_id', $coupon->id)->count();
-            $totalUsedFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)->count();
-            $totalUsed = $totalUsedFromCouponUsage + $totalUsedFromOrders;
+            $totalUsed = CouponUsage::where('coupon_id', $coupon->id)
+                ->whereNotNull('order_id') // Only count actual order usages
+                ->count();
             
             if ($totalUsed >= $coupon->usage_limit) {
                 return response()->json(['message' => 'This coupon is no longer available.'], 400);
             }
         }
 
-        // Check per user/session usage limit (both CouponUsage and Orders)
+        // Check per user/session usage limit (only check CouponUsage since it's created when orders are placed)
         if ($coupon->usage_limit_per_user) {
-            $userUsedFromCouponUsage = CouponUsage::where('coupon_id', $coupon->id)
+            $userUsed = CouponUsage::where('coupon_id', $coupon->id)
+                ->whereNotNull('order_id') // Only count actual order usages
                 ->when($user, fn($q) => $q->where('user_id', $user->id))
                 ->when(!$user && $sessionId, fn($q) => $q->where('session_id', $sessionId))
                 ->count();
-                
-            $userUsedFromOrders = \App\Models\Order::where('coupon_id', $coupon->id)
-                ->when($user, fn($q) => $q->where('user_id', $user->id))
-                ->when(!$user && $sessionId, fn($q) => $q->where('checkout_token', 'like', $sessionId . '%'))
-                ->count();
-                
-            $userUsed = $userUsedFromCouponUsage + $userUsedFromOrders;
             
             if ($userUsed >= $coupon->usage_limit_per_user) {
                 return response()->json(['message' => 'You have already used this coupon.'], 400);

@@ -167,8 +167,8 @@ class CheckoutController extends Controller
 
             if (!$coupon) return response()->json(['message' => 'Invalid or expired coupon code.'], 400);
 
-            $totalUsed = CouponUsage::where('coupon_id', $coupon->id)->count();
-            $usedByUser = CouponUsage::where('coupon_id', $coupon->id)->where('user_id', $user->id)->count();
+            $totalUsed = CouponUsage::where('coupon_id', $coupon->id)->whereNotNull('order_id')->count();
+            $usedByUser = CouponUsage::where('coupon_id', $coupon->id)->whereNotNull('order_id')->where('user_id', $user->id)->count();
 
             if ($coupon->usage_limit && $totalUsed >= $coupon->usage_limit) return response()->json(['message' => 'Coupon usage limit reached.'], 400);
             if ($coupon->usage_limit_per_user && $usedByUser >= $coupon->usage_limit_per_user) return response()->json(['message' => 'You have already used this coupon.'], 400);
@@ -454,8 +454,8 @@ class CheckoutController extends Controller
 
             if (!$coupon) return response()->json(['message' => 'Invalid or expired coupon code.'], 400);
 
-            $totalUsed = CouponUsage::where('coupon_id', $coupon->id)->count();
-            $usedByGuest = CouponUsage::where('coupon_id', $coupon->id)->where('session_id', $sessionId)->count();
+            $totalUsed = CouponUsage::where('coupon_id', $coupon->id)->whereNotNull('order_id')->count();
+            $usedByGuest = CouponUsage::where('coupon_id', $coupon->id)->whereNotNull('order_id')->where('session_id', $sessionId)->count();
 
             if ($coupon->usage_limit && $totalUsed >= $coupon->usage_limit) return response()->json(['message' => 'Coupon usage limit reached.'], 400);
             if ($coupon->usage_limit_per_user && $usedByGuest >= $coupon->usage_limit_per_user) return response()->json(['message' => 'You have already used this coupon.'], 400);
