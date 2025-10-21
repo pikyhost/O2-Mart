@@ -57,6 +57,19 @@
                       @endif
                       @endif
 
+                      @if($inquiry->type === 'tires' && ($inquiry->front_width || $inquiry->front_height || $inquiry->front_diameter || $inquiry->rear_tyres))
+                      <p style="margin:10px 0 5px 0;"><strong style="color:#df2020;">Tire Sizes:</strong></p>
+                      @if($inquiry->front_width || $inquiry->front_height || $inquiry->front_diameter)
+                      <p style="margin:0 0 5px 0;"><strong>Front Tires:</strong> {{ $inquiry->front_width }}/{{ $inquiry->front_height }} R{{ $inquiry->front_diameter }}</p>
+                      @endif
+                      @if($inquiry->rear_tyres && is_array($inquiry->rear_tyres) && count($inquiry->rear_tyres) > 0)
+                      <p style="margin:0 0 5px 0;"><strong>Rear Tires:</strong></p>
+                      @foreach($inquiry->rear_tyres as $index => $rearTyre)
+                      <p style="margin:0 0 5px 0;">  • Rear Set {{ $index + 1 }}: {{ $rearTyre['width'] ?? '' }}/{{ $rearTyre['height'] ?? '' }} R{{ $rearTyre['diameter'] ?? '' }} (Qty: {{ $rearTyre['quantity'] ?? 1 }})</p>
+                      @endforeach
+                      @endif
+                      @endif
+
                       @if($inquiry->required_parts && count($inquiry->required_parts) > 0)
                       <p style="margin:10px 0 5px 0;"><strong style="color:#df2020;">Required Parts:</strong></p>
                       @foreach($inquiry->required_parts as $part)

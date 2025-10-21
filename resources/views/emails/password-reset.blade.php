@@ -36,9 +36,12 @@
                         style="display: inline-block"
                       >
                         <img
-                          src="https://i.ibb.co/0VXXGcfy/logo.png"
-                          alt="logo"
+                          src="https://o2mart.to7fa.online/email-assets/logo.png?v=5"
+                          alt="O2Mart Logo"
+                          width="170"
+                          height="50"
                           border="0"
+                          style="display:block;"
                         />
                       </a>
                     </td>
@@ -173,7 +176,7 @@
                         target="_blank"
                       >
                         <img
-                          src="https://i.ibb.co/bjRrfjKJ/icons8-linkedin-24.png"
+                          src="https://o2mart.to7fa.online/email-assets/linkedin.png?v=5"
                           width="24"
                           height="24"
                           alt="LinkedIn"
@@ -185,7 +188,7 @@
                     <td align="center" style="padding: 0 5px">
                       <a href="https://www.facebook.com/o2mart" target="_blank">
                         <img
-                          src="https://i.ibb.co/nNcJpzQw/icons8-facebook-logo-50.png"
+                          src="https://o2mart.to7fa.online/email-assets/facebook.png?v=5"
                           width="24"
                           height="24"
                           alt="Facebook"
@@ -200,7 +203,7 @@
                         target="_blank"
                       >
                         <img
-                          src="https://i.ibb.co/F4xXdtXp/icons8-instagram-logo-50-1.png"
+                          src="https://o2mart.to7fa.online/email-assets/instagram.png?v=5"
                           width="24"
                           height="24"
                           alt="Instagram"
@@ -212,9 +215,9 @@
                     <td align="center" style="padding: 0 5px">
                       <a href="https://wa.me/971561787270" target="_blank">
                         <img
-                          src="https://i.ibb.co/20ZJMSmx/icons8-whatsapp-50.png"
-                          width="20"
-                          height="20"
+                          src="https://o2mart.to7fa.online/email-assets/whatsapp.png?v=5"
+                          width="24"
+                          height="24"
                           alt="WhatsApp"
                           border="0"
                           style="display: block"
