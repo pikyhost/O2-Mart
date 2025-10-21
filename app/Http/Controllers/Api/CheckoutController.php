@@ -924,7 +924,9 @@ class CheckoutController extends Controller
     public function getOrderDetails($id)
     {
         $order = Order::with([
-            'items', 
+            'items.buyable', 
+            'items.mobileVan',
+            'items.installationCenter',
             'shippingAddress.area', 
             'shippingAddress.city', 
             'user',
@@ -936,49 +938,143 @@ class CheckoutController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        // Format order data similar to email receipt
+        // Format order data with complete details
         $orderData = [
             'order' => [
                 'id' => $order->id,
                 'created_at' => $order->created_at->format('d M Y, h:i A'),
+                'created_at_timestamp' => $order->created_at->timestamp,
                 'status' => $order->status,
                 'payment_method' => ucfirst($order->payment_method ?? 'N/A'),
                 'tracking_number' => $order->tracking_number,
+                'tracking_url' => $order->tracking_url,
+                'shipping_company' => $order->shipping_company,
             ],
             'customer' => [
                 'name' => $order->user->name ?? $order->contact_name ?? 'Guest',
                 'email' => $order->user->email ?? $order->contact_email,
                 'phone' => $order->user->phone ?? $order->contact_phone,
             ],
+            'vehicle' => [
+                'car_make' => $order->car_make,
+                'car_model' => $order->car_model,
+                'car_year' => $order->car_year,
+                'plate_number' => $order->plate_number,
+                'vin' => $order->vin,
+            ],
             'shipping_address' => $order->shippingAddress ? [
+                'id' => $order->shippingAddress->id,
                 'address_line' => $order->shippingAddress->address_line,
                 'area' => $order->shippingAddress->area->name ?? '-',
                 'city' => $order->shippingAddress->city->name ?? '-',
                 'phone' => $order->shippingAddress->phone,
+                'notes' => $order->shippingAddress->notes,
+                'latitude' => $order->shippingAddress->latitude,
+                'longitude' => $order->shippingAddress->longitude,
             ] : null,
             'items' => $order->items->map(function ($item) {
-                return [
-                    'product_name' => $item->product_name,
+                $product = $item->buyable;
+                
+                // Resolve product name (same logic as CartController and order-items-table)
+                $productName = $product->name 
+                    ?? ($product->product_name ?? null)
+                    ?? ($product->title ?? '')
+                    ?? $item->product_name
+                    ?? '-';
+                
+                // Get product image
+                $productImage = $this->resolveImage($product);
+                
+                // Get shipping option details
+                $shippingOption = $item->shipping_option ?: 'delivery_only';
+                $shippingLabel = match ($shippingOption) {
+                    'delivery_only' => 'Delivery Only',
+                    'with_installation' => 'Delivery + Home Installation',
+                    'installation_center' => 'Installation Center (Pick-up)',
+                    default => 'Unknown',
+                };
+                
+                $itemData = [
+                    'id' => $item->id,
+                    'type' => class_basename($item->buyable_type),
+                    'product_id' => $item->buyable_id,
+                    'product_name' => $productName,
                     'quantity' => $item->quantity,
-                    'price_per_unit' => number_format($item->price_per_unit, 2),
-                    'subtotal' => number_format($item->subtotal, 2),
+                    'price_per_unit' => (float) $item->price_per_unit,
+                    'price_per_unit_formatted' => number_format($item->price_per_unit, 2) . ' AED',
+                    'subtotal' => (float) $item->subtotal,
+                    'subtotal_formatted' => number_format($item->subtotal, 2) . ' AED',
+                    'image' => $productImage,
+                    'shipping_option' => $shippingOption,
+                    'shipping_option_label' => $shippingLabel,
                 ];
+                
+                // Add Buy 3 Get 1 info for tires
+                if ($product && isset($product->buy_3_get_1_free)) {
+                    $itemData['buy_3_get_1_free'] = $product->buy_3_get_1_free;
+                }
+                
+                // Add mobile van details if applicable
+                if ($shippingOption === 'with_installation' && $item->mobileVan) {
+                    $itemData['mobile_van'] = [
+                        'id' => $item->mobileVan->id,
+                        'name' => $item->mobileVan->name,
+                        'location' => $item->mobileVan->location,
+                        'phone' => $item->mobileVan->phone ?? null,
+                    ];
+                }
+                
+                // Add installation center details if applicable
+                if ($shippingOption === 'installation_center' && $item->installationCenter) {
+                    $itemData['installation_center'] = [
+                        'id' => $item->installationCenter->id,
+                        'name' => $item->installationCenter->name,
+                        'location' => $item->installationCenter->location,
+                        'phone' => $item->installationCenter->phone ?? null,
+                        'city' => $item->installationCenter->city ?? null,
+                        'google_maps_link' => $item->installationCenter->google_maps_link ?? null,
+                    ];
+                }
+                
+                // Add installation date if scheduled
+                if ($item->installation_date) {
+                    $itemData['installation_date'] = $item->installation_date;
+                    $itemData['installation_date_formatted'] = \Carbon\Carbon::parse($item->installation_date)->format('d M Y, h:i A');
+                }
+                
+                return $itemData;
             }),
             'cost_breakdown' => [
-                'subtotal' => number_format($order->subtotal, 2),
-                'shipping_cost' => number_format($order->shipping_cost, 2),
-                'installation_fees' => number_format($order->installation_fees ?? 0, 2),
-                'tax_amount' => number_format($order->tax_amount, 2),
-                'discount' => number_format($order->discount ?? 0, 2),
-                'total' => number_format($order->total, 2),
+                'subtotal' => (float) $order->subtotal,
+                'subtotal_formatted' => number_format($order->subtotal, 2) . ' AED',
+                'shipping_cost' => (float) $order->shipping_cost,
+                'shipping_cost_formatted' => number_format($order->shipping_cost, 2) . ' AED',
+                'installation_fees' => (float) ($order->installation_fees ?? 0),
+                'installation_fees_formatted' => number_format($order->installation_fees ?? 0, 2) . ' AED',
+                'tax_amount' => (float) $order->tax_amount,
+                'tax_amount_formatted' => number_format($order->tax_amount, 2) . ' AED',
+                'discount' => (float) ($order->discount ?? 0),
+                'discount_formatted' => number_format($order->discount ?? 0, 2) . ' AED',
+                'total' => (float) $order->total,
+                'total_formatted' => number_format($order->total, 2) . ' AED',
             ],
             'coupon' => $order->coupon ? [
+                'id' => $order->coupon->id,
                 'code' => $order->coupon->code,
                 'name' => $order->coupon->name,
                 'type' => $order->coupon->type,
                 'value' => $order->coupon->value,
+                'discount_amount' => (float) ($order->discount ?? 0),
+                'discount_amount_formatted' => number_format($order->discount ?? 0, 2) . ' AED',
             ] : null,
             'currency' => 'AED',
+            'metadata' => [
+                'items_count' => $order->items->count(),
+                'total_quantity' => $order->items->sum('quantity'),
+                'has_tracking' => !empty($order->tracking_number),
+                'has_installation' => $order->items->where('shipping_option', 'with_installation')->count() > 0,
+                'has_pickup' => $order->items->where('shipping_option', 'installation_center')->count() > 0,
+            ],
         ];
 
         return response()->json($orderData);
