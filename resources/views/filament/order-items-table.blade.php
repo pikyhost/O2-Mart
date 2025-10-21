@@ -43,6 +43,12 @@
                 $type = class_basename($item->buyable_type);
                 $price = $item->price_per_unit;
 
+                // Resolve product name (same logic as CartController)
+                $productName = $product->name 
+                    ?? ($product->product_name ?? null)
+                    ?? ($product->title ?? '')
+                    ?? '-';
+
                 $shippingOption = $item->shipping_option ?: 'delivery_only';
                 $shippingLabel = match ($shippingOption) {
                     'delivery_only' => 'Delivery Only',
@@ -65,7 +71,7 @@
 
             <tr class="border-t">
                 <td class="p-2">{{ $type }}</td>
-                <td class="p-2">{{ $product->name ?? '-' }}</td>
+                <td class="p-2">{{ $productName }}</td>
                 <td class="p-2">{{ number_format($price, 2) }} AED</td>
                 <td class="p-2">{{ $item->quantity }}</td>
                 <td class="p-2">

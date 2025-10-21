@@ -131,13 +131,50 @@ class StoreInquiryRequest extends FormRequest
             }
         }
 
-        // Handle vehicle info field mapping
+        // Handle vehicle info field mapping (from 'make' field)
         if ($this->has('make')) {
-            $mappedData['car_make'] = $this->input('make');
+            $makeValue = $this->input('make');
+            // If make is numeric (ID), look up the name
+            if (is_numeric($makeValue)) {
+                $carMake = \App\Models\CarMake::find($makeValue);
+                $mappedData['car_make'] = $carMake?->name ?? $makeValue;
+            } else {
+                $mappedData['car_make'] = $makeValue;
+            }
         }
+        
+        // Handle vehicle info field mapping (from 'car_make' field)
+        if ($this->has('car_make') && !isset($mappedData['car_make'])) {
+            $makeValue = $this->input('car_make');
+            // If make is numeric (ID), look up the name
+            if (is_numeric($makeValue)) {
+                $carMake = \App\Models\CarMake::find($makeValue);
+                $mappedData['car_make'] = $carMake?->name ?? $makeValue;
+            }
+        }
+        
+        // Handle vehicle info field mapping (from 'model' field)
         if ($this->has('model')) {
-            $mappedData['car_model'] = $this->input('model');
+            $modelValue = $this->input('model');
+            // If model is numeric (ID), look up the name
+            if (is_numeric($modelValue)) {
+                $carModel = \App\Models\CarModel::find($modelValue);
+                $mappedData['car_model'] = $carModel?->name ?? $modelValue;
+            } else {
+                $mappedData['car_model'] = $modelValue;
+            }
         }
+        
+        // Handle vehicle info field mapping (from 'car_model' field)
+        if ($this->has('car_model') && !isset($mappedData['car_model'])) {
+            $modelValue = $this->input('car_model');
+            // If model is numeric (ID), look up the name
+            if (is_numeric($modelValue)) {
+                $carModel = \App\Models\CarModel::find($modelValue);
+                $mappedData['car_model'] = $carModel?->name ?? $modelValue;
+            }
+        }
+        
         if ($this->has('year')) {
             $mappedData['car_year'] = $this->input('year');
         }
