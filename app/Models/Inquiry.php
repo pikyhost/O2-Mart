@@ -81,18 +81,14 @@ class Inquiry extends Model implements HasMedia
     protected function carLicensePhotosUrls(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->car_license_photos
-                ? collect($this->car_license_photos)->map(fn ($path) => Storage::url($path))->toArray()
-                : []
+            get: fn () => $this->getMedia('car_license_photos')->map(fn ($media) => $media->getUrl())->toArray()
         );
     }
 
     protected function partPhotosUrls(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->part_photos
-                ? collect($this->part_photos)->map(fn ($path) => Storage::url($path))->toArray()
-                : []
+            get: fn () => $this->getMedia('part_photos')->map(fn ($media) => $media->getUrl())->toArray()
         );
     }
 
@@ -162,7 +158,7 @@ class Inquiry extends Model implements HasMedia
 
     public function hasFiles(): bool
     {
-        return !empty($this->car_license_photos) || !empty($this->part_photos);
+        return $this->getMedia('car_license_photos')->isNotEmpty() || $this->getMedia('part_photos')->isNotEmpty();
     }
 
 
