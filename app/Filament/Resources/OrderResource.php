@@ -173,7 +173,7 @@ class OrderResource extends Resource
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
                         TextEntry::make('shipping_cost')->label('Shipping (AED)')
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
-                        TextEntry::make('installation_fees')->label('Installation & Services (AED)')
+                        TextEntry::make('installation_fees')->label('Delivery and Installation (AED)')
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED')
                             ->default(0),
                         TextEntry::make('tax_amount')->label('VAT (AED)')
