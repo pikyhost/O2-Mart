@@ -273,7 +273,10 @@ class CheckoutController extends Controller
         // comment
 
         // Get location IDs from selected address or manual area input
-        $area = $useManualAddress ? \App\Models\Area::with('city.country')->find($request->input('area_id')) : null;
+        $area = $useManualAddress ? \App\Models\Area::with('city')->find($request->input('area_id')) : null;
+        $countryId = $selectedAddress?->country_id ?? $request->input('country_id') ?? null;
+        $governorateId = $selectedAddress?->governorate_id ?? $request->input('governorate_id') ?? null;
+        $cityId = $selectedAddress?->city_id ?? $area?->city_id ?? $request->input('city_id') ?? null;
         
         $order = Order::create([
             'user_id'           => $user->id,
@@ -293,9 +296,9 @@ class CheckoutController extends Controller
             'plate_number'      => $request->input('plate_number'),
             'vin'               => $request->input('vin'),
             'payment_method'    => 'paymob',
-            'country_id'        => $selectedAddress?->country_id ?? $area?->city?->country_id,
-            'governorate_id'    => $selectedAddress?->governorate_id,
-            'city_id'           => $selectedAddress?->city_id ?? $area?->city_id,
+            'country_id'        => $countryId,
+            'governorate_id'    => $governorateId,
+            'city_id'           => $cityId,
             'title'             => $request->input('title'),
         ]);
 
@@ -346,13 +349,12 @@ class CheckoutController extends Controller
             $addressLineValue = $request->input('address_line') ?? $request->input('address') ?? $request->input('address_line_1');
             $phoneValue = $request->input('phone') ?? $request->input('mobile') ?? $request->input('mobile_number') ?? $request->input('contact_phone');
             
-            $area = \App\Models\Area::find($areaIdValue);
             OrderAddress::create([
                 'order_id'       => $order->id,
                 'type'           => 'shipping',
-                'country_id'     => $area?->city?->country_id ?? null,
-                'governorate_id' => null,
-                'city_id'        => $area?->city_id ?? null,
+                'country_id'     => $request->input('country_id') ?? null,
+                'governorate_id' => $request->input('governorate_id') ?? null,
+                'city_id'        => $request->input('city_id') ?? $area?->city_id ?? null,
                 'area_id'        => $areaIdValue,
                 'address_line'   => $addressLineValue,
                 'phone'          => $phoneValue,
