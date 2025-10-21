@@ -26,13 +26,13 @@ class StoreInquiryRequest extends FormRequest
             'email' => 'required|email|max:200',
 
             // Vehicle Information (backend field names) - accept both string names and integer IDs
-            'car_make' => 'nullable|max:50',
-            'car_model' => 'nullable|max:50',
+            'car_make' => 'nullable',
+            'car_model' => 'nullable',
             'car_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             
             // Vehicle Information (frontend field names - will be mapped) - accept both string names and integer IDs
-            'make' => 'nullable|max:50',
-            'model' => 'nullable|max:50',
+            'make' => 'nullable',
+            'model' => 'nullable',
             'year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'vin_chassis_number' => [
                 'nullable',
