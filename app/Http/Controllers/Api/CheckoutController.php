@@ -102,17 +102,31 @@ class CheckoutController extends Controller
         
         // If no saved address, check if manual address data is provided
         if (!$selectedAddress) {
-            if ($request->has('area_id') && $request->has('address_line') && $request->has('phone')) {
-                \Log::info('Checkout Step 10b: Using manual address data');
+            // Accept various field name formats
+            $areaIdValue = $request->input('area_id') ?? $request->input('area');
+            $addressLineValue = $request->input('address_line') ?? $request->input('address') ?? $request->input('address_line_1');
+            $phoneValue = $request->input('phone') ?? $request->input('mobile_number') ?? $request->input('contact_phone');
+            
+            if ($areaIdValue && $addressLineValue && $phoneValue) {
+                \Log::info('Checkout Step 10b: Using manual address data', [
+                    'area_id' => $areaIdValue,
+                    'address_line' => $addressLineValue,
+                    'phone' => $phoneValue
+                ]);
                 $useManualAddress = true;
-                $areaId = $request->input('area_id');
+                $areaId = $areaIdValue;
             } else {
-                \Log::error('Checkout Error: No address found and no manual address provided');
+                \Log::error('Checkout Error: No address found and no manual address provided', [
+                    'has_area_id' => !empty($areaIdValue),
+                    'has_address_line' => !empty($addressLineValue),
+                    'has_phone' => !empty($phoneValue),
+                    'request_data' => $request->all()
+                ]);
                 return response()->json(['status' => 'error', 'message' => 'Please provide address details (area_id, address_line, phone)'], 422);
             }
         } else {
             \Log::info('Checkout Step 11: Address found', ['address_id' => $selectedAddress->id]);
-            $areaId = $selectedAddress->area_id ?? $request->input('area_id');
+            $areaId = $selectedAddress->area_id ?? $request->input('area_id') ?? $request->input('area');
         }
         
         if (!$areaId) {
@@ -290,17 +304,21 @@ class CheckoutController extends Controller
                 'notes'          => $selectedAddress->additional_info ?? null,
             ]);
         } elseif ($useManualAddress) {
-            // Create order address from manual input
-            $area = \App\Models\Area::find($request->input('area_id'));
+            // Create order address from manual input (using flexible field names)
+            $areaIdValue = $request->input('area_id') ?? $request->input('area');
+            $addressLineValue = $request->input('address_line') ?? $request->input('address') ?? $request->input('address_line_1');
+            $phoneValue = $request->input('phone') ?? $request->input('mobile_number') ?? $request->input('contact_phone');
+            
+            $area = \App\Models\Area::find($areaIdValue);
             OrderAddress::create([
                 'order_id'       => $order->id,
                 'type'           => 'shipping',
                 'country_id'     => $area?->city?->country_id ?? null,
                 'governorate_id' => null,
                 'city_id'        => $area?->city_id ?? null,
-                'area_id'        => $request->input('area_id'),
-                'address_line'   => $request->input('address_line'),
-                'phone'          => $request->input('phone'),
+                'area_id'        => $areaIdValue,
+                'address_line'   => $addressLineValue,
+                'phone'          => $phoneValue,
                 'notes'          => $request->input('notes') ?? $request->input('additional_instructions') ?? null,
             ]);
         }
@@ -321,12 +339,19 @@ class CheckoutController extends Controller
         }
 
         $paymob = new PaymobPaymentService();
+        $phoneForPayment = $selectedAddress?->phone 
+            ?? $request->input('phone') 
+            ?? $request->input('mobile_number') 
+            ?? $request->input('contact_phone')
+            ?? $user->phone 
+            ?? '01000000000';
+            
         $request->merge([
             'amount_cents'      => intval(round($order->total * 100)),
             'contact_email'     => $user->email,
             'name'              => $user->name,
             'merchant_order_id' => $order->id,
-            'phone_number'      => $selectedAddress?->phone ?? $request->input('phone') ?? $user->phone ?? '01000000000',
+            'phone_number'      => $phoneForPayment,
         ]);
 
         $iframeResult = $paymob->sendPayment($request);
