@@ -63,8 +63,17 @@
                         </thead>
                         <tbody>
                           @foreach ($order->items as $item)
+                          @php
+                            $product = $item->buyable;
+                            // Resolve product name (same logic as CartController and order-items-table)
+                            $productName = $product->name 
+                                ?? ($product->product_name ?? null)
+                                ?? ($product->title ?? '')
+                                ?? $item->product_name
+                                ?? '-';
+                          @endphp
                           <tr style="border-bottom:1px solid #ddd;">
-                            <td style="padding:10px; text-align:left; font-family:Arial, sans-serif; font-size:13px;">{{ $item->product_name }}</td>
+                            <td style="padding:10px; text-align:left; font-family:Arial, sans-serif; font-size:13px;">{{ $productName }}</td>
                             <td style="padding:10px; text-align:center; font-family:Arial, sans-serif; font-size:13px;">{{ $item->quantity }}</td>
                             <td style="padding:10px; text-align:right; font-family:Arial, sans-serif; font-size:13px;">{{ number_format($item->price_per_unit, 2) }} AED</td>
                             <td style="padding:10px; text-align:right; font-family:Arial, sans-serif; font-size:13px;">{{ number_format($item->subtotal, 2) }} AED</td>
