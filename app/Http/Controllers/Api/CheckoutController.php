@@ -86,8 +86,10 @@ class CheckoutController extends Controller
         \Log::info('Checkout Step 7: Cart found', ['cart_id' => $cart->id, 'items_count' => $cart->items->count()]);
         
         // \Log::info('Checkout Step 8: Handling address selection');
-        // Handle address selection
+        // Handle address selection or manual entry
         $selectedAddress = null;
+        $useManualAddress = false;
+        
         if ($request->has('address_id') && $request->address_id) {
             \Log::info('Checkout Step 9: Looking for address', ['address_id' => $request->address_id]);
             $selectedAddress = UserAddress::where('user_id', $user->id)->find($request->address_id);
@@ -98,15 +100,23 @@ class CheckoutController extends Controller
             $selectedAddress = UserAddress::where('user_id', $user->id)->where('is_primary', true)->first();
         }
         
+        // If no saved address, check if manual address data is provided
         if (!$selectedAddress) {
-            // \Log::error('Checkout Error: No address found');
-            return response()->json(['status' => 'error', 'message' => 'No address found for user'], 422);
+            if ($request->has('area_id') && $request->has('address_line') && $request->has('phone')) {
+                \Log::info('Checkout Step 10b: Using manual address data');
+                $useManualAddress = true;
+                $areaId = $request->input('area_id');
+            } else {
+                \Log::error('Checkout Error: No address found and no manual address provided');
+                return response()->json(['status' => 'error', 'message' => 'Please provide address details (area_id, address_line, phone)'], 422);
+            }
+        } else {
+            \Log::info('Checkout Step 11: Address found', ['address_id' => $selectedAddress->id]);
+            $areaId = $selectedAddress->area_id ?? $request->input('area_id');
         }
         
-        \Log::info('Checkout Step 11: Address found', ['address_id' => $selectedAddress->id]);
-        $areaId = $selectedAddress->area_id ?? $request->input('area_id');
         if (!$areaId) {
-            \Log::error('Checkout Error: No area ID', ['selected_address' => $selectedAddress->toArray()]);
+            \Log::error('Checkout Error: No area ID', $selectedAddress ? ['selected_address' => $selectedAddress->toArray()] : ['manual_address' => true]);
             return response()->json(['status' => 'error', 'message' => 'No valid area found.'], 422);
         }
         \Log::info('Checkout Step 12: Area ID found', ['area_id' => $areaId]);
@@ -211,6 +221,9 @@ class CheckoutController extends Controller
 
         // comment
 
+        // Get location IDs from selected address or manual area input
+        $area = $useManualAddress ? \App\Models\Area::with('city.country')->find($request->input('area_id')) : null;
+        
         $order = Order::create([
             'user_id'           => $user->id,
             'coupon_id'         => $coupon?->id,
@@ -229,9 +242,9 @@ class CheckoutController extends Controller
             'plate_number'      => $request->input('plate_number'),
             'vin'               => $request->input('vin'),
             'payment_method'    => 'paymob',
-            'country_id'        => $selectedAddress?->country_id,
+            'country_id'        => $selectedAddress?->country_id ?? $area?->city?->country_id,
             'governorate_id'    => $selectedAddress?->governorate_id,
-            'city_id'           => $selectedAddress?->city_id,
+            'city_id'           => $selectedAddress?->city_id ?? $area?->city_id,
             'title'             => $request->input('title'),
         ]);
 
@@ -263,6 +276,7 @@ class CheckoutController extends Controller
             ]);
         }
 
+        // Create OrderAddress from saved address or manual data
         if ($selectedAddress) {
             OrderAddress::create([
                 'order_id'       => $order->id,
@@ -273,6 +287,21 @@ class CheckoutController extends Controller
                 'area_id'        => $selectedAddress->area_id,
                 'address_line'   => $selectedAddress->address_line_1 ?? $selectedAddress->address_line,
                 'phone'          => $selectedAddress->phone,
+                'notes'          => $selectedAddress->additional_info ?? null,
+            ]);
+        } elseif ($useManualAddress) {
+            // Create order address from manual input
+            $area = \App\Models\Area::find($request->input('area_id'));
+            OrderAddress::create([
+                'order_id'       => $order->id,
+                'type'           => 'shipping',
+                'country_id'     => $area?->city?->country_id ?? null,
+                'governorate_id' => null,
+                'city_id'        => $area?->city_id ?? null,
+                'area_id'        => $request->input('area_id'),
+                'address_line'   => $request->input('address_line'),
+                'phone'          => $request->input('phone'),
+                'notes'          => $request->input('notes') ?? $request->input('additional_instructions') ?? null,
             ]);
         }
 
@@ -297,7 +326,7 @@ class CheckoutController extends Controller
             'contact_email'     => $user->email,
             'name'              => $user->name,
             'merchant_order_id' => $order->id,
-            'phone_number'      => $selectedAddress?->phone ?? '01000000000',
+            'phone_number'      => $selectedAddress?->phone ?? $request->input('phone') ?? $user->phone ?? '01000000000',
         ]);
 
         $iframeResult = $paymob->sendPayment($request);
