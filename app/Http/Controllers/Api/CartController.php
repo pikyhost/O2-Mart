@@ -948,13 +948,16 @@ class CartController extends Controller
             return response()->json([
                 'items' => [],
                 'subtotal' => 0,
-                'total' => 0
+                'total' => 0,
+                'original_subtotal' => 0,
+                'original_total' => 0
             ]);
         }
 
         $vatPercent = \App\Models\ShippingSetting::first()?->vat_percent ?? 0.05;
         $items = [];
         $total = 0;
+        $originalTotal = 0;
 
         foreach ($cart->items as $item) {
             if (!$item->buyable) continue;
@@ -967,6 +970,10 @@ class CartController extends Controller
             
             $itemTotal = $paidQuantity * $item->price_per_unit;
             $total += $itemTotal;
+            
+            // Calculate original total (if no discount applied)
+            $originalItemTotal = $item->quantity * $item->price_per_unit;
+            $originalTotal += $originalItemTotal;
 
             $items[] = [
                 'id' => $item->buyable->id,
@@ -980,11 +987,16 @@ class CartController extends Controller
 
         $subtotal = $total / (1 + $vatPercent);
         $vatAmount = $total - $subtotal;
+        
+        // Calculate original subtotal and total (without Buy 3 Get 1 discount)
+        $originalSubtotal = $originalTotal / (1 + $vatPercent);
 
         return response()->json([
             'items' => $items,
             'subtotal' => (float) $subtotal,
-            'total' => (float) $total
+            'total' => (float) $total,
+            'original_subtotal' => (float) $originalSubtotal, // NEW: For strikethrough on frontend
+            'original_total' => (float) $originalTotal // NEW: For strikethrough on frontend
         ]);
     }
 
