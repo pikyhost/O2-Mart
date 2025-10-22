@@ -44,8 +44,8 @@ class OrderResource extends Resource
     {
         return parent::getEloquentQuery()->with([
             'user',
-            'shippingAddress.area',
-            'shippingAddress.city',
+            'addresses.area',
+            'addresses.city',
             'items.buyable',
             'items.mobileVan',
             'items.installationCenter',
@@ -91,24 +91,21 @@ class OrderResource extends Resource
 
                 Tab::make('Shipping Address')->schema([
                     Section::make()->schema([
-                        TextEntry::make('shippingAddress.city.name')->label('City')->default('-'),
-                        TextEntry::make('shippingAddress.area.name')->label('Area'),
-                        TextEntry::make('shippingAddress.address_line')->label('Street Address'),
-                        TextEntry::make('shippingAddress.notes')->label('Notes')->default('-'),
-                        // TextEntry::make('shippingAddress.city.is_supported_by_jeebly')
-                        //     ->label('Jeebly Supported')
-                        //     ->getStateUsing(function ($record) {
-                        //         $city = $record->shippingAddress?->city;
-                        //         if (!$city) return '❓ Unknown';
-                        //         return $city->is_supported_by_jeebly ? '✅ Supported' : '❌ Not Supported';
-                        //     })
-                        //     ->badge()
-                        //     ->color(fn ($state) => match ($state) {
-                        //         '✅ Supported' => 'success',
-                        //         '❌ Not Supported' => 'danger',
-                        //         default => 'gray',
-                        //     }),
-                        // TextEntry::make('shippingAddress.city.jeebly_name')->label('Jeebly City Name')->default('-'),
+                        TextEntry::make('city')
+                            ->label('City')
+                            ->getStateUsing(fn ($record) => $record->addresses()->where('type', 'shipping')->first()?->city?->name ?? '-'),
+                        TextEntry::make('area')
+                            ->label('Area')
+                            ->getStateUsing(fn ($record) => $record->addresses()->where('type', 'shipping')->first()?->area?->name ?? '-'),
+                        TextEntry::make('address')
+                            ->label('Street Address')
+                            ->getStateUsing(fn ($record) => $record->addresses()->where('type', 'shipping')->first()?->address_line ?? '-'),
+                        TextEntry::make('phone')
+                            ->label('Phone')
+                            ->getStateUsing(fn ($record) => $record->addresses()->where('type', 'shipping')->first()?->phone ?? '-'),
+                        TextEntry::make('notes')
+                            ->label('Notes')
+                            ->getStateUsing(fn ($record) => $record->addresses()->where('type', 'shipping')->first()?->notes ?? '-'),
                     ])->columns(2),
                 ]),
 
@@ -125,15 +122,16 @@ class OrderResource extends Resource
                         TextEntry::make('shipping_cost')->label('Total (Calculator + Area)')
                             ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED')
                             ->color('primary'),
-                        TextEntry::make('shippingAddress.area.shipping_cost')
+                        TextEntry::make('area_cost')
                             ->label('Area Cost Alone')
+                            ->getStateUsing(fn ($record) => $record->addresses()->where('type', 'shipping')->first()?->area?->shipping_cost ?? 0)
                             ->formatStateUsing(fn ($state) => $state ? number_format((float)$state, 2) . ' AED' : '0.00 AED')
                             ->color('warning'),
                         TextEntry::make('id')
                             ->label('Calculator Alone (Without Area)')
                             ->formatStateUsing(function ($record) {
                                 $totalShipping = (float)($record->shipping_cost ?? 0);
-                                $areaCost = (float)($record->shippingAddress?->area?->shipping_cost ?? 0);
+                                $areaCost = (float)($record->addresses()->where('type', 'shipping')->first()?->area?->shipping_cost ?? 0);
                                 $calculatorAlone = $totalShipping - $areaCost;
                                 return number_format(max(0, $calculatorAlone), 2) . ' AED';
                             })
