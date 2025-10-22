@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 
 class MobileVanService extends Model
 {
-    protected $fillable = ['name', 'location'];
+    protected $fillable = ['name', 'location', 'google_map_link', 'is_active'];
 
     protected $table = 'mobile_van_services';
 
