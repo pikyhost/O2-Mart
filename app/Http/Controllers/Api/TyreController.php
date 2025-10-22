@@ -104,13 +104,11 @@ class TyreController extends Controller
         if ($request->filled('search')) {
             $searchTerm = $request->search;
             $query->where(function ($q) use ($searchTerm) {
-                // Search in product name, SKU, warranty, description
-                $q->where('name', 'like', "%{$searchTerm}%")
+                // Search in product title, SKU, warranty, description
+                $q->where('title', 'like', "%{$searchTerm}%")
                     ->orWhere('sku', 'like', "%{$searchTerm}%")
-                    ->orWhere('item_code', 'like', "%{$searchTerm}%")
                     ->orWhere('warranty', 'like', "%{$searchTerm}%")
                     ->orWhere('description', 'like', "%{$searchTerm}%")
-                    ->orWhere('details', 'like', "%{$searchTerm}%")
                     ->orWhere('tire_size', 'like', "%{$searchTerm}%")
                     ->orWhere('speed_rating', 'like', "%{$searchTerm}%")
                     ->orWhere('load_index', 'like', "%{$searchTerm}%")
