@@ -259,11 +259,7 @@ class InquiryResource extends Resource
                     })
                     ->sortable()
                     ->toggleable(),
-                Tables\Columns\TextColumn::make('source')
-                    ->label('Source')
-                    ->formatStateUsing(fn (?string $state): string => $state ? Str::title($state) : '-')
-                    ->toggleable()
-                    ->toggledHiddenByDefault(),
+               
                 Tables\Columns\TextColumn::make('page_source')
                     ->label('Page Source')
                     ->badge()
@@ -281,11 +277,7 @@ class InquiryResource extends Resource
                     ->sortable()
                     ->toggleable()
                     ->toggledHiddenByDefault(),
-                Tables\Columns\TextColumn::make('quoted_price')
-                    ->money('USD')
-                    ->sortable()
-                    ->toggleable()
-                    ->toggledHiddenByDefault(),
+               
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created')
                     ->dateTime()
