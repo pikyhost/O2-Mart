@@ -100,6 +100,39 @@ class TyreController extends Controller
         // Debug logging
         \Log::info('Tyre filter request', ['request' => $request->all()]);
 
+        // Global search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                // Search in product name, SKU, warranty, description
+                $q->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhere('sku', 'like', "%{$searchTerm}%")
+                    ->orWhere('item_code', 'like', "%{$searchTerm}%")
+                    ->orWhere('warranty', 'like', "%{$searchTerm}%")
+                    ->orWhere('description', 'like', "%{$searchTerm}%")
+                    ->orWhere('details', 'like', "%{$searchTerm}%")
+                    ->orWhere('tire_size', 'like', "%{$searchTerm}%")
+                    ->orWhere('speed_rating', 'like', "%{$searchTerm}%")
+                    ->orWhere('load_index', 'like', "%{$searchTerm}%")
+                    // Search in brand name
+                    ->orWhereHas('tyreBrand', function ($q) use ($searchTerm) {
+                        $q->where('value', 'like', "%{$searchTerm}%");
+                    })
+                    // Search in country name
+                    ->orWhereHas('tyreCountry', function ($q) use ($searchTerm) {
+                        $q->where('value', 'like', "%{$searchTerm}%");
+                    })
+                    // Search in model name
+                    ->orWhereHas('tyreModel', function ($q) use ($searchTerm) {
+                        $q->where('value', 'like', "%{$searchTerm}%");
+                    })
+                    // Search in category name
+                    ->orWhereHas('category', function ($q) use ($searchTerm) {
+                        $q->where('name', 'like', "%{$searchTerm}%");
+                    });
+            });
+        }
+
         if ($request->filled('tire_size')) {
             $query->where('tire_size', $request->tire_size);
         }

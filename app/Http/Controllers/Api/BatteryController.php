@@ -25,6 +25,39 @@ public function index(Request $request)
         $q->where('is_approved', true);
     }], 'rating');
 
+    // Global search functionality
+    if ($request->filled('search')) {
+        $searchTerm = $request->search;
+        $query->where(function ($q) use ($searchTerm) {
+            // Search in product name, SKU, warranty, description
+            $q->where('name', 'like', "%{$searchTerm}%")
+                ->orWhere('sku', 'like', "%{$searchTerm}%")
+                ->orWhere('item_code', 'like', "%{$searchTerm}%")
+                ->orWhere('warranty', 'like', "%{$searchTerm}%")
+                ->orWhere('description', 'like', "%{$searchTerm}%")
+                // Search in brand name
+                ->orWhereHas('batteryBrand', function ($q) use ($searchTerm) {
+                    $q->where('value', 'like', "%{$searchTerm}%");
+                })
+                // Search in country name
+                ->orWhereHas('batteryCountry', function ($q) use ($searchTerm) {
+                    $q->where('value', 'like', "%{$searchTerm}%");
+                })
+                // Search in capacity
+                ->orWhereHas('capacity', function ($q) use ($searchTerm) {
+                    $q->where('value', 'like', "%{$searchTerm}%");
+                })
+                // Search in dimension
+                ->orWhereHas('dimension', function ($q) use ($searchTerm) {
+                    $q->where('value', 'like', "%{$searchTerm}%");
+                })
+                // Search in category name
+                ->orWhereHas('category', function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', "%{$searchTerm}%");
+                });
+        });
+    }
+
     if ($request->filled('brand_id')) {
         $query->where('battery_brand_id', $request->brand_id);
     }

@@ -108,6 +108,41 @@ class RimController extends Controller
         ])->withAvg(['reviews as average_rating' => function ($q) {
                 $q->where('is_approved', true);
             }], 'rating');
+
+        // Global search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                // Search in product name, SKU, warranty, description
+                $q->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhere('sku', 'like', "%{$searchTerm}%")
+                    ->orWhere('item_code', 'like', "%{$searchTerm}%")
+                    ->orWhere('warranty', 'like', "%{$searchTerm}%")
+                    ->orWhere('description', 'like', "%{$searchTerm}%")
+                    ->orWhere('details', 'like', "%{$searchTerm}%")
+                    ->orWhere('colour', 'like', "%{$searchTerm}%")
+                    ->orWhere('condition', 'like', "%{$searchTerm}%")
+                    ->orWhere('bolt_pattern', 'like', "%{$searchTerm}%")
+                    ->orWhere('offsets', 'like', "%{$searchTerm}%")
+                    // Search in brand name
+                    ->orWhereHas('rimBrand', function ($q) use ($searchTerm) {
+                        $q->where('name', 'like', "%{$searchTerm}%");
+                    })
+                    // Search in country name
+                    ->orWhereHas('rimCountry', function ($q) use ($searchTerm) {
+                        $q->where('name', 'like', "%{$searchTerm}%");
+                    })
+                    // Search in rim size
+                    ->orWhereHas('rimSize', function ($q) use ($searchTerm) {
+                        $q->where('size', 'like', "%{$searchTerm}%");
+                    })
+                    // Search in category name
+                    ->orWhereHas('category', function ($q) use ($searchTerm) {
+                        $q->where('name', 'like', "%{$searchTerm}%");
+                    });
+            });
+        }
+
         if ($request->filled('colour')) {
             $query->where('colour', $request->colour);
         }
