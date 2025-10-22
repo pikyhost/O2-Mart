@@ -121,12 +121,6 @@ class PopupController extends Controller
         try {
             $popup = Popup::find($request->popup_id);
 
-            // if (!$popup->email_needed) {
-            //     return response()->json([
-            //         'error' => 'This popup does not require email submission',
-            //     ], 400);
-            // }
-
             // Get an active coupon 
             $coupon = $popup->coupon;
 

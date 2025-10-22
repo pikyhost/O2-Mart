@@ -16,9 +16,9 @@ class Popup extends Model
      */
     protected $casts = [
         'is_active' => 'boolean',
+        'email_needed' => 'boolean',
         'delay_seconds' => 'integer',
         'specific_pages' => 'array', // Cast JSON string to array
-        'email_input_mode' => 'string',
     ];
 
     /**
