@@ -41,7 +41,7 @@ public function index(Request $request)
                 })
                 // Search in country name
                 ->orWhereHas('batteryCountry', function ($q) use ($searchTerm) {
-                    $q->where('value', 'like', "%{$searchTerm}%");
+                    $q->where('name', 'like', "%{$searchTerm}%");
                 })
                 // Search in capacity
                 ->orWhereHas('capacity', function ($q) use ($searchTerm) {

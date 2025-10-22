@@ -116,15 +116,15 @@ class TyreController extends Controller
                     ->orWhere('load_index', 'like', "%{$searchTerm}%")
                     // Search in brand name
                     ->orWhereHas('tyreBrand', function ($q) use ($searchTerm) {
-                        $q->where('value', 'like', "%{$searchTerm}%");
+                        $q->where('name', 'like', "%{$searchTerm}%");
                     })
                     // Search in country name
                     ->orWhereHas('tyreCountry', function ($q) use ($searchTerm) {
-                        $q->where('value', 'like', "%{$searchTerm}%");
+                        $q->where('name', 'like', "%{$searchTerm}%");
                     })
                     // Search in model name
                     ->orWhereHas('tyreModel', function ($q) use ($searchTerm) {
-                        $q->where('value', 'like', "%{$searchTerm}%");
+                        $q->where('name', 'like', "%{$searchTerm}%");
                     })
                     // Search in category name
                     ->orWhereHas('category', function ($q) use ($searchTerm) {
