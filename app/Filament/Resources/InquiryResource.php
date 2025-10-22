@@ -190,9 +190,23 @@ class InquiryResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('full_name')
-                    ->searchable(),
+                    ->label('Customer Name')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('phone_number')
+                    ->label('Phone')
+                    ->searchable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('car_make')
                     ->label('Vehicle')
                     ->formatStateUsing(fn ($record) => 
@@ -202,7 +216,14 @@ class InquiryResource extends Resource
                             $record->car_year
                         ]))) ?: '-'
                     )
-                    ->searchable(['car_make', 'car_model', 'car_year']),
+                    ->searchable(['car_make', 'car_model', 'car_year'])
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('vin_chassis_number')
+                    ->label('VIN/Chassis')
+                    ->searchable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('type')
                     ->formatStateUsing(fn (string $state): string => Str::title($state))
                     ->badge()
@@ -212,7 +233,9 @@ class InquiryResource extends Resource
                         'battery' => 'warning',
                         'tires' => 'success',
                         default => 'gray',
-                    }),
+                    })
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -222,7 +245,9 @@ class InquiryResource extends Resource
                         'completed' => 'success',
                         'cancelled' => 'danger',
                         default => 'gray',
-                    }),
+                    })
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('priority')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
@@ -231,21 +256,47 @@ class InquiryResource extends Resource
                         'high' => 'warning',
                         'urgent' => 'danger',
                         default => 'gray',
-                    }),
+                    })
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('source')
+                    ->label('Source')
+                    ->formatStateUsing(fn (?string $state): string => $state ? Str::title($state) : '-')
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('page_source')
                     ->label('Page Source')
                     ->badge()
                     ->color('info')
                     ->formatStateUsing(fn (?string $state): string => $state ? Str::title(str_replace('_', ' ', $state)) : 'Unknown')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('assignedUser.name')
-                    ->label('Assigned To'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable(),
+                    ->label('Assigned To')
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('quantity')
+                    ->label('Qty')
+                    ->sortable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('quoted_price')
                     ->money('USD')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Updated')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('type')
