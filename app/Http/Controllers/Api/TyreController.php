@@ -109,7 +109,9 @@ class TyreController extends Controller
                     ->orWhere('sku', 'like', "%{$searchTerm}%")
                     ->orWhere('warranty', 'like', "%{$searchTerm}%")
                     ->orWhere('description', 'like', "%{$searchTerm}%")
-                    ->orWhere('tire_size', 'like', "%{$searchTerm}%")
+                    ->orWhere('width', 'like', "%{$searchTerm}%")
+                    ->orWhere('height', 'like', "%{$searchTerm}%")
+                    ->orWhere('wheel_diameter', 'like', "%{$searchTerm}%")
                     ->orWhere('speed_rating', 'like', "%{$searchTerm}%")
                     ->orWhere('load_index', 'like', "%{$searchTerm}%")
                     // Search in brand name
@@ -127,8 +129,9 @@ class TyreController extends Controller
             });
         }
 
-        if ($request->filled('tire_size')) {
-            $query->where('tire_size', $request->tire_size);
+        if ($request->filled('tire_size') || $request->filled('tyre_size_id')) {
+            $sizeId = $request->tyre_size_id ?? $request->tire_size;
+            $query->where('tyre_size_id', $sizeId);
         }
 
         if ($request->filled(['make_id', 'model_id', 'year'])) {
