@@ -57,7 +57,13 @@ class AutoPartImporter extends BaseUpsertImporter
 
     public function fillRecord(): void
     {
-        parent::fillRecord();
+        try {
+            parent::fillRecord();
+            
+            // Validate required fields
+            if (empty($this->record->name)) {
+                throw new \Exception('Product name is required');
+            }
 
         // Generate unique slug from product name
         if (empty($this->record->slug) || $this->record->slug === 'car-spare-parts-uae') {
@@ -128,6 +134,14 @@ class AutoPartImporter extends BaseUpsertImporter
             $visc = $this->firstOrCreateByName(ViscosityGrade::class, $name);
             if ($visc) $this->record->viscosity_grade_id = $visc->id;
         });
+        } catch (\Exception $e) {
+            \Log::error('AutoPartImporter fillRecord failed', [
+                'row' => $this->data,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
     }
 
     public function saveRecord(): void

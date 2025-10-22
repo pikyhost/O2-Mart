@@ -37,6 +37,9 @@ class AutoPart extends Model implements HasMedia
             'meta_title',
             'meta_description',
             'alt_text',
+            'buy_3_get_1_free',
+            'gallery_links',
+            'secondary_image_url',
         ];
 
 
