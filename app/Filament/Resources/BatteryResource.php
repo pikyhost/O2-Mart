@@ -52,7 +52,7 @@ class BatteryResource extends BaseResource
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()->orderBy('created_at', 'desc');
+        return parent::getEloquentQuery()->orderBy('created_at');
     }
 
     public static function form(Form $form): Form
