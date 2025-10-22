@@ -179,7 +179,7 @@ class CartService
                     'van_id' => $item->mobile_van_id,
                     'date' => $item->installation_date,
                     'location' => $item->mobileVan ? 
-                        ($item->mobileVan->name . ' - ' . $item->mobileVan->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null,
+                        ($item->mobileVan->name . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null,
                 ];
                 $withInstallation[] = $entry;
             } elseif ($type === 'installation_center') {
@@ -187,7 +187,7 @@ class CartService
                     'center_id' => $item->installation_center_id,
                     'date' => $item->installation_date,
                     'location' => $item->installationCenter ? 
-                        ($item->installationCenter->name . ' - ' . $item->installationCenter->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null,
+                        ($item->installationCenter->name . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null,
                 ];
                 $installationCenter[] = $entry;
             } else {
