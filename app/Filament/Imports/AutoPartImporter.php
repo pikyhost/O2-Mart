@@ -58,21 +58,12 @@ class AutoPartImporter extends BaseUpsertImporter
     public function fillRecord(): void
     {
         parent::fillRecord();
-        
-        // Validate required fields
-        if (empty($this->record->name)) {
-            throw new \Exception('Product name is required');
-        }
 
-        // Generate unique slug from product name
-        if (empty($this->record->slug) || $this->record->slug === 'car-spare-parts-uae') {
-            // If slug is empty or generic, generate from name + SKU for uniqueness
-            $baseName = $this->record->name ?? 'product';
-            $sku = $this->record->sku ?? '';
-            $this->record->slug = Str::slug($baseName . ' ' . $sku);
+        if (empty($this->record->slug) && !empty($this->record->name)) {
+            $this->record->slug = Str::slug($this->record->name);
         } else {
             $this->record->slug = Str::slug(
-                preg_replace('/\s+/', ' ', trim($this->record->slug))
+                preg_replace('/\s+/', ' ', trim($this->record->slug ?? $this->record->name))
             );
         }
 
@@ -137,28 +128,6 @@ class AutoPartImporter extends BaseUpsertImporter
 
     public function saveRecord(): void
     {
-        // Validate slug uniqueness before saving
-        if (!empty($this->record->slug)) {
-            $exists = AutoPart::where('slug', $this->record->slug)
-                ->when($this->record->exists, fn($q) => $q->where('id', '!=', $this->record->id))
-                ->exists();
-            
-            if ($exists) {
-                throw new \Exception("Duplicate slug '{$this->record->slug}'. Each product must have a unique slug.");
-            }
-        }
-        
-        // Validate SKU uniqueness before saving
-        if (!empty($this->record->sku)) {
-            $exists = AutoPart::where('sku', $this->record->sku)
-                ->when($this->record->exists, fn($q) => $q->where('id', '!=', $this->record->id))
-                ->exists();
-            
-            if ($exists) {
-                throw new \Exception("Duplicate SKU '{$this->record->sku}'. SKU must be unique.");
-            }
-        }
-        
         $this->record->save();
 
         // Import feature image
@@ -171,11 +140,9 @@ class AutoPartImporter extends BaseUpsertImporter
                 }
             } catch (\Exception $e) {
                 \Log::error('AutoPartImporter: Failed to import feature image', [
-                    'sku' => $this->record->sku,
                     'url' => $url,
                     'error' => $e->getMessage()
                 ]);
-                // Don't throw, just log - image import failures shouldn't fail the entire record
             }
         }
 
@@ -189,11 +156,9 @@ class AutoPartImporter extends BaseUpsertImporter
                 }
             } catch (\Exception $e) {
                 \Log::error('AutoPartImporter: Failed to import secondary image', [
-                    'sku' => $this->record->sku,
                     'url' => $url,
                     'error' => $e->getMessage()
                 ]);
-                // Don't throw, just log - image import failures shouldn't fail the entire record
             }
         }
     }
