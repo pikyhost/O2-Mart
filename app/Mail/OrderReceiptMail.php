@@ -15,7 +15,13 @@ class OrderReceiptMail extends Mailable
 
     public function __construct(Order $order)
     {
-        $this->order = $order->load('items.installationCenter', 'items.buyable');
+        $this->order = $order->load([
+            'items.installationCenter', 
+            'items.mobileVan', 
+            'items.buyable',
+            'addresses.area',
+            'addresses.city'
+        ]);
     }
 
     public function build()

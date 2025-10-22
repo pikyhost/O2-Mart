@@ -82,11 +82,15 @@
                         </tbody>
                       </table>
 
-                      @if ($order->shippingAddress)
+                      @php
+                        $shippingAddress = $order->addresses()->where('type', 'shipping')->first();
+                      @endphp
+                      
+                      @if ($shippingAddress)
                       <p style="margin:15px 0 10px 0;"><strong style="color:#df2020;">Customer Address:</strong><br/>
-                        {{ $order->shippingAddress->address_line }}<br/>
-                        {{ $order->shippingAddress->area->name ?? '-' }}, {{ $order->shippingAddress->city->name ?? '-' }}<br/>
-                        Phone: {{ $order->shippingAddress->phone }}
+                        {{ $shippingAddress->address_line }}<br/>
+                        {{ $shippingAddress->area->name ?? '-' }}, {{ $shippingAddress->city->name ?? '-' }}<br/>
+                        Phone: {{ $shippingAddress->phone }}
                       </p>
                       @endif
 
@@ -102,15 +106,41 @@
                       <p style="margin:10px 0;"><strong style="color:#df2020;">Total Paid:</strong> {{ number_format($order->total, 2) }} AED</p>
 
                       @php
+                        $withInstallationItems = $order->items->where('shipping_option', 'with_installation');
                         $installationCenterItems = $order->items->where('shipping_option', 'installation_center');
                       @endphp
                       
+                      @if ($withInstallationItems->count() > 0)
+                      <p style="margin:15px 0 10px 0;"><strong style="color:#df2020;">🚚 Delivery with Installation (Mobile Van):</strong></p>
+                      @foreach ($withInstallationItems as $item)
+                        @if ($item->mobileVan)
+                        <p style="margin:10px 0;"><strong style="color:#df2020;">Mobile Van:</strong> {{ $item->mobileVan->name }}</p>
+                        <p style="margin:10px 0;"><strong style="color:#df2020;">Location:</strong> 
+                          @if ($item->mobileVan->google_map_link)
+                          <a href="{{ $item->mobileVan->google_map_link }}" target="_blank" style="color:#df2020; text-decoration:underline;">{{ $item->mobileVan->location }}</a>
+                          @else
+                          {{ $item->mobileVan->location }}
+                          @endif
+                        </p>
+                        @if ($item->installation_date)
+                        <p style="margin:10px 0;"><strong style="color:#df2020;">Scheduled Date:</strong> {{ \Carbon\Carbon::parse($item->installation_date)->format('d M Y, h:i A') }}</p>
+                        @endif
+                        @endif
+                      @endforeach
+                      @endif
+                      
                       @if ($installationCenterItems->count() > 0)
-                      <p style="margin:15px 0 10px 0;"><strong style="color:#df2020;">Center Shipping:</strong></p>
+                      <p style="margin:15px 0 10px 0;"><strong style="color:#df2020;">🏪 Installation Center:</strong></p>
                       @foreach ($installationCenterItems as $item)
                         @if ($item->installationCenter)
-                        <p style="margin:10px 0;"><strong style="color:#df2020;">Name:</strong> {{ $item->installationCenter->name }}</p>
-                        <p style="margin:10px 0;"><strong style="color:#df2020;">Location:</strong> {{ $item->installationCenter->location }}</p>
+                        <p style="margin:10px 0;"><strong style="color:#df2020;">Center Name:</strong> {{ $item->installationCenter->name }}</p>
+                        <p style="margin:10px 0;"><strong style="color:#df2020;">Location:</strong> 
+                          @if ($item->installationCenter->google_map_link)
+                          <a href="{{ $item->installationCenter->google_map_link }}" target="_blank" style="color:#df2020; text-decoration:underline;">📍 {{ $item->installationCenter->location }} (View on Google Maps)</a>
+                          @else
+                          {{ $item->installationCenter->location }}
+                          @endif
+                        </p>
                         @if ($item->installation_date)
                         <p style="margin:10px 0;"><strong style="color:#df2020;">Scheduled Date:</strong> {{ \Carbon\Carbon::parse($item->installation_date)->format('d M Y, h:i A') }}</p>
                         @endif
