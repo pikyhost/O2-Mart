@@ -183,7 +183,7 @@ class SearchController extends Controller
 
     private function searchCarModels(string $search, int $limit, array $filters): array
     {
-        $query = \App\Models\CarModel::with('carMake');
+        $query = \App\Models\CarModel::with('make');
         
         if (!empty($search)) {
             $query->where('name', 'like', "%{$search}%");
@@ -199,7 +199,7 @@ class SearchController extends Controller
             ->get(['id', 'name', 'car_make_id'])
             ->map(fn($item) => [
                 'id' => $item->id,
-                'label' => $item->name . ($item->carMake ? ' (' . $item->carMake->name . ')' : ''),
+                'label' => $item->name . ($item->make ? ' (' . $item->make->name . ')' : ''),
                 'value' => $item->id,
                 'make_id' => $item->car_make_id
             ])->toArray();
