@@ -98,6 +98,13 @@
 
                       @if ($order->tracking_number)
                       <p style="margin:10px 0;"><strong style="color:#df2020;">Tracking Number:</strong> {{ $order->tracking_number }}</p>
+                      <p style="margin:5px 0 15px 0;">
+                        <a href="{{ config('app.frontend_url') }}/TrackMyOrder?tracking={{ $order->tracking_number }}" 
+                           target="_blank" 
+                           style="display:inline-block; background-color:#df2020; color:#ffffff; padding:10px 20px; text-decoration:none; border-radius:5px; font-weight:bold; font-family:Arial, sans-serif; font-size:14px;">
+                          🔍 Track Your Order
+                        </a>
+                      </p>
                       @endif
 
                       <p style="margin:10px 0;"><strong style="color:#df2020;">Subtotal:</strong> {{ number_format($order->subtotal, 2) }} AED</p>
