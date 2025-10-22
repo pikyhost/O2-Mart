@@ -57,13 +57,12 @@ class AutoPartImporter extends BaseUpsertImporter
 
     public function fillRecord(): void
     {
-        try {
-            parent::fillRecord();
-            
-            // Validate required fields
-            if (empty($this->record->name)) {
-                throw new \Exception('Product name is required');
-            }
+        parent::fillRecord();
+        
+        // Validate required fields
+        if (empty($this->record->name)) {
+            throw new \Exception('Product name is required');
+        }
 
         // Generate unique slug from product name
         if (empty($this->record->slug) || $this->record->slug === 'car-spare-parts-uae') {
@@ -134,85 +133,68 @@ class AutoPartImporter extends BaseUpsertImporter
             $visc = $this->firstOrCreateByName(ViscosityGrade::class, $name);
             if ($visc) $this->record->viscosity_grade_id = $visc->id;
         });
-        } catch (\Exception $e) {
-            \Log::error('AutoPartImporter fillRecord failed', [
-                'row' => $this->data,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            throw $e;
-        }
     }
 
     public function saveRecord(): void
     {
-        try {
-            // Validate slug uniqueness before saving
-            if (!empty($this->record->slug)) {
-                $exists = AutoPart::where('slug', $this->record->slug)
-                    ->when($this->record->exists, fn($q) => $q->where('id', '!=', $this->record->id))
-                    ->exists();
-                
-                if ($exists) {
-                    throw new \Exception("Duplicate slug '{$this->record->slug}'. Each product must have a unique slug.");
-                }
-            }
+        // Validate slug uniqueness before saving
+        if (!empty($this->record->slug)) {
+            $exists = AutoPart::where('slug', $this->record->slug)
+                ->when($this->record->exists, fn($q) => $q->where('id', '!=', $this->record->id))
+                ->exists();
             
-            // Validate SKU uniqueness before saving
-            if (!empty($this->record->sku)) {
-                $exists = AutoPart::where('sku', $this->record->sku)
-                    ->when($this->record->exists, fn($q) => $q->where('id', '!=', $this->record->id))
-                    ->exists();
-                
-                if ($exists) {
-                    throw new \Exception("Duplicate SKU '{$this->record->sku}'. SKU must be unique.");
-                }
+            if ($exists) {
+                throw new \Exception("Duplicate slug '{$this->record->slug}'. Each product must have a unique slug.");
             }
-            // comment
-            $this->record->save();
+        }
+        
+        // Validate SKU uniqueness before saving
+        if (!empty($this->record->sku)) {
+            $exists = AutoPart::where('sku', $this->record->sku)
+                ->when($this->record->exists, fn($q) => $q->where('id', '!=', $this->record->id))
+                ->exists();
+            
+            if ($exists) {
+                throw new \Exception("Duplicate SKU '{$this->record->sku}'. SKU must be unique.");
+            }
+        }
+        
+        $this->record->save();
 
-            // Import feature image
-            if (!empty($this->data['photo_link'])) {
-                $url = trim($this->data['photo_link']);
-                try {
-                    if (filter_var($url, FILTER_VALIDATE_URL)) {
-                        $this->record->addMediaFromUrl($url)
-                            ->toMediaCollection('auto_part_feature_image');
-                    }
-                } catch (\Exception $e) {
-                    \Log::error('AutoPartImporter: Failed to import feature image', [
-                        'sku' => $this->record->sku,
-                        'url' => $url,
-                        'error' => $e->getMessage()
-                    ]);
-                    // Don't throw, just log - image import failures shouldn't fail the entire record
+        // Import feature image
+        if (!empty($this->data['photo_link'])) {
+            $url = trim($this->data['photo_link']);
+            try {
+                if (filter_var($url, FILTER_VALIDATE_URL)) {
+                    $this->record->addMediaFromUrl($url)
+                        ->toMediaCollection('auto_part_feature_image');
                 }
+            } catch (\Exception $e) {
+                \Log::error('AutoPartImporter: Failed to import feature image', [
+                    'sku' => $this->record->sku,
+                    'url' => $url,
+                    'error' => $e->getMessage()
+                ]);
+                // Don't throw, just log - image import failures shouldn't fail the entire record
             }
+        }
 
-            // Import secondary image
-            if (!empty($this->data['secondary_image_url'])) {
-                $url = trim($this->data['secondary_image_url']);
-                try {
-                    if (filter_var($url, FILTER_VALIDATE_URL)) {
-                        $this->record->addMediaFromUrl($url)
-                            ->toMediaCollection('auto_part_secondary_image');
-                    }
-                } catch (\Exception $e) {
-                    \Log::error('AutoPartImporter: Failed to import secondary image', [
-                        'sku' => $this->record->sku,
-                        'url' => $url,
-                        'error' => $e->getMessage()
-                    ]);
-                    // Don't throw, just log - image import failures shouldn't fail the entire record
+        // Import secondary image
+        if (!empty($this->data['secondary_image_url'])) {
+            $url = trim($this->data['secondary_image_url']);
+            try {
+                if (filter_var($url, FILTER_VALIDATE_URL)) {
+                    $this->record->addMediaFromUrl($url)
+                        ->toMediaCollection('auto_part_secondary_image');
                 }
+            } catch (\Exception $e) {
+                \Log::error('AutoPartImporter: Failed to import secondary image', [
+                    'sku' => $this->record->sku,
+                    'url' => $url,
+                    'error' => $e->getMessage()
+                ]);
+                // Don't throw, just log - image import failures shouldn't fail the entire record
             }
-        } catch (\Exception $e) {
-            \Log::error('AutoPartImporter: Failed to save record', [
-                'data' => $this->data,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            throw $e; // Re-throw to mark row as failed
         }
     }
 
