@@ -116,6 +116,7 @@ class AreaResource extends BaseResource
                     ->label(__('City'))
                     ->relationship('city', 'name')
             ], Tables\Enums\FiltersLayout::AboveContent)
+            ->defaultSort('created_at', 'desc')
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
