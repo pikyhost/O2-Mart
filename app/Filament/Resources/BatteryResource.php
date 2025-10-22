@@ -52,7 +52,7 @@ class BatteryResource extends BaseResource
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()->orderBy('created_at');
+        return parent::getEloquentQuery()->orderBy('created_at', 'desc');
     }
 
     public static function form(Form $form): Form
@@ -542,7 +542,7 @@ class BatteryResource extends BaseResource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-          ;
+            ->defaultSort('created_at', 'desc');
     }
 
     protected static function getCategoryWithDescendants($categoryId): \Illuminate\Support\Collection
