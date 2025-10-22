@@ -542,7 +542,7 @@ class BatteryResource extends BaseResource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('created_at', 'desc');
+          ;
     }
 
     protected static function getCategoryWithDescendants($categoryId): \Illuminate\Support\Collection
