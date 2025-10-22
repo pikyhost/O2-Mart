@@ -80,13 +80,8 @@ class CartService
         }
         $subtotal = $menuTotal / (1 + $vatPercent);
 
-        // 🟢 Installation Fees (only once if any item has with_installation)
-        $installationFee = 0;
-        $hasInstallation = $cart->items->contains('shipping_option', 'with_installation');
-        if ($hasInstallation) {
-            $installationFeeValue = \App\Models\ShippingSetting::first()?->installation_fee ?? 200;
-            $installationFee = $installationFeeValue;
-        }
+        // 🟢 Installation Fees (includes both regular installation and rim installation center)
+        $installationFee = self::calculateInstallationFee($cart);
 
         // 🟢 Shipping Cost (use saved shipping_cost from cart)
         $shippingCost = $cart->shipping_cost ?? 0;
