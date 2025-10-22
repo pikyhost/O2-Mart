@@ -555,30 +555,31 @@ class TyreController extends Controller
 
     public function filters(Request $request)
     {
-        $query = Tyre::query();
+        // Base query for non-size filters
+        $baseQuery = Tyre::query();
         
         $hasFilters = false;
         
         if ($request->filled('brand_id')) {
             $brands = is_array($request->brand_id) ? $request->brand_id : [$request->brand_id];
-            $query->whereIn('tyre_brand_id', $brands);
+            $baseQuery->whereIn('tyre_brand_id', $brands);
             $hasFilters = true;
         }
         
         if ($request->filled('model')) {
             $models = is_array($request->model) ? $request->model : [$request->model];
-            $query->whereIn('tyre_model_id', $models);
+            $baseQuery->whereIn('tyre_model_id', $models);
             $hasFilters = true;
         }
         
         if ($request->filled('tyre_country_id')) {
             $countries = is_array($request->tyre_country_id) ? $request->tyre_country_id : [$request->tyre_country_id];
-            $query->whereIn('tyre_country_id', $countries);
+            $baseQuery->whereIn('tyre_country_id', $countries);
             $hasFilters = true;
         }
         
         if ($request->filled(['make_id', 'model_id', 'year'])) {
-            $query->whereHas('tyreAttribute', function ($q) use ($request) {
+            $baseQuery->whereHas('tyreAttribute', function ($q) use ($request) {
                 $q->where('car_make_id', $request->make_id)
                   ->where('car_model_id', $request->model_id)
                   ->where('model_year', $request->year);
@@ -590,19 +591,53 @@ class TyreController extends Controller
             $hasFilters = true;
         }
         
+        // Get base tyre IDs for other filters (without size constraints)
+        $baseTyreIds = $hasFilters ? $baseQuery->pluck('id') : Tyre::pluck('id');
+        
+        // Cascading size filters: Width -> Height -> Wheel Diameter
+        // Step 1: Get all available widths (based on other filters only)
+        $widthQuery = Tyre::whereIn('id', $baseTyreIds);
+        $availableWidths = $widthQuery->select('width')->distinct()->whereNotNull('width')->pluck('width')->filter()->sort()->values();
+        
+        // Step 2: Get heights based on selected width
+        $heightQuery = Tyre::whereIn('id', $baseTyreIds);
         if ($request->filled('width')) {
             $widths = is_array($request->width) ? $request->width : [$request->width];
-            $query->whereIn('width', $widths);
-            $hasFilters = true;
+            $heightQuery->whereIn('width', $widths);
         }
+        $availableHeights = $heightQuery->select('height')->distinct()->whereNotNull('height')->pluck('height')->filter()->sort()->values();
         
+        // Step 3: Get wheel diameters based on selected width and height
+        $diameterQuery = Tyre::whereIn('id', $baseTyreIds);
+        if ($request->filled('width')) {
+            $widths = is_array($request->width) ? $request->width : [$request->width];
+            $diameterQuery->whereIn('width', $widths);
+        }
         if ($request->filled('height')) {
             $heights = is_array($request->height) ? $request->height : [$request->height];
-            $query->whereIn('height', $heights);
-            $hasFilters = true;
+            $diameterQuery->whereIn('height', $heights);
+        }
+        $availableWheelDiameters = $diameterQuery->select('wheel_diameter')->distinct()->whereNotNull('wheel_diameter')->pluck('wheel_diameter')->filter()->map(function($diameter) {
+            $float = (float) $diameter;
+            return $float == intval($float) ? (string) intval($float) : (string) $float;
+        })->sort()->values();
+        
+        // For other filters, apply all size filters if present
+        $fullQuery = clone $baseQuery;
+        if ($request->filled('width')) {
+            $widths = is_array($request->width) ? $request->width : [$request->width];
+            $fullQuery->whereIn('width', $widths);
+        }
+        if ($request->filled('height')) {
+            $heights = is_array($request->height) ? $request->height : [$request->height];
+            $fullQuery->whereIn('height', $heights);
+        }
+        if ($request->filled('wheel_diameter')) {
+            $diameters = is_array($request->wheel_diameter) ? $request->wheel_diameter : [$request->wheel_diameter];
+            $fullQuery->whereIn('wheel_diameter', $diameters);
         }
         
-        $filteredTyreIds = $hasFilters ? $query->pluck('id') : Tyre::pluck('id');
+        $filteredTyreIds = $fullQuery->pluck('id');
         
         return response()->json([
             'status' => 'success',
@@ -610,12 +645,9 @@ class TyreController extends Controller
                 'brands' => TyreBrand::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
                     $q->whereIn('id', $filteredTyreIds);
                 })->orderBy('name')->get(),
-                'widths' => Tyre::whereIn('id', $filteredTyreIds)->select('width')->distinct()->whereNotNull('width')->pluck('width')->filter()->sort()->values(),
-                'heights' => Tyre::whereIn('id', $filteredTyreIds)->select('height')->distinct()->whereNotNull('height')->pluck('height')->filter()->sort()->values(),
-                'wheel_diameters' => Tyre::whereIn('id', $filteredTyreIds)->select('wheel_diameter')->distinct()->whereNotNull('wheel_diameter')->pluck('wheel_diameter')->filter()->map(function($diameter) {
-                    $float = (float) $diameter;
-                    return $float == intval($float) ? (string) intval($float) : (string) $float;
-                })->sort()->values(),
+                'widths' => $availableWidths,
+                'heights' => $availableHeights,
+                'wheel_diameters' => $availableWheelDiameters,
                 'models' => TyreModel::select('id', 'name')->whereHas('tyres', function($q) use ($filteredTyreIds) {
                     $q->whereIn('id', $filteredTyreIds);
                 })->orderBy('name')->get(),
