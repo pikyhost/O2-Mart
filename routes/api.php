@@ -27,6 +27,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\RimController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\TyreController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\CompareController;
@@ -165,6 +166,10 @@ return response()->json(['data' => request()->user()->last_filter]);
 })->middleware('auth:sanctum');
 // Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
+
+// General search endpoint for dropdowns
+Route::get('/search', [SearchController::class, 'search']);
+
 // Route::get('/attributes', [AttributeController::class, 'index']);
 // Route::get('/products/part-number/search', [ProductController::class, 'searchByPartNumber']);
 // Route::get('/products/cross-reference/search', [ProductController::class, 'findByCrossReference']);
