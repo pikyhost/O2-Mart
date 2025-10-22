@@ -125,10 +125,6 @@ class TyreController extends Controller
                     // Search in model name
                     ->orWhereHas('tyreModel', function ($q) use ($searchTerm) {
                         $q->where('name', 'like', "%{$searchTerm}%");
-                    })
-                    // Search in category name
-                    ->orWhereHas('category', function ($q) use ($searchTerm) {
-                        $q->where('name', 'like', "%{$searchTerm}%");
                     });
             });
         }
