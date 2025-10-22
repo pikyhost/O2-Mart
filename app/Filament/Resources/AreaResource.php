@@ -25,7 +25,7 @@ class AreaResource extends BaseResource
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()->orderBy('created_at', 'desc');
+        return parent::getEloquentQuery()->orderBy('id', 'desc');
     }
 
     public static function form(Form $form): Form
@@ -121,7 +121,7 @@ class AreaResource extends BaseResource
                     ->label(__('City'))
                     ->relationship('city', 'name')
             ], Tables\Enums\FiltersLayout::AboveContent)
-            ->defaultSort('created_at', 'desc')
+            ->defaultSort('id', 'desc')
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
