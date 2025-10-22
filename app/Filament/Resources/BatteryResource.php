@@ -24,7 +24,7 @@ use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -38,7 +38,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 
-class BatteryResource extends Resource
+class BatteryResource extends BaseResource
 {
     protected static ?string $model = Battery::class;
 

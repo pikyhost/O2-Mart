@@ -6,12 +6,12 @@ use App\Filament\Resources\CouponUsageResource\Pages;
 use App\Models\CouponUsage;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class CouponUsageResource extends Resource
+class CouponUsageResource extends BaseResource
 {
     protected static ?string $model = CouponUsage::class;
 

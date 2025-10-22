@@ -8,7 +8,7 @@ use App\Models\RimSize;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -20,7 +20,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Actions\Action;
 
-class RimSizeResource extends Resource
+class RimSizeResource extends BaseResource
 {
     protected static ?string $model = RimSize::class;
 

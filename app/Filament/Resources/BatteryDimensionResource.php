@@ -8,7 +8,7 @@ use App\Models\BatteryDimension;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ImportAction;
@@ -16,7 +16,7 @@ use Filament\Tables\Table;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Filament\Resources\BatteryDimensionResource\Pages;
 
-class BatteryDimensionResource extends Resource
+class BatteryDimensionResource extends BaseResource
 {
     protected static ?string $model = BatteryDimension::class;
 

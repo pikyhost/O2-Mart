@@ -7,12 +7,12 @@ use App\Filament\Resources\CarTyreSpecResource\Pages;
 use App\Models\CarTyreSpec;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Table;
 
-// class CarTyreSpecResource extends Resource
+// class CarTyreSpecResource extends BaseResource
 // {
 //     protected static ?string $model = CarTyreSpec::class;
 

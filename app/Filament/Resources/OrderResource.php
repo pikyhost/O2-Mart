@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\OrderResource\Pages\ListOrders;
 use App\Filament\Resources\OrderResource\Pages\ViewOrder;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Pages\Actions\Action;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -24,7 +24,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
 use Illuminate\Database\Eloquent\Builder;
 
-class OrderResource extends Resource
+class OrderResource extends BaseResource
 {
     protected static ?string $model = Order::class;
 

@@ -7,11 +7,11 @@ use App\Filament\Resources\CouponResource\Pages;
 use App\Models\Coupon;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class CouponResource extends Resource
+class CouponResource extends BaseResource
 {
     protected static ?string $model = Coupon::class;
 

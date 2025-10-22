@@ -6,13 +6,13 @@ use App\Filament\Resources\AreaResource\Pages;
 use App\Models\Area;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class AreaResource extends Resource
+class AreaResource extends BaseResource
 {
     protected static ?string $model = Area::class;
 

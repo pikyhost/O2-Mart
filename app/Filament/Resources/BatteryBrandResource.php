@@ -8,7 +8,7 @@ use App\Models\BatteryBrand;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ImportAction;
@@ -18,7 +18,7 @@ use App\Filament\Resources\BatteryBrandResource\Pages;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
-class BatteryBrandResource extends Resource
+class BatteryBrandResource extends BaseResource
 {
     protected static ?string $model = BatteryBrand::class;
 

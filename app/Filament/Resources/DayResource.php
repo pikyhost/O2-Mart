@@ -6,13 +6,13 @@ use App\Filament\Resources\DayResource\Pages;
 use App\Models\Day;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class DayResource extends Resource
+class DayResource extends BaseResource
 {
     protected static ?string $model = Day::class;
 

@@ -8,7 +8,7 @@ use App\Models\RimCountry;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -21,7 +21,7 @@ use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Actions\Action;
 
 
-class RimCountryResource extends Resource
+class RimCountryResource extends BaseResource
 {
     protected static ?string $model = RimCountry::class;
 

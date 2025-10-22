@@ -21,7 +21,7 @@ use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\IconPosition;
@@ -48,7 +48,7 @@ use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 use Ysfkaya\FilamentPhoneInput\Infolists\PhoneEntry;
 
-class UserResource extends Resource
+class UserResource extends BaseResource
 {
     use HasCreatedAtFilter, HasTimestampSection;
 

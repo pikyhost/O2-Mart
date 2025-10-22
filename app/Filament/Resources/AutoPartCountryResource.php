@@ -5,14 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Imports\AutoPartCountryImporter;
 use App\Models\AutoPartCountry;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\ImportAction;
 use App\Filament\Resources\AutoPartCountryResource\Pages;
 
-class AutoPartCountryResource extends Resource
+class AutoPartCountryResource extends BaseResource
 {
     protected static ?string $model = AutoPartCountry::class;
     protected static ?string $navigationIcon = 'heroicon-o-flag';

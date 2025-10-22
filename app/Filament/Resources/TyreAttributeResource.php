@@ -12,14 +12,14 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ImportAction;
 
 use Filament\Tables\Table;
 
-class TyreAttributeResource extends Resource
+class TyreAttributeResource extends BaseResource
 {
     protected static ?string $model = TyreAttribute::class;
 

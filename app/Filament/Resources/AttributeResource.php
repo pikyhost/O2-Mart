@@ -6,12 +6,12 @@ use App\Filament\Resources\AttributeResource\Pages;
 use App\Models\Attribute;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
-// class AttributeResource extends Resource
+// class AttributeResource extends BaseResource
 // {
 //     protected static ?string $model = Attribute::class;
 

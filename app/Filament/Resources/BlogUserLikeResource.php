@@ -5,13 +5,13 @@ namespace App\Filament\Resources;
 use App\Enums\UserRole;
 use App\Filament\Resources\BlogUserLikeResource\Pages;
 use App\Models\BlogUserLike;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class BlogUserLikeResource extends Resource
+class BlogUserLikeResource extends BaseResource
 {
     protected static ?string $model = BlogUserLike::class;
 

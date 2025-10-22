@@ -8,13 +8,13 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components;
 use Filament\Infolists\Infolist;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 use Ysfkaya\FilamentPhoneInput\Infolists\PhoneEntry;
 
-class ContactMessageResource extends Resource
+class ContactMessageResource extends BaseResource
 {
     protected static ?string $model = ContactMessage::class;
 

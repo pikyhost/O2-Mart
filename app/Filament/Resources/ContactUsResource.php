@@ -6,11 +6,11 @@ use App\Filament\Resources\ContactUsResource\Pages;
 use App\Models\ContactUs;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class ContactUsResource extends Resource
+class ContactUsResource extends BaseResource
 {
     protected static ?string $model = ContactUs::class;
 

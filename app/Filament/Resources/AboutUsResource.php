@@ -6,12 +6,12 @@ use App\Filament\Resources\AboutUsResource\Pages;
 use App\Models\AboutUs;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Notifications\Notification;
 
-class AboutUsResource extends Resource
+class AboutUsResource extends BaseResource
 {
     protected static ?string $model = AboutUs::class;
 

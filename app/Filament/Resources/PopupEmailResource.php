@@ -6,11 +6,11 @@ use App\Filament\Resources\PopupEmailResource\Pages;
 use App\Models\PopupEmail;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class PopupEmailResource extends Resource
+class PopupEmailResource extends BaseResource
 {
     protected static ?string $model = PopupEmail::class;
 

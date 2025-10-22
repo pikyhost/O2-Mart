@@ -16,7 +16,7 @@ use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Support\Enums\ActionSize;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Parallax\FilamentComments\Infolists\Components\CommentsEntry;
 
-class BlogResource extends Resource
+class BlogResource extends BaseResource
 {
     protected static ?string $model = Blog::class;
 

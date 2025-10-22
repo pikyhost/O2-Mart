@@ -8,12 +8,12 @@ use App\Filament\Imports\CarMakeImporter;
 use App\Models\CarMake;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
 
-class CarMakeResource extends Resource
+class CarMakeResource extends BaseResource
 {
     protected static ?string $model = CarMake::class;
 

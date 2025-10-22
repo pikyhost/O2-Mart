@@ -10,7 +10,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Filament\Tables\Actions\EditAction;
@@ -20,7 +20,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\File;
 
-class SettingResource extends Resource
+class SettingResource extends BaseResource
 {
     protected static ?string $model = Setting::class;
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';

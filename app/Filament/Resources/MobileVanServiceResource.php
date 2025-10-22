@@ -17,7 +17,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Pages\SubNavigationPosition;
 use Filament\Resources\Pages\Page;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
-class MobileVanServiceResource extends Resource
+class MobileVanServiceResource extends BaseResource
 {
     protected static ?string $model = MobileVanService::class;
 

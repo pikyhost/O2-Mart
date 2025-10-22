@@ -14,7 +14,7 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Forms\Get;
@@ -26,7 +26,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Actions\ImportAction;
 
-class RimResource extends Resource
+class RimResource extends BaseResource
 {
     protected static ?string $model = Rim::class;
     protected static ?string $navigationIcon = 'heroicon-o-cog';

@@ -8,14 +8,14 @@ use App\Filament\Resources\ViscosityGradeResource\Pages;
 use App\Models\ViscosityGrade;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class ViscosityGradeResource extends Resource
+class ViscosityGradeResource extends BaseResource
 {
     protected static ?string $model = ViscosityGrade::class;
     protected static ?string $navigationIcon = 'heroicon-o-cube';

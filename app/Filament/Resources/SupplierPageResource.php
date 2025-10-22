@@ -9,13 +9,13 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 
-class SupplierPageResource extends Resource
+class SupplierPageResource extends BaseResource
 {
     protected static ?string $model = SupplierPage::class;
 

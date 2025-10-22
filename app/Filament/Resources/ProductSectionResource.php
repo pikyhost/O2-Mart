@@ -11,11 +11,11 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class ProductSectionResource extends Resource
+class ProductSectionResource extends BaseResource
 {
     protected static ?string $model = ProductSection::class;
 

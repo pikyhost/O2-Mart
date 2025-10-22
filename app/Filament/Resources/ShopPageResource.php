@@ -6,7 +6,7 @@ use App\Filament\Resources\ShopPageResource\Pages\EditShopPage;
 use App\Filament\Resources\ShopPageResource\Pages\ListShopPages;
 use App\Models\ShopPage;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables\Table;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\MarkdownEditor;
@@ -15,7 +15,7 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 
-class ShopPageResource extends Resource
+class ShopPageResource extends BaseResource
 {
     protected static ?string $model = ShopPage::class;
 

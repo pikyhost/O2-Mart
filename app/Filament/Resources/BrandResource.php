@@ -7,12 +7,12 @@ use App\Filament\Resources\BrandResource\Pages;
 use App\Models\Brand;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Table;
 
-class BrandResource extends Resource
+class BrandResource extends BaseResource
 {
 
     public static function canAccess(): bool

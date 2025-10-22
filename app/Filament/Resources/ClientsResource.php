@@ -6,12 +6,12 @@ use App\Enums\UserRole;
 use App\Models\User;
 use App\Filament\Resources\ClientsResource\Pages;
 use Filament\Forms;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class ClientsResource extends Resource
+class ClientsResource extends BaseResource
 {
     protected static ?string $model = User::class;
     protected static ?string $navigationIcon = 'heroicon-o-user-group';

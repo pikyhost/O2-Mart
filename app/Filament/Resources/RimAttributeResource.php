@@ -9,7 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,7 +22,7 @@ use Filament\Forms\Get;
 use Maatwebsite\Excel\Facades\Excel;
 
 
-class RimAttributeResource extends Resource
+class RimAttributeResource extends BaseResource
 {
     protected static ?string $model = RimAttribute::class;
 

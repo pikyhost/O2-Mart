@@ -14,7 +14,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteAction;
@@ -27,7 +27,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class CountryResource extends Resource
+class CountryResource extends BaseResource
 {
     use HasMakeCostZeroAction;
 

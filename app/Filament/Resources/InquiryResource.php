@@ -8,7 +8,7 @@ use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
-class InquiryResource extends Resource
+class InquiryResource extends BaseResource
 {
     protected static ?string $model = Inquiry::class;
 

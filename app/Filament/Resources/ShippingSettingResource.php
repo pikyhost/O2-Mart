@@ -6,11 +6,11 @@ use App\Filament\Resources\ShippingSettingResource\Pages;
 use App\Models\ShippingSetting;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class ShippingSettingResource extends Resource
+class ShippingSettingResource extends BaseResource
 {
     protected static ?string $model = ShippingSetting::class;
     protected static ?string $navigationIcon = 'heroicon-o-cog-6-tooth';

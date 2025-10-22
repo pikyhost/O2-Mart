@@ -12,7 +12,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Table;
@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class NewsletterSubscriberResource extends Resource
+class NewsletterSubscriberResource extends BaseResource
 {
     protected static ?string $model = NewsletterSubscriber::class;
 

@@ -7,7 +7,7 @@ use App\Models\WorkingHour;
 use Closure;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use App\Models\MobileVanService;
 use App\Models\Day;
 use App\Models\InstallerShop;
@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\BooleanFilter;
 use Webbingbrasil\FilamentAdvancedFilter\Filters\DateFilter;
 
-class WorkingHourResource extends Resource
+class WorkingHourResource extends BaseResource
 {
     protected static ?string $model = WorkingHour::class;
 

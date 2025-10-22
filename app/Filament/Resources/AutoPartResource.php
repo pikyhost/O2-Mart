@@ -22,7 +22,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ImportAction;
@@ -32,7 +32,7 @@ use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 
-class AutoPartResource extends Resource
+class AutoPartResource extends BaseResource
 {
     protected static ?string $model = AutoPart::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';

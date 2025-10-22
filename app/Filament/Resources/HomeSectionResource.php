@@ -6,7 +6,7 @@ use App\Filament\Resources\HomeSectionResource\Pages;
 use App\Models\HomeSection;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Forms\Components\TextInput;
@@ -17,7 +17,7 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs\Tab;
 
-class HomeSectionResource extends Resource
+class HomeSectionResource extends BaseResource
 {
     protected static ?string $model = HomeSection::class;
 

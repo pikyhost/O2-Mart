@@ -7,13 +7,13 @@ use App\Filament\Resources\VinRecordResource\RelationManagers;
 use App\Models\VinRecord;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class VinRecordResource extends Resource
+class VinRecordResource extends BaseResource
 {
     protected static ?string $model = VinRecord::class;
 

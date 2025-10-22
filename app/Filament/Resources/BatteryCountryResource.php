@@ -9,10 +9,10 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables\Actions\ImportAction;
 
-class BatteryCountryResource extends Resource
+class BatteryCountryResource extends BaseResource
 {
     protected static ?string $model = BatteryCountry::class;
 

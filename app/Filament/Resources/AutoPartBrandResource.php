@@ -10,14 +10,14 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class AutoPartBrandResource extends Resource
+class AutoPartBrandResource extends BaseResource
 {
     protected static ?string $model = AutoPartBrand::class;
     protected static ?string $navigationIcon = 'heroicon-o-tag';

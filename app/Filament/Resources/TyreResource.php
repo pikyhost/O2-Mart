@@ -23,7 +23,7 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\ImageColumn;
@@ -33,7 +33,7 @@ use Filament\Infolists\Components;
 use Filament\Infolists\Infolist;
 use Filament\Tables\Actions\ExportAction;
 
-class TyreResource extends Resource
+class TyreResource extends BaseResource
 {
     protected static ?string $model = Tyre::class;
     protected static ?string $navigationIcon = 'heroicon-o-truck';

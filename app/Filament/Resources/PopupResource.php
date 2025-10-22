@@ -8,11 +8,11 @@ use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class PopupResource extends Resource
+class PopupResource extends BaseResource
 {
     protected static ?string $model = Popup::class;
 

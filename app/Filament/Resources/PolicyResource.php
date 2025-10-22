@@ -9,12 +9,12 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class PolicyResource extends Resource
+class PolicyResource extends BaseResource
 {
     protected static ?string $model = Policy::class;
 

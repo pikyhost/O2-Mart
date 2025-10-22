@@ -6,7 +6,7 @@ use App\Filament\Resources\SupplierResource\Pages;
 use App\Models\Supplier;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use App\Filament\Resources\BaseResource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkAction;
@@ -16,7 +16,7 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Table;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
-class SupplierResource extends Resource
+class SupplierResource extends BaseResource
 {
     protected static ?string $model = Supplier::class;
 
