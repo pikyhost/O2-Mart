@@ -225,6 +225,7 @@ class CartService
     public static function calculateInstallationFee(Cart $cart): float
     {
         $shippingSetting = \App\Models\ShippingSetting::first();
+        $totalFee = 0;
         
         // Check for rim items with installation_center shipping option
         $hasRimInstallationCenter = $cart->items->contains(function ($item) {
@@ -233,17 +234,17 @@ class CartService
         });
         
         if ($hasRimInstallationCenter) {
-            return $shippingSetting?->rim_installation_center_fee ?? 0;
+            $totalFee += $shippingSetting?->rim_installation_center_fee ?? 0;
         }
         
         // Check for regular installation (with_installation)
         $hasInstallation = $cart->items->contains('shipping_option', 'with_installation');
         
         if ($hasInstallation) {
-            return $shippingSetting?->installation_fee ?? 200;
+            $totalFee += $shippingSetting?->installation_fee ?? 200;
         }
         
-        return 0;
+        return $totalFee;
     }
 
     /**

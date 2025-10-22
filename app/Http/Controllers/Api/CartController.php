@@ -458,15 +458,8 @@ class CartController extends Controller
             $cartTotal += $item->subtotal;
         }
 
-        // Calculate installation fee only once if any item has "with_installation" shipping option
-        $installationFee = 0;
-        $shippingSetting = \App\Models\ShippingSetting::first();
-        if ($shippingSetting) {
-            $hasInstallation = $cart->items->contains('shipping_option', 'with_installation');
-            if ($hasInstallation) {
-                $installationFee = $shippingSetting->installation_fee ?? 0;
-            }
-        }
+        // Calculate installation fee (includes both regular installation and rim installation center fees)
+        $installationFee = CartService::calculateInstallationFee($cart);
 
         $shippingCost = $cart->shipping_cost ?? 0;
         
