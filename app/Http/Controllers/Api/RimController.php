@@ -119,7 +119,6 @@ class RimController extends Controller
                     ->orWhere('item_code', 'like', "%{$searchTerm}%")
                     ->orWhere('warranty', 'like', "%{$searchTerm}%")
                     ->orWhere('description', 'like', "%{$searchTerm}%")
-                    ->orWhere('details', 'like', "%{$searchTerm}%")
                     ->orWhere('colour', 'like', "%{$searchTerm}%")
                     ->orWhere('condition', 'like', "%{$searchTerm}%")
                     ->orWhere('bolt_pattern', 'like', "%{$searchTerm}%")
