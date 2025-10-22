@@ -8,7 +8,10 @@ use Filament\Resources\Resource;
 use Filament\Pages\Actions\Action;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\Filter;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Infolists\Components\Tabs;
 use Filament\Infolists\Components\Tabs\Tab;
 
@@ -204,20 +207,147 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')->label('Order ID')->sortable(),
+                Tables\Columns\TextColumn::make('id')
+                    ->label('Order ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+                    
                 Tables\Columns\TextColumn::make('contact_name')
                     ->label('Customer')
                     ->getStateUsing(fn ($record) => $record->user?->name ?? $record->contact_name ?? '-')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
 
-                Tables\Columns\TextColumn::make('status')->label('Payment Status')->badge()->colors([
-                    'completed' => 'success',
-                    'pending' => 'warning',
-                    'payment_failed' => 'danger',
-                ]),
-                Tables\Columns\TextColumn::make('total')->label('Total (AED)')
-                    ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED'),
-                Tables\Columns\TextColumn::make('created_at')->label('Created At')->dateTime(),
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->icon(fn (string $state): string => match ($state) {
+                        'pending' => 'heroicon-o-clock',
+                        'completed' => 'heroicon-o-check-circle',
+                        'processing' => 'heroicon-o-arrow-path',
+                        'payment_failed' => 'heroicon-o-x-circle',
+                        'cancelled' => 'heroicon-o-x-mark',
+                        'shipped' => 'heroicon-o-truck',
+                        'delivered' => 'heroicon-o-check-badge',
+                        default => 'heroicon-o-question-mark-circle',
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'completed' => 'success',
+                        'delivered' => 'success',
+                        'pending' => 'warning',
+                        'processing' => 'info',
+                        'shipped' => 'primary',
+                        'payment_failed' => 'danger',
+                        'cancelled' => 'danger',
+                        default => 'gray',
+                    })
+                    ->sortable()
+                    ->toggleable(),
+                    
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->label('Payment Method')
+                    ->formatStateUsing(fn ($state) => ucfirst($state ?? '-'))
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
+                    
+                Tables\Columns\TextColumn::make('subtotal')
+                    ->label('Subtotal')
+                    ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED')
+                    ->sortable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
+                    
+                Tables\Columns\TextColumn::make('shipping_cost')
+                    ->label('Shipping')
+                    ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED')
+                    ->sortable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
+                    
+                Tables\Columns\TextColumn::make('tax_amount')
+                    ->label('VAT')
+                    ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED')
+                    ->sortable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
+                    
+                Tables\Columns\TextColumn::make('discount')
+                    ->label('Discount')
+                    ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED')
+                    ->sortable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
+                    
+                Tables\Columns\TextColumn::make('total')
+                    ->label('Total (AED)')
+                    ->formatStateUsing(fn ($state) => number_format((float)$state, 2) . ' AED')
+                    ->sortable()
+                    ->toggleable(),
+                    
+                Tables\Columns\TextColumn::make('tracking_number')
+                    ->label('Tracking #')
+                    ->searchable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
+                    
+                Tables\Columns\TextColumn::make('shipping_company')
+                    ->label('Shipping Company')
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
+                    
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Order Date')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(),
+            ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'processing' => 'Processing',
+                        'completed' => 'Completed',
+                        'shipped' => 'Shipped',
+                        'delivered' => 'Delivered',
+                        'cancelled' => 'Cancelled',
+                        'payment_failed' => 'Payment Failed',
+                    ])
+                    ->label('Status'),
+                    
+                SelectFilter::make('payment_method')
+                    ->options([
+                        'paymob' => 'Paymob',
+                        'cod' => 'Cash on Delivery',
+                    ])
+                    ->label('Payment Method'),
+                    
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from')
+                            ->label('Order From'),
+                        DatePicker::make('created_until')
+                            ->label('Order Until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    }),
+                    
+                Filter::make('has_coupon')
+                    ->query(fn (Builder $query): Builder => $query->whereNotNull('coupon_id'))
+                    ->label('Has Coupon'),
+                    
+                Filter::make('high_value')
+                    ->query(fn (Builder $query): Builder => $query->where('total', '>=', 1000))
+                    ->label('High Value (≥1000 AED)'),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -225,6 +355,11 @@ class OrderResource extends Resource
                     ->modalHeading('Delete Order')
                     ->modalSubheading('Are you sure you want to delete this order?')
                     ->successNotificationTitle('Order deleted successfully.'),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ])
             ->defaultSort('created_at', 'desc');
     }
