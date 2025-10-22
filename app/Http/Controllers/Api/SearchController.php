@@ -17,7 +17,7 @@ class SearchController extends Controller
     public function search(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'type' => 'required|string|in:brands,categories,cities,areas,car_makes,car_models,countries,tyres,batteries,rims,auto_parts,mobile_vans,installation_centers,tyre_sizes,battery_brands,rim_brands,auto_part_brands',
+            'type' => 'required|string|in:brands,categories,cities,areas,car_makes,car_models,car_years,car_trims,countries,tyres,batteries,rims,auto_parts,mobile_vans,installation_centers,tyre_sizes,tyre_widths,tyre_heights,tyre_rim_sizes,battery_brands,rim_brands,auto_part_brands',
             'search' => 'nullable|string|max:255',
             'limit' => 'nullable|integer|min:1|max:100',
             'filters' => 'nullable|array', // Additional filters like city_id for areas
@@ -64,6 +64,8 @@ class SearchController extends Controller
             'areas' => $this->searchAreas($search, $limit, $filters),
             'car_makes' => $this->searchCarMakes($search, $limit),
             'car_models' => $this->searchCarModels($search, $limit, $filters),
+            'car_years' => $this->searchCarYears($search, $limit),
+            'car_trims' => $this->searchCarTrims($search, $limit, $filters),
             'countries' => $this->searchCountries($search, $limit),
             'tyres' => $this->searchTyres($search, $limit),
             'batteries' => $this->searchBatteries($search, $limit),
@@ -72,6 +74,9 @@ class SearchController extends Controller
             'mobile_vans' => $this->searchMobileVans($search, $limit),
             'installation_centers' => $this->searchInstallationCenters($search, $limit),
             'tyre_sizes' => $this->searchTyreSizes($search, $limit),
+            'tyre_widths' => $this->searchTyreWidths($search, $limit),
+            'tyre_heights' => $this->searchTyreHeights($search, $limit),
+            'tyre_rim_sizes' => $this->searchTyreRimSizes($search, $limit),
             'battery_brands' => $this->searchBatteryBrands($search, $limit),
             'rim_brands' => $this->searchRimBrands($search, $limit),
             'auto_part_brands' => $this->searchAutoPartBrands($search, $limit),
@@ -396,6 +401,118 @@ class SearchController extends Controller
                 'id' => $item->id,
                 'label' => $item->value,
                 'value' => $item->id
+            ])->toArray();
+    }
+
+    private function searchCarYears(string $search, int $limit): array
+    {
+        // Get distinct years from car models or generate range
+        $currentYear = (int) date('Y');
+        $startYear = 1990;
+        $years = range($currentYear, $startYear);
+        
+        if (!empty($search)) {
+            $years = array_filter($years, fn($year) => str_contains((string)$year, $search));
+        }
+        
+        $years = array_slice($years, 0, $limit);
+        
+        return array_map(fn($year) => [
+            'id' => $year,
+            'label' => (string) $year,
+            'value' => $year
+        ], $years);
+    }
+
+    private function searchCarTrims(string $search, int $limit, array $filters): array
+    {
+        $query = \App\Models\CarTyreSpec::query();
+        
+        if (!empty($search)) {
+            $query->where('trim', 'like', "%{$search}%");
+        }
+        
+        // Filter by model if provided
+        if (!empty($filters['model_id'])) {
+            $query->where('car_model_id', $filters['model_id']);
+        }
+        
+        // Filter by year if provided
+        if (!empty($filters['year'])) {
+            $query->where('year', $filters['year']);
+        }
+        
+        return $query->distinct()
+            ->limit($limit)
+            ->get(['id', 'trim', 'car_model_id', 'year'])
+            ->map(fn($item) => [
+                'id' => $item->id,
+                'label' => $item->trim,
+                'value' => $item->id,
+                'trim' => $item->trim
+            ])->toArray();
+    }
+
+    private function searchTyreWidths(string $search, int $limit): array
+    {
+        $query = \App\Models\Tyre::query();
+        
+        if (!empty($search)) {
+            $query->where('width', 'like', "%{$search}%");
+        }
+        
+        return $query->select('width')
+            ->distinct()
+            ->whereNotNull('width')
+            ->orderBy('width')
+            ->limit($limit)
+            ->get()
+            ->map(fn($item) => [
+                'id' => $item->width,
+                'label' => $item->width,
+                'value' => $item->width
+            ])->toArray();
+    }
+
+    private function searchTyreHeights(string $search, int $limit): array
+    {
+        $query = \App\Models\Tyre::query();
+        
+        if (!empty($search)) {
+            $query->where('height', 'like', "%{$search}%");
+        }
+        
+        return $query->select('height')
+            ->distinct()
+            ->whereNotNull('height')
+            ->orderBy('height')
+            ->limit($limit)
+            ->get()
+            ->map(fn($item) => [
+                'id' => $item->height,
+                'label' => $item->height,
+                'value' => $item->height
+            ])->toArray();
+    }
+
+    private function searchTyreRimSizes(string $search, int $limit): array
+    {
+        $query = \App\Models\Tyre::query();
+        
+        if (!empty($search)) {
+            $query->where('diameter', 'like', "%{$search}%");
+        }
+        
+        return $query->select('diameter')
+            ->distinct()
+            ->whereNotNull('diameter')
+            ->orderBy('diameter')
+            ->limit($limit)
+            ->get()
+            ->map(fn($item) => [
+                'id' => $item->diameter,
+                'label' => $item->diameter,
+                'value' => $item->diameter
             ])->toArray();
     }
 }

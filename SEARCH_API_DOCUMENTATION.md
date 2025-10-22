@@ -35,6 +35,8 @@ General-purpose search endpoint for all dropdown/select options on the website.
 | `areas` | Areas/Districts | `city_id` |
 | `car_makes` | Car manufacturers | - |
 | `car_models` | Car models | `make_id` |
+| `car_years` | Car years (1990-current) | - |
+| `car_trims` | Car trims/variants | `model_id`, `year` |
 | `countries` | Countries | - |
 | `tyres` | Tyre products | - |
 | `batteries` | Battery products | - |
@@ -43,6 +45,9 @@ General-purpose search endpoint for all dropdown/select options on the website.
 | `mobile_vans` | Mobile van services | - |
 | `installation_centers` | Installation centers | - |
 | `tyre_sizes` | Tyre sizes | - |
+| `tyre_widths` | Tyre widths (distinct) | - |
+| `tyre_heights` | Tyre heights (distinct) | - |
+| `tyre_rim_sizes` | Tyre RIM sizes (distinct) | - |
 | `battery_brands` | Battery brands | - |
 | `rim_brands` | Rim brands | - |
 | `auto_part_brands` | Auto part brands | - |
@@ -258,7 +263,164 @@ GET /api/search?type=mobile_vans&search=van
 
 ---
 
-### 8. Get All Categories (No Search)
+### 8. Search Car Years
+
+**Request:**
+```http
+GET /api/search?type=car_years&search=202
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "type": "car_years",
+  "data": [
+    {
+      "id": 2025,
+      "label": "2025",
+      "value": 2025
+    },
+    {
+      "id": 2024,
+      "label": "2024",
+      "value": 2024
+    },
+    {
+      "id": 2023,
+      "label": "2023",
+      "value": 2023
+    }
+  ]
+}
+```
+
+---
+
+### 9. Search Car Trims by Model and Year
+
+**Request:**
+```http
+GET /api/search?type=car_trims&search=SE&filters[model_id]=123&filters[year]=2024
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "type": "car_trims",
+  "data": [
+    {
+      "id": 456,
+      "label": "SE 2.5L",
+      "value": 456,
+      "trim": "SE 2.5L"
+    },
+    {
+      "id": 457,
+      "label": "SE Hybrid",
+      "value": 457,
+      "trim": "SE Hybrid"
+    }
+  ]
+}
+```
+
+---
+
+### 10. Search Tyre Widths
+
+**Request:**
+```http
+GET /api/search?type=tyre_widths&search=19
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "type": "tyre_widths",
+  "data": [
+    {
+      "id": "195",
+      "label": "195",
+      "value": "195"
+    },
+    {
+      "id": "190",
+      "label": "190",
+      "value": "190"
+    }
+  ]
+}
+```
+
+---
+
+### 11. Search Tyre Heights
+
+**Request:**
+```http
+GET /api/search?type=tyre_heights&search=6
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "type": "tyre_heights",
+  "data": [
+    {
+      "id": "60",
+      "label": "60",
+      "value": "60"
+    },
+    {
+      "id": "65",
+      "label": "65",
+      "value": "65"
+    }
+  ]
+}
+```
+
+---
+
+### 12. Search Tyre RIM Sizes
+
+**Request:**
+```http
+GET /api/search?type=tyre_rim_sizes&search=1
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "type": "tyre_rim_sizes",
+  "data": [
+    {
+      "id": "15",
+      "label": "15",
+      "value": "15"
+    },
+    {
+      "id": "16",
+      "label": "16",
+      "value": "16"
+    },
+    {
+      "id": "17",
+      "label": "17",
+      "value": "17"
+    }
+  ]
+}
+```
+
+---
+
+### 13. Get All Categories (No Search)
 
 **Request:**
 ```http
