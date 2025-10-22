@@ -18,6 +18,7 @@ class Popup extends Model
         'is_active' => 'boolean',
         'delay_seconds' => 'integer',
         'specific_pages' => 'array', // Cast JSON string to array
+        'email_input_mode' => 'string',
     ];
 
     /**

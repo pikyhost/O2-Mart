@@ -172,9 +172,17 @@ class PopupResource extends Resource
                         ->columnSpanFull()
                         ->helperText(__('You can choose specific frontend pages to apply rules to.')),
 
-                    // Forms\Components\Checkbox::make('email_needed')
-                    //     ->label(__('Email needed'))
-                    //     ->helperText(__('email_needed_helper')),
+                    Forms\Components\Select::make('email_input_mode')
+                        ->label(__('Email Input Field'))
+                        ->options([
+                            'hidden' => 'Hidden (No email input)',
+                            'optional' => 'Optional (Show but not required)',
+                            'required' => 'Required (Must be filled)',
+                        ])
+                        ->default('hidden')
+                        ->required()
+                        ->helperText(__('Choose whether to show email input field in the popup and if it should be required'))
+                        ->columnSpanFull(),
 
                     Forms\Components\Checkbox::make('is_active')
                         ->label(__('Is Active'))
@@ -205,9 +213,21 @@ class PopupResource extends Resource
                     ->label(__('Is Active'))
                     ->boolean(),
 
-                // Tables\Columns\IconColumn::make('email_needed')
-                //     ->label(__('Email needed?'))
-                //     ->boolean(),
+                Tables\Columns\TextColumn::make('email_input_mode')
+                    ->label(__('Email Input'))
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'hidden' => 'gray',
+                        'optional' => 'warning',
+                        'required' => 'success',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'hidden' => 'Hidden',
+                        'optional' => 'Optional',
+                        'required' => 'Required',
+                        default => 'Hidden',
+                    }),
 
                 Tables\Columns\TextColumn::make('offer_title')
                     ->label(__('Offer Title'))
