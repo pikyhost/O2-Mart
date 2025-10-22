@@ -23,6 +23,11 @@ class AreaResource extends BaseResource
         return __('Shipping Management'); //Products Attributes Management
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->orderBy('created_at', 'desc');
+    }
+
     public static function form(Form $form): Form
     {
         return $form

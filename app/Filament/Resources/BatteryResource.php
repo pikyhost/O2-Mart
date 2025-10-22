@@ -50,7 +50,10 @@ class BatteryResource extends BaseResource
     protected static ?int $navigationSort = 8;
     protected static ?string $navigationLabel = 'Batteries';
 
-
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->orderBy('created_at', 'desc');
+    }
 
     public static function form(Form $form): Form
     {
