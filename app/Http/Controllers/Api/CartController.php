@@ -416,10 +416,10 @@ class CartController extends Controller
         
         $scheduledDisplay = null;
         if ($updatedItem->shipping_option === 'with_installation' && $updatedItem->mobileVan) {
-            $scheduledDisplay = $updatedItem->mobileVan->name . ' - ' . $updatedItem->mobileVan->location . 
+            $scheduledDisplay = $updatedItem->mobileVan->name . 
                 ($updatedItem->installation_date ? ' - ' . \Carbon\Carbon::parse($updatedItem->installation_date)->format('D M j Y') : '');
         } elseif ($updatedItem->shipping_option === 'installation_center' && $updatedItem->installationCenter) {
-            $scheduledDisplay = $updatedItem->installationCenter->name . ' - ' . $updatedItem->installationCenter->location . 
+            $scheduledDisplay = $updatedItem->installationCenter->name . 
                 ($updatedItem->installation_date ? ' - ' . \Carbon\Carbon::parse($updatedItem->installation_date)->format('D M j Y') : '');
         }
         
@@ -581,16 +581,16 @@ class CartController extends Controller
                         ] : $item->installation_center_id,
                         'installation_date' => $item->installation_date,
                         'scheduled_display' => $item->shipping_option === 'with_installation' && $item->mobileVan ? 
-                            ($item->mobileVan->name . ' - ' . $item->mobileVan->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) :
+                            ($item->mobileVan->name . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) :
                             ($item->shipping_option === 'installation_center' && $item->installationCenter ? 
-                                ($item->installationCenter->name . ' - ' . $item->installationCenter->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null),
+                                ($item->installationCenter->name . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : '')) : null),
                         'scheduled' => $item->shipping_option === 'with_installation' && $item->mobileVan ? [
                             'name' => $item->mobileVan->name,
-                            'location' => $item->mobileVan->name . ' - ' . $item->mobileVan->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : ''),
+                            'location' => $item->mobileVan->name . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : ''),
                             'date' => $item->installation_date,
                         ] : ($item->shipping_option === 'installation_center' && $item->installationCenter ? [
                             'name' => $item->installationCenter->name,
-                            'location' => $item->installationCenter->name . ' - ' . $item->installationCenter->location . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : ''),
+                            'location' => $item->installationCenter->name . ' - ' . ($item->installation_date ? \Carbon\Carbon::parse($item->installation_date)->format('D M j Y') : ''),
                             'date' => $item->installation_date,
                         ] : null),
                     ];
