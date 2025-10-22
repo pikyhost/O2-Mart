@@ -18,8 +18,8 @@ class ShippingSetting extends Model
         'vat_percent',
         'volumetric_divisor',
         'remote_areas',
-        'installation_fee', 
-        
+        'installation_fee',
+        'rim_installation_center_fee',
     ];
 
     protected $casts = [
@@ -33,6 +33,7 @@ class ShippingSetting extends Model
         'volumetric_divisor' => 'float',
         'remote_areas' => 'array',
         'installation_fee' => 'float',
+        'rim_installation_center_fee' => 'float',
     ];
 
     public $timestamps = false;

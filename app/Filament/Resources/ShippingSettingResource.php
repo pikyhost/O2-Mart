@@ -24,6 +24,12 @@ class ShippingSettingResource extends Resource
                     ->numeric()
                     ->label('Installation Fee')
                     ->required(),
+                Forms\Components\TextInput::make('rim_installation_center_fee')
+                    ->numeric()
+                    ->label('Rim Installation Center Fee')
+                    ->helperText('Fee charged when rim installation is done at an installation center')
+                    ->default(0)
+                    ->required(),
                 Forms\Components\TextInput::make('extra_per_kg')
                     ->numeric()
                     ->label('Extra per KG')
@@ -64,6 +70,10 @@ class ShippingSettingResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('installation_fee')
                     ->label('Installation Fee')
+                    ->money('AED')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('rim_installation_center_fee')
+                    ->label('Rim Installation Center Fee')
                     ->money('AED')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('extra_per_kg')
