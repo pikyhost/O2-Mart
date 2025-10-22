@@ -830,12 +830,55 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $search = $request->get('search');
 
-        $query = Order::with('items')->where('user_id', $user->id);
+        $query = Order::with(['items.buyable', 'addresses'])
+            ->where('user_id', $user->id);
 
         if ($search) {
             $query->where(function ($q) use ($search) {
+                // Search by Order ID
                 $q->where('id', 'like', '%' . $search . '%')
-                  ->orWhere('tracking_number', 'like', '%' . $search . '%');
+                  // Search by Tracking Number
+                  ->orWhere('tracking_number', 'like', '%' . $search . '%')
+                  // Search by Status
+                  ->orWhere('status', 'like', '%' . $search . '%')
+                  // Search by Payment Method
+                  ->orWhere('payment_method', 'like', '%' . $search . '%')
+                  // Search by Coupon Code
+                  ->orWhere('coupon_code', 'like', '%' . $search . '%')
+                  // Search by Car Make/Model/Year
+                  ->orWhere('car_make', 'like', '%' . $search . '%')
+                  ->orWhere('car_model', 'like', '%' . $search . '%')
+                  ->orWhere('car_year', 'like', '%' . $search . '%')
+                  ->orWhere('plate_number', 'like', '%' . $search . '%')
+                  // Search by Product Names in Order Items
+                  ->orWhereHas('items', function ($itemQuery) use ($search) {
+                      $itemQuery->where('product_name', 'like', '%' . $search . '%')
+                          // Search in related products (polymorphic)
+                          ->orWhereHasMorph('buyable', [
+                              \App\Models\Tyre::class,
+                              \App\Models\Battery::class,
+                              \App\Models\Rim::class,
+                              \App\Models\AutoPart::class,
+                          ], function ($productQuery) use ($search) {
+                              $productQuery->where('name', 'like', '%' . $search . '%')
+                                  ->orWhere('title', 'like', '%' . $search . '%')
+                                  ->orWhere('product_name', 'like', '%' . $search . '%');
+                          });
+                  })
+                  // Search by Shipping Address
+                  ->orWhereHas('addresses', function ($addressQuery) use ($search) {
+                      $addressQuery->where('address_line', 'like', '%' . $search . '%')
+                          ->orWhere('phone', 'like', '%' . $search . '%')
+                          ->orWhere('notes', 'like', '%' . $search . '%')
+                          // Search in Area name
+                          ->orWhereHas('area', function ($areaQuery) use ($search) {
+                              $areaQuery->where('name', 'like', '%' . $search . '%');
+                          })
+                          // Search in City name
+                          ->orWhereHas('city', function ($cityQuery) use ($search) {
+                              $cityQuery->where('name', 'like', '%' . $search . '%');
+                          });
+                  });
             });
         }
 
