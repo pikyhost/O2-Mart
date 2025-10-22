@@ -105,6 +105,34 @@ class AutoPartController extends Controller
             $q->where('is_approved', true);
         }], 'rating');
 
+        // Global search functionality
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm) {
+                // Search in product name, SKU, description, details
+                $q->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhere('sku', 'like', "%{$searchTerm}%")
+                    ->orWhere('description', 'like', "%{$searchTerm}%")
+                    ->orWhere('details', 'like', "%{$searchTerm}%")
+                    // Search in brand name
+                    ->orWhereHas('autoPartBrand', function ($q) use ($searchTerm) {
+                        $q->where('name', 'like', "%{$searchTerm}%");
+                    })
+                    // Search in country name
+                    ->orWhereHas('autoPartCountry', function ($q) use ($searchTerm) {
+                        $q->where('name', 'like', "%{$searchTerm}%");
+                    })
+                    // Search in viscosity grade
+                    ->orWhereHas('viscosityGrade', function ($q) use ($searchTerm) {
+                        $q->where('name', 'like', "%{$searchTerm}%");
+                    })
+                    // Search in category name
+                    ->orWhereHas('category', function ($q) use ($searchTerm) {
+                        $q->where('name', 'like', "%{$searchTerm}%");
+                    });
+            });
+        }
+
         if ($request->filled('part_number')) {
             $query->where('part_number', $request->part_number);
         }
