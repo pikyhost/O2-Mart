@@ -62,9 +62,12 @@ Route::get('/about-us', [AboutUsController::class, 'index'])->name('api.about-us
 
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle']);
 
-Route::post('/forgot-password', [\App\Http\Controllers\Api\PasswordResetController::class, 'forgotPassword']);
-Route::post('/reset-password', [\App\Http\Controllers\Api\PasswordResetController::class, 'resetPassword']);
-Route::get('/password/validate', [\App\Http\Controllers\Api\PasswordResetController::class, 'validateToken']);
+// Password reset endpoints with strict rate limiting
+Route::middleware('throttle.auth')->group(function () {
+    Route::post('/forgot-password', [\App\Http\Controllers\Api\PasswordResetController::class, 'forgotPassword']);
+    Route::post('/reset-password', [\App\Http\Controllers\Api\PasswordResetController::class, 'resetPassword']);
+    Route::get('/password/validate', [\App\Http\Controllers\Api\PasswordResetController::class, 'validateToken']);
+});
 
 Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback']);
 
@@ -72,16 +75,22 @@ Route::get('/faqs', [FaqController::class, 'index']);
 
 Route::get('/contact-us', [\App\Http\Controllers\Api\ContactUsPageController::class, 'index']);
 
-Route::post('/contact', [ContactMessageController::class, 'store']);
-
-Route::post('/newsletter/subscribe', [NewsletterSubscriberController::class, 'store'])->name('newsletter.subscribe');
+// Form submissions with rate limiting
+Route::middleware('throttle.forms')->group(function () {
+    Route::post('/contact', [ContactMessageController::class, 'store']);
+    Route::post('/newsletter/subscribe', [NewsletterSubscriberController::class, 'store'])->name('newsletter.subscribe');
+});
 
 Route::get('/policy/privacy', [PolicyController::class, 'privacy']);
 Route::get('/policy/refund', [PolicyController::class, 'refund']);
 Route::get('/policy/terms', [PolicyController::class, 'terms']);
 
 Route::get('/supplier-page', [SupplierPageController::class, 'show']);
-Route::post('/suppliers', [SupplierController::class, 'store']);
+
+// Supplier form with rate limiting
+Route::middleware('throttle.forms')->group(function () {
+    Route::post('/suppliers', [SupplierController::class, 'store']);
+});
 
 Route::middleware('api')->group(function () {
 // Public blog endpoints
@@ -167,8 +176,10 @@ return response()->json(['data' => request()->user()->last_filter]);
 // Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 
-// General search endpoint for dropdowns
-Route::get('/search', [SearchController::class, 'search']);
+// General search endpoint for dropdowns with rate limiting
+Route::middleware('throttle.search')->group(function () {
+    Route::get('/search', [SearchController::class, 'search']);
+});
 
 // Route::get('/attributes', [AttributeController::class, 'index']);
 // Route::get('/products/part-number/search', [ProductController::class, 'searchByPartNumber']);
@@ -256,23 +267,28 @@ Route::get('/{type}/models', [VehicleController::class, 'getCompatibleModels']);
 Route::get('/{type}/years', [VehicleController::class, 'getCompatibleYears']);
 });
 
-Route::middleware(CheckAuthOrSession::class)->group(function () {
-Route::get('/cart-menu', [CartController::class, 'getCartMenu']);
-Route::get('/cart', [CartController::class, 'getCart']);
-Route::post('/cart/add', [CartController::class, 'add']);
-Route::post('/cart/add-tyre-group', [CartController::class, 'addTyreGroup']);
-Route::delete('/cart/remove', [CartController::class, 'remove']);
-Route::get('/cart/recommendations', [CartController::class, 'getRecommendations']);
-Route::put('/cart/update-quantity', [CartController::class, 'updateQuantity']);
-Route::post('/cart/calculate-shipping', [CartController::class, 'calculateShipping']);
-Route::get('/checkout/installer-shops', [CartController::class, 'getInstallerShops']);
-Route::get('/checkout/mobile-vans', [CartController::class, 'getMobileVanServices']);
-Route::get('/checkout/installation-dates', [CartController::class, 'getAvailableInstallationDates']);
-Route::put('/cart/update-shipping-option', [CartController::class, 'updateShippingOption']);
-Route::put('/cart/update-area', [CheckoutController::class, 'updateCartArea']);
-Route::get('/cart/summary', [CartController::class, 'getCartSummary']);
+// Cart operations with rate limiting
+Route::middleware([CheckAuthOrSession::class, 'throttle.cart'])->group(function () {
+    Route::get('/cart-menu', [CartController::class, 'getCartMenu']);
+    Route::get('/cart', [CartController::class, 'getCart']);
+    Route::post('/cart/add', [CartController::class, 'add']);
+    Route::post('/cart/add-tyre-group', [CartController::class, 'addTyreGroup']);
+    Route::delete('/cart/remove', [CartController::class, 'remove']);
+    Route::get('/cart/recommendations', [CartController::class, 'getRecommendations']);
+    Route::put('/cart/update-quantity', [CartController::class, 'updateQuantity']);
+    Route::post('/cart/calculate-shipping', [CartController::class, 'calculateShipping']);
+    Route::get('/checkout/installer-shops', [CartController::class, 'getInstallerShops']);
+    Route::get('/checkout/mobile-vans', [CartController::class, 'getMobileVanServices']);
+    Route::get('/checkout/installation-dates', [CartController::class, 'getAvailableInstallationDates']);
+    Route::put('/cart/update-shipping-option', [CartController::class, 'updateShippingOption']);
+    Route::put('/cart/update-area', [CheckoutController::class, 'updateCartArea']);
+    Route::get('/cart/summary', [CartController::class, 'getCartSummary']);
 });
-Route::post('/checkout/guest', [CheckoutController::class, 'guestCheckout']);
+// Checkout operations with rate limiting
+Route::middleware('throttle.checkout')->group(function () {
+    Route::post('/checkout/guest', [CheckoutController::class, 'guestCheckout']);
+});
+
 Route::get('/guest/tracking/{id}', [CheckoutController::class, 'getGuestTracking']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -316,10 +332,13 @@ Route::get('/track/{tracking_number}', [TrackingController::class, 'trackByNumbe
 Route::post('/webhooks/jeebly/status-update', [\App\Http\Controllers\JeeblyWebhookController::class, 'handleStatusUpdate']);
 
 
-Route::middleware('auth:sanctum')
-->group(function () {
-Route::post('/checkout', [CheckoutController::class, 'userCheckout']);
-Route::get('/account', [AccountController::class, 'show']);
+// Authenticated checkout with rate limiting
+Route::middleware(['auth:sanctum', 'throttle.checkout'])->group(function () {
+    Route::post('/checkout', [CheckoutController::class, 'userCheckout']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/account', [AccountController::class, 'show']);
 });
 
 // Checkout addresses and save address for auth users only
@@ -334,7 +353,11 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/addresses/transfer-to-user', [AddressBookController::class, 'transferToUser']);
 });
 
-Route::post('/inquiries', [InquiryController::class, 'store']);
+// Inquiry submissions with rate limiting
+Route::middleware('throttle.forms')->group(function () {
+    Route::post('/inquiries', [InquiryController::class, 'store']);
+});
+
 Route::get('/inquiries/debug', [InquiryController::class, 'debug']);
 Route::get('/inquiries/types', function () {
 $types = \App\Models\Inquiry::TYPES;

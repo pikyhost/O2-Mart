@@ -19,10 +19,16 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(prepend: [
             HandleCors::class,
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
         ]);
 
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+            'throttle.auth' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':auth',
+            'throttle.forms' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':forms',
+            'throttle.checkout' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':checkout',
+            'throttle.search' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':search',
+            'throttle.cart' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':cart',
         ]);
 
         // API middleware group
