@@ -21,19 +21,14 @@ class InquiryController extends Controller
     public function debug(): JsonResponse
     {
         try {
-            \Log::info('🔧 DEBUG ENDPOINT CALLED');
-            
             // Test database connection
             $dbTest = DB::select('SELECT 1 as test');
-            \Log::info('✅ DATABASE CONNECTION OK', ['result' => $dbTest]);
             
             // Test inquiry table structure
             $columns = \Schema::getColumnListing('inquiries');
-            \Log::info('📋 INQUIRY TABLE COLUMNS', ['columns' => $columns]);
             
             // Test inquiry types
             $types = Inquiry::TYPES;
-            \Log::info('📝 INQUIRY TYPES', ['types' => $types]);
             
             // Test mail configuration
             $mailConfig = [
@@ -42,7 +37,6 @@ class InquiryController extends Controller
                 'port' => config('mail.mailers.smtp.port'),
                 'from' => config('mail.from')
             ];
-            \Log::info('📧 MAIL CONFIG', ['config' => $mailConfig]);
             
             return response()->json([
                 'status' => 'success',
@@ -54,11 +48,6 @@ class InquiryController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            \Log::error('❌ DEBUG ENDPOINT FAILED', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
             return response()->json([
                 'status' => 'error',
                 'error' => $e->getMessage()
@@ -68,92 +57,68 @@ class InquiryController extends Controller
 
     public function store(StoreInquiryRequest $request): JsonResponse
     {
-        \Log::info('🔥 INQUIRY REQUEST RECEIVED', [
-            'raw_data' => $request->all(),
-            'headers' => $request->headers->all(),
-            'method' => $request->method(),
-            'url' => $request->fullUrl()
-        ]);
+
         
         try {
-            \Log::info('🔍 STARTING VALIDATION');
             $data = $request->validated();
-            \Log::info('✅ VALIDATION PASSED', ['validated_data' => $data]);
             
             DB::beginTransaction();
-            \Log::info('🔄 DATABASE TRANSACTION STARTED');
+
 
             // Remove file fields from data since we handle them with media library
             $inquiryData = collect($data)->except(['car_license_photos', 'part_photos'])->toArray();
-            \Log::info('💾 CREATING INQUIRY IN DATABASE', ['final_data' => $inquiryData]);
+
             $inquiry = Inquiry::create($inquiryData);
             
             // Handle file uploads with media library
-            \Log::info('📁 FILE UPLOAD DEBUG', [
-                'has_car_photos' => $request->hasFile('car_license_photos'),
-                'has_part_photos' => $request->hasFile('part_photos'),
-                'car_photos_data' => $request->input('car_license_photos'),
-                'part_photos_data' => $request->input('part_photos')
-            ]);
+
             
             if ($request->hasFile('car_license_photos')) {
-                \Log::info('📁 UPLOADING CAR LICENSE PHOTOS');
+
                 $files = is_array($request->file('car_license_photos')) ? $request->file('car_license_photos') : [$request->file('car_license_photos')];
                 foreach ($files as $file) {
                     $inquiry->addMedia($file)->toMediaCollection('car_license_photos');
                 }
-                \Log::info('✅ CAR LICENSE PHOTOS UPLOADED', []);
+
             }
 
             if ($request->hasFile('part_photos')) {
-                \Log::info('📁 UPLOADING PART PHOTOS', []);
+
                 $files = is_array($request->file('part_photos')) ? $request->file('part_photos') : [$request->file('part_photos')];
                 foreach ($files as $file) {
                     $inquiry->addMedia($file)->toMediaCollection('part_photos');
                 }
-                \Log::info('✅ PART PHOTOS UPLOADED', []);
+
             }
-            \Log::info('✅ INQUIRY CREATED SUCCESSFULLY', [
-                'inquiry_id' => $inquiry->id,
-                'inquiry_data' => $inquiry->toArray()
-            ]);
+
 
             // Send confirmation email
-            \Log::info('📧 ATTEMPTING TO SEND EMAIL', ['email' => $inquiry->email]);
+
             try {
                 $mailInstance = new InquiryConfirmation($inquiry);
-                \Log::info('📧 MAIL INSTANCE CREATED', []);
+
                 
                 Mail::to($inquiry->email)->send($mailInstance);
-                \Log::info('✅ EMAIL SENT SUCCESSFULLY', [
-                    'inquiry_id' => $inquiry->id, 
-                    'email' => $inquiry->email
-                ]);
+
             } catch (\Exception $e) {
-                \Log::error('❌ EMAIL SENDING FAILED', [
+                \Log::error('Email sending failed', [
                     'inquiry_id' => $inquiry->id,
-                    'email' => $inquiry->email,
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
+                    'error' => $e->getMessage()
                 ]);
             }
 
             DB::commit();
-            \Log::info('✅ DATABASE TRANSACTION COMMITTED', []);
+
 
             $response = [
                 'message' => 'Inquiry submitted successfully',
                 'data' => new InquiryResource($inquiry)
             ];
-            \Log::info('🎉 INQUIRY PROCESS COMPLETED', ['response' => $response]);
+
             
             return response()->json($response, 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('❌ VALIDATION FAILED', [
-                'errors' => $e->errors(),
-                'message' => $e->getMessage()
-            ]);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Validation failed.',
@@ -161,10 +126,8 @@ class InquiryController extends Controller
             ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('❌ INQUIRY CREATION FAILED', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'request_data' => $request->all()
+            \Log::error('Inquiry creation failed', [
+                'error' => $e->getMessage()
             ]);
             return response()->json([
                 'message' => 'Failed to create inquiry',

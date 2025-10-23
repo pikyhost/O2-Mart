@@ -314,7 +314,7 @@ class RimController extends Controller
 
     public function compatibleSearch(Request $request)
     {
-        Log::info('Filtering Rims with: ', ['request' => $request->all()]);
+
 
         $request->validate([
             'make_id' => 'nullable|integer',

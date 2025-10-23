@@ -80,7 +80,6 @@ class CheckoutController extends Controller
 
         $cart = Cart::with('items.buyable')->where('user_id', $user->id)->first();
         if (!$cart) {
-            \Log::error('Checkout Error: No cart found', ['user_id' => $user->id]);
             return response()->json(['status' => 'error', 'message' => 'No cart found for user'], 400);
         }
 
@@ -131,23 +130,9 @@ class CheckoutController extends Controller
                 $useManualAddress = true;
                 $areaId = $areaIdValue;
             } else {
-                \Log::error('Checkout Error: No address found and no manual address provided', [
-                    'has_area_id' => !empty($areaIdValue),
-                    'has_address_line' => !empty($addressLineValue),
-                    'has_phone' => !empty($phoneValue),
-                    'all_fields' => $request->all()
-                ]);
                 return response()->json([
                     'status' => 'error', 
-                    'message' => 'Please provide address details (area_id, address_line, phone)',
-                    'debug' => [
-                        'received_fields' => array_keys($request->all()),
-                        'missing' => [
-                            'area' => empty($areaIdValue) ? 'missing' : 'found',
-                            'address' => empty($addressLineValue) ? 'missing' : 'found',
-                            'phone' => empty($phoneValue) ? 'missing' : 'found',
-                        ]
-                    ]
+                    'message' => 'Please provide address details (area_id, address_line, phone)'
                 ], 422);
             }
         } else {
@@ -156,7 +141,6 @@ class CheckoutController extends Controller
         }
         
         if (!$areaId) {
-            \Log::error('Checkout Error: No area ID', $selectedAddress ? ['selected_address' => $selectedAddress->toArray()] : ['manual_address' => true]);
             return response()->json(['status' => 'error', 'message' => 'No valid area found.'], 422);
         }
 
@@ -296,7 +280,6 @@ class CheckoutController extends Controller
         foreach ($cart->items as $cartItem) {
             $product = $cartItem->buyable;
             if (!$product) {
-                \Log::error('Product not found for cart item', ['cart_item_id' => $cartItem->id]);
                 continue;
             }
             $unitPrice = $cartItem->price_per_unit;
@@ -410,16 +393,11 @@ class CheckoutController extends Controller
             \Log::error('Checkout Fatal Error', [
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'line' => $e->getLine()
             ]);
             return response()->json([
                 'status' => 'error',
-                'message' => 'Checkout failed: ' . $e->getMessage(),
-                'debug' => [
-                    'file' => basename($e->getFile()),
-                    'line' => $e->getLine()
-                ]
+                'message' => 'Checkout failed: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -613,7 +591,6 @@ class CheckoutController extends Controller
         foreach ($cart->items as $cartItem) {
             $product = $cartItem->buyable;
             if (!$product) {
-                \Log::error('Product not found for cart item', ['cart_item_id' => $cartItem->id]);
                 continue;
             }
             $itemData = collect($validated['items'])->first(fn($i) => $i['buyable_type'] === strtolower(class_basename($cartItem->buyable_type)) && $i['buyable_id'] == $product->id);
@@ -696,8 +673,7 @@ class CheckoutController extends Controller
             \Log::error('Guest Checkout Error', [
                 'error' => $e->getMessage(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'line' => $e->getLine()
             ]);
             return response()->json([
                 'status' => 'error',

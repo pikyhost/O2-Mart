@@ -209,9 +209,20 @@ class Inquiry extends Model implements HasMedia
 
     public function getRequiredPartsString(): string
     {
-        return is_array($this->required_parts)
-            ? implode(', ', $this->required_parts)
-            : (string) $this->required_parts;
+        if (!$this->required_parts) {
+            return '';
+        }
+        
+        if (is_array($this->required_parts)) {
+            return collect($this->required_parts)->map(function ($part) {
+                if (is_array($part)) {
+                    return ($part['part'] ?? '') . ' (Qty: ' . ($part['quantity'] ?? 1) . ')';
+                }
+                return (string) $part;
+            })->implode(', ');
+        }
+        
+        return (string) $this->required_parts;
     }
 
     // Boot method for observers

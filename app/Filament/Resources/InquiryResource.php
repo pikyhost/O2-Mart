@@ -190,9 +190,7 @@ class InquiryResource extends BaseResource
                                             ->openable()
                                             ->columnSpanFull(),
                                     ]),
-                            ]),
-
-    
+                            ]),    
                     ])
                     ->persistTabInQueryString() // Optional: remembers the last active tab
                     ->columnSpanFull(),

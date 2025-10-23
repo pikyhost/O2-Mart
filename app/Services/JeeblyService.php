@@ -24,7 +24,7 @@ class JeeblyService
     public function createShipment(Order $order): ?array
     {
 
-        \Log::info('Running createShipment for order ' . $order->id, []);
+
 
         $order->load('addresses.city');
 
@@ -38,7 +38,7 @@ class JeeblyService
         //     return null;
         // }
         
-        Log::info('Running createShipment for order ' . $order->id, []);
+
 
         $pickupDate = now()->addDay();
         if ($pickupDate->isSunday()) {
@@ -62,7 +62,6 @@ class JeeblyService
         $deliveryOnlyItems = $order->items->where('shipping_option', 'delivery_only');
 
         if ($deliveryOnlyItems->isEmpty()) {
-            Log::info('⛔ No delivery_only items to send to Jeebly for order', ['order_id' => $order->id]);
             return null;
         }
 
@@ -124,17 +123,9 @@ class JeeblyService
         ];
 
 
-        Log::info('Jeebly Payload:', ['payload' => $payload]);
 
-        Log::info('Jeebly API Request', [
-            'url' => "{$this->baseUrl}/customer/create_shipment",
-            'headers' => [
-                'X-API-KEY' => $this->apiKey ? 'present' : 'missing',
-                'client_key' => $this->clientKey ? 'present' : 'missing',
-                'Content-Type' => 'application/json',
-            ],
-            'payload_size' => strlen(json_encode($payload))
-        ]);
+
+
 
         $response = Http::withHeaders([
             'X-API-KEY'  => $this->apiKey,
@@ -142,16 +133,11 @@ class JeeblyService
             'Content-Type' => 'application/json',
         ])->post("{$this->baseUrl}/customer/create_shipment", $payload);
 
-        Log::info('Jeebly API Response', [
-            'status' => $response->status(),
-            'headers' => $response->headers(),
-            'body_length' => strlen($response->body()),
-            'body_preview' => substr($response->body(), 0, 500)
-        ]);
+
 
         if ($response->successful()) {
             $data = $response->json();
-            Log::info('Jeebly response data', ['data' => $data, 'status' => $response->status()]);
+
 
             // Check if response contains error or success indicator
             if (isset($data['success']) && $data['success'] === false) {
@@ -173,7 +159,6 @@ class JeeblyService
                     'tracking_url'    => "https://demo.jeebly.com/track-shipment?shipment_number={$awb}",
                     'shipping_company' => 'Jeebly',
                 ]);
-                Log::info('Tracking number updated', ['order_id' => $order->id, 'tracking_number' => $awb]);
             } else {
                 Log::warning('No AWB number in Jeebly response', [
                     'response' => $data,
@@ -243,12 +228,7 @@ class JeeblyService
             'shipping_response' => $trackingData,
         ]);
 
-        Log::info('Updated order status from Jeebly', [
-            'order_id' => $order->id,
-            'jeebly_status' => $lastStatus,
-            'order_status' => $orderStatus,
-            'shipping_status' => $shippingStatus,
-        ]);
+
 
         return true;
     }

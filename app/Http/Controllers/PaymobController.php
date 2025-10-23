@@ -188,8 +188,7 @@ class PaymobController extends Controller
         } catch (\Exception $e) {
             Log::error('ORDER_STATUS_CHECK_ERROR', [
                 'order_id' => $orderId,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'error' => $e->getMessage()
             ]);
             
             return response()->json([

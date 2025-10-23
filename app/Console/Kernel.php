@@ -17,10 +17,7 @@ class Kernel extends ConsoleKernel
                  ->everyTenMinutes()
                  ->withoutOverlapping();
 
-        // Test cron job is working
-        $schedule->call(function () {
-            \Log::info('✅ Cron job is working at ' . now());
-        })->everyMinute();
+
 
         // restart any old worker every 5 min
         $schedule->command('queue:restart')->everyFiveMinutes();

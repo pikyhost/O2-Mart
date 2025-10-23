@@ -42,7 +42,6 @@ class PaymobPaymentService
     {
         
         $authToken = $this->generateToken();
-        Log::info('Auth Token Generated', ['token' => $authToken]);
         $this->header['Authorization'] = 'Bearer ' . $authToken;
 
         // Create Order
@@ -63,9 +62,7 @@ class PaymobPaymentService
 
         if (!$orderId) {
             Log::error('Order creation failed', [
-                'response' => $body,
-                'request_data' => $orderData,
-                'auth_token' => $authToken ? 'present' : 'missing'
+                'response' => $body
             ]);
             return ['success' => false, 'message' => 'Order creation failed.', 'paymob_response' => $body];
         }
@@ -93,20 +90,17 @@ class PaymobPaymentService
             "state"           => "NA",
         ];
 
-        Log::info('Billing Phone Number Used', ['phone' => $billingData['phone_number']]);
 
         // Generate Payment Key
         $paymentToken = $this->generatePaymentKey($authToken, $orderId, $request->input('amount_cents'), $billingData);
-        Log::info('Payment Key Response', ['token' => $paymentToken]);
 
         if (!$paymentToken) {
-            Log::error('Payment key generation failed', []);
+            Log::error('Payment key generation failed');
             return ['success' => false, 'message' => 'Failed to generate payment key.'];
         }
 
         $iframeId = config('services.paymob.iframe_id');
         $iframeUrl = "{$this->base_url}/api/acceptance/iframes/{$iframeId}?payment_token={$paymentToken}";
-        Log::info('Iframe URL Generated', ['url' => $iframeUrl]);
 
         return [
             'success' => true,
@@ -142,14 +136,14 @@ class PaymobPaymentService
         $paymobOrderId = $response['order'] ?? null;
 
         if (!$paymobOrderId) {
-            \Log::error('Missing Paymob order ID in callback.', []);
+            \Log::error('Missing Paymob order ID in callback');
             return false;
         }
 
         $order = \App\Models\Order::where('paymob_order_id', $paymobOrderId)->first();
 
         if (!$order) {
-            \Log::error('No matching local order for Paymob order ID.', ['paymob_order_id' => $paymobOrderId]);
+            \Log::error('No matching local order for Paymob order ID', ['paymob_order_id' => $paymobOrderId]);
             return false;
         }
 
@@ -157,15 +151,7 @@ class PaymobPaymentService
         $order->update(['status' => 'completed']);
 
         try {
-            Log::info('Calling Jeebly after payment', ['order_id' => $order->id]);
-            
-            $jeeblyResult = (new \App\Services\JeeblyService())->createShipment($order);
-            if ($jeeblyResult) {
-                Log::info('Jeebly shipment created successfully', ['order_id' => $order->id, 'tracking' => $order->tracking_number]);
-            } else {
-                Log::warning('Jeebly shipment creation returned null', ['order_id' => $order->id]);
-            }
-
+            (new \App\Services\JeeblyService())->createShipment($order);
         } catch (\Exception $e) {
             \Log::error('Jeebly failed after payment', ['order_id' => $order->id, 'error' => $e->getMessage()]);
         }
@@ -173,14 +159,12 @@ class PaymobPaymentService
         try {
             Mail::to($order->user?->email ?? $order->contact_email)->send(new \App\Mail\OrderReceiptMail($order));
         } catch (\Exception $e) {
-            \Log::error('Failed to send email receipt', ['e' => $e->getMessage()]);
+            \Log::error('Failed to send email receipt', ['error' => $e->getMessage()]);
         }
 
-        \Log::info('Order marked as PAID & receipt sent', ['order_id' => $order->id]);
         return true;
     }else {
                 $order->update(['status' => 'payment_failed']);
-                \Log::warning('Order payment FAILED', ['order_id' => $order->id]);
                 return false;
             }
     }
