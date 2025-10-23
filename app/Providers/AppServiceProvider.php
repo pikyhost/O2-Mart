@@ -31,11 +31,6 @@ class AppServiceProvider extends ServiceProvider
         // Configure Rate Limiters
         $this->configureRateLimiting();
         
-        // Force HTTPS for ngrok
-        if (str_contains(config('app.url'), 'ngrok')) {
-            URL::forceScheme('https');
-        }
-        
         // Set password validation rules
         Password::defaults(function () {
             return Password::min(8)
