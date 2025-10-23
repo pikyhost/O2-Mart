@@ -16,6 +16,7 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
 
     'frontend_url' => env('FRONTEND_URL', 'https://mk3bel.o2mart.net'),
+    'backend_url' => env('BACKEND_URL', 'https://o2mart.to7fa.online'),
 
 
     /*

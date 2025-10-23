@@ -22,12 +22,12 @@ return [
     'allowed_origins' => [
         'http://localhost:3000',
         'http://127.0.0.1:3000',
-        'https://o2mart.to7fa.online',
+        env('BACKEND_URL', 'https://o2mart.to7fa.online'),
         'https://mart.to7fa.online',
         'https://o22mart.to7fa.online',
         'https://o2-mart-front.vercel.app',
         'http://78.110.164.71:3000',
-        'https://mk3bel.o2mart.net'
+        env('FRONTEND_URL', 'https://mk3bel.o2mart.net')
     ],
 
 // comment
