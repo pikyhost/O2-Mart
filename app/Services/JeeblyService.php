@@ -192,6 +192,9 @@ class JeeblyService
             'client_key_present' => $this->clientKey ? true : false,
         ]);
 
+        // Check if wallet balance is low
+        $this->checkAndNotifyLowWallet($response, $order);
+
         return null;
     }
 
@@ -276,5 +279,87 @@ class JeeblyService
             'cancelled' => 'cancelled',
             default => strtolower(str_replace(' ', '_', $jeeblyStatus)),
         };
+    }
+
+    /**
+     * Check if wallet balance is low and notify super admins
+     */
+    private function checkAndNotifyLowWallet($response, Order $order): void
+    {
+        $responseBody = $response->body();
+        $responseStatus = $response->status();
+        
+        // Check if response contains low wallet balance message
+        $isLowWallet = $responseStatus == 400 && 
+                       (str_contains(strtolower($responseBody), 'wallet balance is low') || 
+                        str_contains(strtolower($responseBody), 'insufficient balance'));
+        
+        if (!$isLowWallet) {
+            return;
+        }
+
+        Log::critical('Jeebly Wallet Balance is LOW!', [
+            'status' => $responseStatus,
+            'body' => $responseBody,
+            'order_id' => $order->id,
+        ]);
+
+        // Prepare error data
+        $errorData = [
+            'status' => $responseStatus,
+            'message' => 'Wallet balance is low',
+            'order_id' => $order->id,
+            'response_body' => $responseBody,
+        ];
+
+        // Get all super admin users
+        $superAdmins = \App\Models\User::whereHas('roles', function ($query) {
+            $query->whereIn('name', ['super_admin', 'admin']);
+        })->get();
+
+        if ($superAdmins->isEmpty()) {
+            Log::warning('No super admin users found to notify about low Jeebly wallet');
+            return;
+        }
+
+        // Send email and Filament notification to each super admin
+        foreach ($superAdmins as $admin) {
+            // Send email notification
+            try {
+                \Illuminate\Support\Facades\Mail::to($admin->email)
+                    ->send(new \App\Mail\JeeblyLowWalletAlert($errorData));
+                
+                Log::info('Low wallet email sent to admin', ['admin_id' => $admin->id, 'email' => $admin->email]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send low wallet email', [
+                    'admin_id' => $admin->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+
+            // Create Filament notification in database
+            try {
+                \Filament\Notifications\Notification::make()
+                    ->title('⚠️ Jeebly Wallet Balance is Low')
+                    ->body("Shipment creation failed for Order #{$order->id}. Please recharge the Jeebly wallet immediately.")
+                    ->danger()
+                    ->icon('heroicon-o-exclamation-triangle')
+                    ->persistent()
+                    ->actions([
+                        \Filament\Notifications\Actions\Action::make('view_order')
+                            ->label('View Order')
+                            ->url(route('filament.admin.resources.orders.view', ['record' => $order->id]))
+                            ->markAsRead(),
+                    ])
+                    ->sendToDatabase($admin);
+
+                Log::info('Filament notification created for admin', ['admin_id' => $admin->id]);
+            } catch (\Exception $e) {
+                Log::error('Failed to create Filament notification', [
+                    'admin_id' => $admin->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
     }
 }

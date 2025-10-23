@@ -196,6 +196,18 @@ Route::prefix('test-email')->group(function () {
         return view('emails.orders.receipt', compact('order'));
     });
     
+    // Jeebly Low Wallet Alert
+    Route::get('/jeebly-low-wallet', function () {
+        $errorData = [
+            'status' => 400,
+            'message' => 'Wallet balance is low',
+            'order_id' => 12345,
+            'response_body' => '{"success":"false","message":"Wallet balance is low"}'
+        ];
+        
+        return view('emails.jeebly-low-wallet', compact('errorData'));
+    });
+    
     // List all available email templates
     Route::get('/', function () {
         return view('emails.test-index');

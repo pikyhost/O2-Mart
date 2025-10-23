@@ -79,7 +79,7 @@ class AppServiceProvider extends ServiceProvider
         // Authenticated API - 120 requests per minute per user
         RateLimiter::for('api-authenticated', function (Request $request) {
             return auth('sanctum')->check()
-                ? Limit::perMinute(120)->by(auth('sanctum')->id())
+                ? Limit::perMinute(70)->by(auth('sanctum')->id())
                 : Limit::perMinute(60)->by($request->ip());
         });
 
