@@ -104,12 +104,34 @@ class InquiryResource extends BaseResource
                             ->schema([
                                 Forms\Components\Section::make('Parts Information')
                                     ->schema([
-                                        Forms\Components\TagsInput::make('required_parts')
-                                            ->placeholder('Add part')
-                                            ->separator(','),
+                                        Forms\Components\Repeater::make('required_parts')
+                                            ->label('Required Parts')
+                                            ->schema([
+                                                Forms\Components\TextInput::make('part')
+                                                    ->label('Part Name')
+                                                    ->required()
+                                                    ->maxLength(100)
+                                                    ->columnSpan(2),
+                                                Forms\Components\TextInput::make('quantity')
+                                                    ->label('Quantity')
+                                                    ->numeric()
+                                                    ->required()
+                                                    ->default(1)
+                                                    ->minValue(1)
+                                                    ->maxValue(1000)
+                                                    ->columnSpan(1),
+                                            ])
+                                            ->columns(3)
+                                            ->defaultItems(0)
+                                            ->addActionLabel('Add Part')
+                                            ->columnSpanFull()
+                                            ->collapsible(),
                                         Forms\Components\TextInput::make('quantity')
+                                            ->label('Overall Quantity (Legacy)')
                                             ->numeric()
-                                            ->minValue(1),
+                                            ->minValue(1)
+                                            ->helperText('This field is for backward compatibility only')
+                                            ->hidden(),
                                         Forms\Components\Textarea::make('battery_specs')
                                             ->label('Battery Specifications')
                                             ->columnSpanFull(),
@@ -272,8 +294,25 @@ class InquiryResource extends BaseResource
                     ->label('Assigned To')
                     ->sortable()
                     ->toggleable(),
+                Tables\Columns\TextColumn::make('required_parts')
+                    ->label('Required Parts')
+                    ->formatStateUsing(function ($state) {
+                        if (!$state || !is_array($state)) {
+                            return '-';
+                        }
+                        return collect($state)->map(function ($part) {
+                            if (is_array($part)) {
+                                return ($part['part'] ?? '-') . ' (Qty: ' . ($part['quantity'] ?? 1) . ')';
+                            }
+                            return $part;
+                        })->join(', ');
+                    })
+                    ->wrap()
+                    ->searchable()
+                    ->toggleable()
+                    ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('quantity')
-                    ->label('Qty')
+                    ->label('Qty (Legacy)')
                     ->sortable()
                     ->toggleable()
                     ->toggledHiddenByDefault(),

@@ -48,7 +48,8 @@ class StoreInquiryRequest extends FormRequest
 
             // Inquiry Details
             'required_parts' => 'nullable|array|max:10',
-            'required_parts.*' => 'string|max:100',
+            'required_parts.*.part' => 'required_with:required_parts|string|max:100',
+            'required_parts.*.quantity' => 'required_with:required_parts|integer|min:1|max:1000',
             'quantity' => 'nullable|integer|min:1|max:1000',
             'quantities' => 'nullable|array|max:10',
             'quantities.*' => 'integer|min:1|max:1000',
@@ -190,8 +191,30 @@ class StoreInquiryRequest extends FormRequest
             $mappedData['front_diameter'] = $this->input('diameter');
         }
 
-        // Handle quantities array to quantity field
-        if ($this->has('quantities') && is_array($this->input('quantities'))) {
+        // Handle old format: Convert required_parts array of strings + quantities array to new format
+        if ($this->has('required_parts') && is_array($this->input('required_parts'))) {
+            $requiredParts = $this->input('required_parts');
+            $quantities = $this->input('quantities', []);
+            
+            // Check if it's the old format (array of strings)
+            if (!empty($requiredParts) && is_string($requiredParts[0] ?? null)) {
+                // Convert to new format: array of objects with 'part' and 'quantity'
+                $newRequiredParts = [];
+                foreach ($requiredParts as $index => $part) {
+                    if (!empty($part)) {
+                        $newRequiredParts[] = [
+                            'part' => $part,
+                            'quantity' => isset($quantities[$index]) ? (int)$quantities[$index] : 1
+                        ];
+                    }
+                }
+                $mappedData['required_parts'] = $newRequiredParts;
+            }
+            // If it's already in the new format (array of objects), leave it as is
+        }
+
+        // Handle quantities array to quantity field (for backward compatibility)
+        if ($this->has('quantities') && is_array($this->input('quantities')) && !isset($mappedData['required_parts'])) {
             $quantities = $this->input('quantities');
             $mappedData['quantity'] = !empty($quantities) ? (int)$quantities[0] : 1;
         }

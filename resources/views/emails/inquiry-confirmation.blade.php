@@ -111,7 +111,11 @@
                       @if($inquiry->required_parts && count($inquiry->required_parts) > 0)
                       <p style="margin:10px 0 5px 0;"><strong style="color:#df2020;">Required Parts:</strong></p>
                       @foreach($inquiry->required_parts as $part)
-                      <p style="margin:0 0 5px 0;">• {{ $part }}</p>
+                        @if(is_array($part))
+                          <p style="margin:0 0 5px 0;">• {{ $part['part'] ?? '' }} (Qty: {{ $part['quantity'] ?? 1 }})</p>
+                        @else
+                          <p style="margin:0 0 5px 0;">• {{ $part }}</p>
+                        @endif
                       @endforeach
                       @endif
 
