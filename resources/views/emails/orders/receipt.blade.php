@@ -173,7 +173,7 @@
                       @endif
                       
                       @if ($installationCenterItems->count() > 0)
-                      <p style="margin:15px 0 10px 0;"><strong style="color:#df2020;">🏪 Installation Center:</strong></p>
+                      <p style="margin:15px 0 10px 0;"><strong style="color:#df2020;">🏪 Installer Center:</strong></p>
                       @foreach ($installationCenterItems as $item)
                         @if ($item->installationCenter)
                         <p style="margin:10px 0;"><strong style="color:#df2020;">Center Name:</strong> {{ $item->installationCenter->name }}</p>
