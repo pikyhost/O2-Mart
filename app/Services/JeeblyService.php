@@ -298,20 +298,18 @@ class JeeblyService
             return;
         }
 
-        // Prevent duplicate notifications for the same order
-        $cacheKey = "jeebly_low_wallet_notified_order_{$order->id}";
+        // Prevent duplicate notifications - check cache first
+        $cacheKey = "jeebly_low_wallet_notified";
         if (\Illuminate\Support\Facades\Cache::has($cacheKey)) {
-            Log::info('Low wallet notification already sent for this order', ['order_id' => $order->id]);
             return;
         }
 
-        // Mark as notified for 24 hours to prevent duplicates
-        \Illuminate\Support\Facades\Cache::put($cacheKey, true, now()->addHours(24));
+        // Mark as notified for 1 hour to prevent duplicates
+        \Illuminate\Support\Facades\Cache::put($cacheKey, true, now()->addHour());
 
         Log::critical('Jeebly Wallet Balance is LOW!', [
-            'status' => $responseStatus,
-            'body' => $responseBody,
             'order_id' => $order->id,
+            'message' => 'Wallet balance is low'
         ]);
 
         // Prepare error data
@@ -334,36 +332,15 @@ class JeeblyService
 
         // Send email and Filament notification to each super admin
         foreach ($superAdmins as $admin) {
-            // Send email notification (queued)
+            // Send email notification directly
             try {
                 \Illuminate\Support\Facades\Mail::to($admin->email)
-                    ->queue(new \App\Mail\JeeblyLowWalletAlert($errorData));
-                
-                Log::info('Low wallet email queued for admin', ['admin_id' => $admin->id, 'email' => $admin->email]);
+                    ->send(new \App\Mail\JeeblyLowWalletAlert($errorData));
             } catch (\Exception $e) {
-                Log::error('Failed to queue low wallet email', [
+                Log::error('Failed to send low wallet email', [
                     'admin_id' => $admin->id,
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
+                    'error' => $e->getMessage()
                 ]);
-            }
-
-            // Check if admin already has an unread notification for this order
-            $existingNotification = \Illuminate\Support\Facades\DB::table('notifications')
-                ->where('notifiable_type', 'App\Models\User')
-                ->where('notifiable_id', $admin->id)
-                ->where('type', 'Filament\Notifications\DatabaseNotification')
-                ->whereNull('read_at')
-                ->where('data->title', '⚠️ Jeebly Wallet Balance is Low')
-                ->where('data->body', 'like', "%Order #{$order->id}%")
-                ->exists();
-
-            if ($existingNotification) {
-                Log::info('Skipping duplicate Filament notification for admin', [
-                    'admin_id' => $admin->id,
-                    'order_id' => $order->id
-                ]);
-                continue;
             }
 
             // Create Filament notification in database
@@ -381,13 +358,10 @@ class JeeblyService
                             ->markAsRead(),
                     ])
                     ->sendToDatabase($admin);
-
-                Log::info('Filament notification created for admin', ['admin_id' => $admin->id]);
             } catch (\Exception $e) {
                 Log::error('Failed to create Filament notification', [
                     'admin_id' => $admin->id,
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
+                    'error' => $e->getMessage()
                 ]);
             }
         }
