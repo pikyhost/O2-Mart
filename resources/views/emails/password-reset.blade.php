@@ -36,10 +36,10 @@
                         style="display: inline-block"
                       >
                         <img
-                          src="https://o2mart.to7fa.online/email-assets/logo.png?v=5"
+                          src="{{ config('app.url') }}/photos/logo.png"
                           alt="O2Mart Logo"
-                          width="170"
-                          height="50"
+                          width="150"
+                          height="30"
                           border="0"
                           style="display:block;"
                         />
@@ -176,7 +176,7 @@
                         target="_blank"
                       >
                         <img
-                          src="https://o2mart.to7fa.online/email-assets/linkedin.png?v=5"
+                          src="{{ config('app.url') }}/photos/linkedin.png"
                           width="24"
                           height="24"
                           alt="LinkedIn"
@@ -188,7 +188,7 @@
                     <td align="center" style="padding: 0 5px">
                       <a href="https://www.facebook.com/o2mart" target="_blank">
                         <img
-                          src="https://o2mart.to7fa.online/email-assets/facebook.png?v=5"
+                          src="{{ config('app.url') }}/photos/FB.png"
                           width="24"
                           height="24"
                           alt="Facebook"
@@ -203,7 +203,7 @@
                         target="_blank"
                       >
                         <img
-                          src="https://o2mart.to7fa.online/email-assets/instagram.png?v=5"
+                          src="{{ config('app.url') }}/photos/IG.png"
                           width="24"
                           height="24"
                           alt="Instagram"
@@ -215,12 +215,12 @@
                     <td align="center" style="padding: 0 5px">
                       <a href="https://wa.me/971561787270" target="_blank">
                         <img
-                          src="https://o2mart.to7fa.online/email-assets/whatsapp.png?v=5"
-                          width="24"
-                          height="24"
+                          src="{{ config('app.url') }}/photos/WA.png"
+                          width="30"
+                          height="30"
                           alt="WhatsApp"
                           border="0"
-                          style="display: block"
+                          style="display: block; position: relative; top: -3px"
                         />
                       </a>
                     </td>
