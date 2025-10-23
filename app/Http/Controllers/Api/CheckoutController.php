@@ -30,7 +30,7 @@ class CheckoutController extends Controller
         try {
             // \Log::info('Checkout Step 1: Starting userCheckout');
             $itemsData = $request->input('items', []);
-            \Log::info('Checkout Step 2: Got items data', ['items_count' => count($itemsData)]);
+
             $validationErrors = [];
 
         foreach ($itemsData as $index => $item) {
@@ -69,7 +69,7 @@ class CheckoutController extends Controller
             // \Log::error('Checkout Error: User not authenticated');
             return response()->json(['status' => 'error', 'message' => 'User not authenticated'], 401);
         }
-        \Log::info('Checkout Step 4: User found', ['user_id' => $user->id]);
+
         
         $paymentMethod = $request->input('payment_method', 'paymob');
         if ($paymentMethod !== 'paymob') {
@@ -77,13 +77,13 @@ class CheckoutController extends Controller
         }
         // \Log::info('Checkout Step 5: Payment method validated');
 
-        \Log::info('Checkout Step 6: Getting cart for user', ['user_id' => $user->id]);
+
         $cart = Cart::with('items.buyable')->where('user_id', $user->id)->first();
         if (!$cart) {
             \Log::error('Checkout Error: No cart found', ['user_id' => $user->id]);
             return response()->json(['status' => 'error', 'message' => 'No cart found for user'], 400);
         }
-        \Log::info('Checkout Step 7: Cart found', ['cart_id' => $cart->id, 'items_count' => $cart->items->count()]);
+
         
         // \Log::info('Checkout Step 8: Handling address selection');
         // Handle address selection or manual entry
@@ -91,7 +91,7 @@ class CheckoutController extends Controller
         $useManualAddress = false;
         
         if ($request->has('address_id') && $request->address_id) {
-            \Log::info('Checkout Step 9: Looking for address', ['address_id' => $request->address_id]);
+
             $selectedAddress = UserAddress::where('user_id', $user->id)->find($request->address_id);
         }
         
@@ -103,10 +103,7 @@ class CheckoutController extends Controller
         // If no saved address, check if manual address data is provided
         if (!$selectedAddress) {
             // Log all request data for debugging
-            \Log::info('Checkout: No saved address, checking manual input', [
-                'all_request_keys' => array_keys($request->all()),
-                'all_request_data' => $request->all()
-            ]);
+
             
             // Accept various field name formats - be very flexible
             $areaIdValue = $request->input('area_id') 
@@ -127,18 +124,10 @@ class CheckoutController extends Controller
                 ?? $request->input('phone_number')
                 ?? $user->phone;
             
-            \Log::info('Checkout: Extracted address values', [
-                'area_id' => $areaIdValue,
-                'address_line' => $addressLineValue,
-                'phone' => $phoneValue
-            ]);
+
             
             if ($areaIdValue && $addressLineValue && $phoneValue) {
-                \Log::info('Checkout Step 10b: Using manual address data', [
-                    'area_id' => $areaIdValue,
-                    'address_line' => $addressLineValue,
-                    'phone' => $phoneValue
-                ]);
+
                 $useManualAddress = true;
                 $areaId = $areaIdValue;
             } else {
@@ -162,7 +151,7 @@ class CheckoutController extends Controller
                 ], 422);
             }
         } else {
-            \Log::info('Checkout Step 11: Address found', ['address_id' => $selectedAddress->id]);
+
             $areaId = $selectedAddress->area_id ?? $request->input('area_id') ?? $request->input('area');
         }
         
@@ -170,16 +159,16 @@ class CheckoutController extends Controller
             \Log::error('Checkout Error: No area ID', $selectedAddress ? ['selected_address' => $selectedAddress->toArray()] : ['manual_address' => true]);
             return response()->json(['status' => 'error', 'message' => 'No valid area found.'], 422);
         }
-        \Log::info('Checkout Step 12: Area ID found', ['area_id' => $areaId]);
+
 
         // \Log::info('Checkout Step 13: Checking cart items');
         if ($cart->items->isEmpty()) {
             // \Log::error('Checkout Error: Cart is empty');
             return response()->json(['status' => 'error', 'message' => 'Cart is empty.'], 400);
         }
-        \Log::info('Checkout Step 14: Cart has items', ['items_count' => $cart->items->count()]);
 
-        \Log::info('Checkout Step 15: Updating cart area', ['area_id' => $areaId]);
+
+
         $cart->update(['area_id' => $areaId]);
         
         // Use cart summary for all calculations

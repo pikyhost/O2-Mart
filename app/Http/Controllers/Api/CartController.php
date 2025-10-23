@@ -19,12 +19,7 @@ class CartController extends Controller
 {
     public function add(Request $request)
     {
-        \Log::info('Cart Add Request Data', [
-            'all_data' => $request->all(),
-            'has_cart_payload' => $request->has('cart_payload'),
-            'method' => $request->method(),
-            'url' => $request->url()
-        ]);
+
 
         // Handle cart payload for tyre groups
         if ($request->has('cart_payload')) {
@@ -60,16 +55,7 @@ class CartController extends Controller
         
         $price = (float) $priceString;
         
-        \Log::info('Cart Add Price Debug', [
-            'tyre_id' => $itemModel->id,
-            'discounted_price' => $itemModel->discounted_price,
-            'price_vat_inclusive' => $itemModel->price_vat_inclusive,
-            'price_including_vat' => $itemModel->price_including_vat,
-            'regular_price' => $itemModel->regular_price,
-            'selected_price_string' => $priceString,
-            'converted_price_float' => $price,
-            'price_type' => gettype($priceString)
-        ]);
+
         // Check if we have stored quantities from filter API
         $sessionKey = 'tyre_quantities_' . session()->getId();
         $storedQuantities = session($sessionKey, []);
@@ -83,15 +69,7 @@ class CartController extends Controller
             ->where('buyable_id', $itemModel->id)
             ->first();
 
-        \Log::info('Tyre Offer Debug', [
-            'buy_3_get_1_free' => $isOfferActive,
-            'class' => get_class($itemModel),
-            'id' => $itemModel->id,
-            'title' => $itemModel->title ?? null,
-            'quantity_added' => $quantity,
-            'stored_quantities' => $storedQuantities,
-            'used_stored_quantity' => isset($storedQuantities[$request->buyable_id]),
-        ]);
+
 
         if ($existingItem) {
             $newTotalQuantity = $existingItem->quantity + $quantity;
@@ -120,12 +98,7 @@ class CartController extends Controller
                 'subtotal'       => $price * $paidQuantity,
             ]);
             
-            \Log::info('Cart Item Created', [
-                'stored_price_per_unit' => $cartItem->price_per_unit,
-                'stored_subtotal' => $cartItem->subtotal,
-                'expected_price' => $price,
-                'expected_subtotal' => $price * $paidQuantity
-            ]);
+
         }
 
         return response()->json([
@@ -545,18 +518,7 @@ class CartController extends Controller
                         ? $item->quantity - floor($item->quantity / 4) 
                         : $item->quantity;
                     
-                    \Log::info('Individual Item Subtotal Debug', [
-                        'item_id' => $buyable->id,
-                        'is_tyre' => $buyable instanceof \App\Models\Tyre,
-                        'buy_3_get_1_free' => $buyable->buy_3_get_1_free ?? false,
-                        'is_offer_active' => $isOfferActive,
-                        'quantity' => $item->quantity,
-                        'paid_quantity' => $paidQuantity,
-                        'price_per_unit' => $item->price_per_unit,
-                        'vat_percent' => $vatPercent,
-                        'price_without_vat' => $item->price_per_unit / (1 + $vatPercent),
-                        'calculated_subtotal' => $paidQuantity * ($item->price_per_unit / (1 + $vatPercent))
-                    ]);
+
                     
                     $itemData = [
                         'type' => class_basename($item->buyable_type),
@@ -595,13 +557,7 @@ class CartController extends Controller
                         ] : null),
                     ];
                     
-                    \Log::info('Cart API Response Item', [
-                        'item_id' => $buyable->id,
-                        'db_price_per_unit' => $item->price_per_unit,
-                        'db_subtotal' => $item->subtotal,
-                        'response_price_per_unit' => $itemData['price_per_unit'],
-                        'response_subtotal' => $itemData['sub']
-                    ]);
+
                     
                     return $itemData;
                 }),
@@ -1007,11 +963,7 @@ class CartController extends Controller
 
     public function addTyreGroup(Request $request)
     {
-        \Log::info('AddTyreGroup Request Data', [
-            'all_data' => $request->all(),
-            'has_cart_payload' => $request->has('cart_payload'),
-            'has_items' => $request->has('items')
-        ]);
+
 
         if ($request->has('cart_payload')) {
             $request->merge([
@@ -1025,9 +977,7 @@ class CartController extends Controller
             'items.*.quantity' => 'required|integer|min:1'
         ]);
 
-        \Log::info('AddTyreGroup Validated Items', [
-            'items' => $request->input('items')
-        ]);
+
 
         $cart = \App\Services\CartService::getCurrentCart();
 

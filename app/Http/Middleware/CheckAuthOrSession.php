@@ -16,12 +16,6 @@ class CheckAuthOrSession
      */
     public function handle($request, Closure $next)
     {
-            \Log::info('🔍 AUTH DEBUG', [
-        'sanctum_check' => auth('sanctum')->check(),
-        'user' => auth('sanctum')->user(),
-        'token' => $request->bearerToken(),
-        'session_id' => $request->header('x-session-id'),
-    ]);
         if (auth('sanctum')->check()) {
             return $next($request);
         }

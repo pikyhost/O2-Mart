@@ -97,8 +97,7 @@ class TyreController extends Controller
     {
         $query = Tyre::query();
         
-        // Debug logging
-        \Log::info('Tyre filter request', ['request' => $request->all()]);
+
 
         // Global search functionality
         if ($request->filled('search')) {
@@ -189,13 +188,11 @@ class TyreController extends Controller
             $q->where('is_approved', true);
         }], 'rating');
 
-        // Debug: Log the final query
-        \Log::info('Final tyre query SQL', ['sql' => $query->toSql(), 'bindings' => $query->getBindings()]);
+
         
         $tyres = $query->paginate(15);
         
-        // Debug: Log results count
-        \Log::info('Tyre results', ['total' => $tyres->total(), 'count' => $tyres->count()]);
+
 
         $tyres->load(['tyreBrand', 'tyreCountry', 'tyreAttribute']);
         

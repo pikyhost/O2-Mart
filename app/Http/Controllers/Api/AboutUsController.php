@@ -114,7 +114,6 @@ private function processInlineMarkdown($text)
         // Check if file exists, if not return null
         $fullPath = public_path($cleanPath);
         if (!file_exists($fullPath)) {
-            \Log::warning("Missing image file: {$fullPath}");
             return null;
         }
         

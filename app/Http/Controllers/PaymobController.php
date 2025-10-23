@@ -36,7 +36,7 @@ class PaymobController extends Controller
         
         $result = $service->sendPayment($paymentRequest);
         
-        Log::info('Payment initiation result', ['result' => $result]);
+
         
         if ($result['success']) {
             return response()->json([
@@ -52,13 +52,7 @@ class PaymobController extends Controller
     }
     public function handleWebhook(Request $request)
     {
-        Log::info('WEBHOOK_RECEIVED', [
-            'all_data' => $request->all(),
-            'headers' => $request->headers->all(),
-            'method' => $request->method(),
-            'url' => $request->fullUrl(),
-            'ip' => $request->ip()
-        ]);
+
         
         $data = $request->all();
         $isPaid = $data['success'] ?? false;
@@ -67,28 +61,17 @@ class PaymobController extends Controller
         // Extract original order ID (remove timestamp suffix)
         $orderId = $merchantOrderId ? explode('_', $merchantOrderId)[0] : null;
         
-        Log::info('WEBHOOK_PROCESSING', [
-            'is_paid' => $isPaid,
-            'merchant_order_id' => $merchantOrderId,
-            'extracted_order_id' => $orderId
-        ]);
+
 
         if ($isPaid && $orderId) {
             $order = Order::with('user', 'items')->find($orderId);
             
-            Log::info('ORDER_FOUND', [
-                'order_id' => $orderId,
-                'order_exists' => $order ? true : false,
-                'current_status' => $order?->status
-            ]);
+
 
             if ($order && $order->status !== 'completed') {
                 $order->update(['status' => 'completed']);
                 
-                Log::info('ORDER_UPDATED', [
-                    'order_id' => $order->id,
-                    'new_status' => 'completed'
-                ]);
+
 
                 try {
                     if (!$order->tracking_number) {
@@ -109,11 +92,7 @@ class PaymobController extends Controller
                 }
             }
         } else {
-            Log::warning('WEBHOOK_IGNORED', [
-                'reason' => !$isPaid ? 'payment_not_successful' : 'no_order_id',
-                'is_paid' => $isPaid,
-                'order_id' => $orderId
-            ]);
+
         }
 
         return response()->json(['status' => 'ok']);
@@ -123,7 +102,7 @@ class PaymobController extends Controller
 
     public function handleRedirect(Request $request)
     {
-        Log::info('REDIRECT_RECEIVED', ['request' => $request->all()]);
+
         
         $merchantOrderId = $request->query('merchant_order_id');
         $success = $request->query('success');
@@ -139,7 +118,7 @@ class PaymobController extends Controller
         // Update order status if payment was successful (workaround for missing webhook)
         if ($success === 'true' && $order->status === 'pending') {
             $order->update(['status' => 'completed']);
-            Log::info('ORDER_UPDATED_VIA_REDIRECT', ['order_id' => $order->id]);
+
             
             // Create Jeebly shipment and send email
             try {
@@ -147,13 +126,13 @@ class PaymobController extends Controller
                     $shippingService = new JeeblyService();
                     $shippingService->createShipment($order);
                     $order->refresh(); // Refresh to get updated tracking number
-                    Log::info('JEEBLY_SHIPMENT_CREATED_VIA_REDIRECT', ['order_id' => $order->id]);
+
                 }
 
                 $email = $order->contact_email ?? $order->user?->email;
                 if ($email) {
                     Mail::to($email)->send(new OrderReceiptMail($order));
-                    Log::info('EMAIL_SENT_VIA_REDIRECT', ['order_id' => $order->id]);
+
                 }
             } catch (\Exception $e) {
                 Log::error('REDIRECT_PROCESSING_FAILED', [
@@ -171,12 +150,12 @@ class PaymobController extends Controller
     public function checkOrderStatus($orderId)
     {
         try {
-            Log::info('ORDER_STATUS_CHECK', ['order_id' => $orderId]);
+
             
             $order = Order::find($orderId);
             
             if (!$order) {
-                Log::warning('ORDER_NOT_FOUND', ['order_id' => $orderId]);
+
                 return response()->json([
                     'status' => 'not_found',
                     'message' => 'Order not found. Please check your order details.'
@@ -188,7 +167,7 @@ class PaymobController extends Controller
             $attempt = 0;
             
             while ($attempt < $maxAttempts && $order->status === 'pending') {
-                Log::info('WAITING_FOR_WEBHOOK', ['attempt' => $attempt + 1, 'order_id' => $orderId]);
+
                 sleep(1);
                 $order->refresh();
                 $attempt++;
@@ -197,12 +176,7 @@ class PaymobController extends Controller
             $status = $order->status === 'completed' ? 'success' : 'failed';
             $message = $this->getPaymentMessage($status);
             
-            Log::info('ORDER_STATUS_RESPONSE', [
-                'order_id' => $orderId,
-                'order_status' => $order->status,
-                'response_status' => $status,
-                'message' => $message
-            ]);
+
             
             return response()->json([
                 'status' => $status,
