@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Password Reset – O2Mart</title>
+    <!--[if mso]>
+    <style type="text/css">
+      body, table, td, a { font-family: Arial, sans-serif !important; }
+    </style>
+    <![endif]-->
   </head>
-  <body style="margin: 0; padding: 0; background-color: #F5F5F5">
+  <body style="margin: 0; padding: 0; background-color: #F5F5F5; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
     <table
       width="100%"
       cellpadding="0"
@@ -15,14 +22,19 @@
       <tr>
         <td align="center">
           <!-- Main Container -->
+          <!--[if mso]>
+          <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#FFFFFF" style="width: 600px;">
+          <![endif]-->
+          <!--[if !mso]><!-->
           <table
             width="600"
             cellpadding="0"
             cellspacing="0"
             border="0"
             bgcolor="#FFFFFF"
-            style="width: 600px; max-width: 600px; margin: 0 auto"
+            style="width: 600px; max-width: 600px; margin: 0 auto;"
           >
+          <!--<![endif]-->
             
             <!-- Header -->
             <tr>
@@ -41,7 +53,7 @@
                           width="150"
                           height="30"
                           border="0"
-                          style="display:block;"
+                          style="display: block; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;"
                         />
                       </a>
                     </td>
@@ -85,32 +97,52 @@
                   cellspacing="0"
                   border="0"
                   align="left"
-                  style="margin: 20px 0"
+                  style="margin: 20px 0;"
                 >
                   <tr>
-                    <td
-                      bgcolor="#DF2020"
-                      align="center"
-                      style="border-radius: 5px; padding: 12px 30px"
-                    >
-                      <a
-                        href="{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}"
-                        style="
-                          font-family: Arial, sans-serif;
-                          font-size: 16px;
-                          color: #FFFFFF;
-                          text-decoration: none;
-                          display: inline-block;
-                          font-weight: bold;
-                        "
-                      >
-                        Reset Password
-                      </a>
+                    <td align="center" style="padding: 0;">
+                      <!--[if mso]>
+                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}" style="height:44px;v-text-anchor:middle;width:200px;" arcsize="11%" stroke="f" fillcolor="#DF2020">
+                        <w:anchorlock/>
+                        <center style="color:#FFFFFF;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">Reset Password</center>
+                      </v:roundrect>
+                      <![endif]-->
+                      <!--[if !mso]><!-->
+                      <table cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td
+                            bgcolor="#DF2020"
+                            align="center"
+                            style="border-radius: 5px; padding: 12px 30px; -webkit-border-radius: 5px; -moz-border-radius: 5px;"
+                          >
+                            <a
+                              href="{{ config('app.frontend_url') }}/reset-password/{{ $token }}?email={{ $email }}"
+                              style="
+                                font-family: Arial, sans-serif;
+                                font-size: 16px;
+                                color: #FFFFFF;
+                                text-decoration: none;
+                                display: inline-block;
+                                font-weight: bold;
+                                line-height: 20px;
+                              "
+                            >
+                              Reset Password
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                      <!--<![endif]-->
                     </td>
                   </tr>
                 </table>
 
-                <div style="clear: both; height: 10px"></div>
+                <!-- Spacer -->
+                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                  <tr>
+                    <td height="10" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
+                  </tr>
+                </table>
 
                 <p style="margin: 0 0 15px 0">
                   Please note that this link will expire in 60 minutes.
@@ -181,7 +213,7 @@
                           height="24"
                           alt="LinkedIn"
                           border="0"
-                          style="display: block"
+                          style="display: block; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;"
                         />
                       </a>
                     </td>
@@ -193,7 +225,7 @@
                           height="24"
                           alt="Facebook"
                           border="0"
-                          style="display: block"
+                          style="display: block; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;"
                         />
                       </a>
                     </td>
@@ -208,7 +240,7 @@
                           height="24"
                           alt="Instagram"
                           border="0"
-                          style="display: block"
+                          style="display: block; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;"
                         />
                       </a>
                     </td>
@@ -216,11 +248,11 @@
                       <a href="https://wa.me/971561787270" target="_blank">
                         <img
                           src="{{ config('app.url') }}/photos/WA.png"
-                          width="30"
-                          height="30"
+                          width="28"
+                          height="28"
                           alt="WhatsApp"
                           border="0"
-                          style="display: block; position: relative; top: -3px"
+                          style="display: block; height: auto; line-height: 100%; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;"
                         />
                       </a>
                     </td>
