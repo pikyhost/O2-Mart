@@ -17,6 +17,7 @@ return [
 
     'frontend_url' => env('FRONTEND_URL', 'https://mk3bel.o2mart.net'),
     'backend_url' => env('BACKEND_URL', 'https://o2mart.to7fa.online'),
+    'api_security_key' => env('API_SECURITY_KEY'),
 
 
     /*

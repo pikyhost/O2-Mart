@@ -63,33 +63,7 @@ Route::get('/payment/paymob/callback', [PaymobController::class, 'handleRedirect
 
 Route::get('test-push', fn()=> 'so so bad');
 
-// notes: buy_3_get_1 => tyres only
-
-
-// 4 tyres => pricing of 3 ,4 tyres
-// 5 tyres => pricing of 4 ,5 tyres
-
-
-
-
-// chatbot systme
-/*
-
-1 - backend_name for the chat bot 
-2 - instead of desc , replace name with "System prompt"
-
-
-
-talbe:
-1 -at supervisor select the teacher
-2 - إحصائيات الحصص
-3 - print pdf , the name of scheool 
-4- save pdf
-
-*/
-
 Route::get('/test-paymob', [App\Http\Controllers\PaymobController::class, 'testPayment']);
-
 
 Route::get('/final-test-2', function() {
     return 'All tests done222222222222222222222222222222222';

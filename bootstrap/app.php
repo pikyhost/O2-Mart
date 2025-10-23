@@ -29,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'throttle.checkout' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':checkout',
             'throttle.search' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':search',
             'throttle.cart' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':cart',
+            // 'api.security' => \App\Http\Middleware\ApiSecurityMiddleware::class,
         ]);
 
         // API middleware group
