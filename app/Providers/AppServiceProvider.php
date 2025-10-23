@@ -78,8 +78,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Authenticated API - 120 requests per minute per user
         RateLimiter::for('api-authenticated', function (Request $request) {
-            return $request->user()
-                ? Limit::perMinute(120)->by($request->user()->id)
+            return auth('sanctum')->check()
+                ? Limit::perMinute(120)->by(auth('sanctum')->id())
                 : Limit::perMinute(60)->by($request->ip());
         });
 
@@ -107,8 +107,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Checkout operations - 10 requests per minute
         RateLimiter::for('checkout', function (Request $request) {
-            return $request->user()
-                ? Limit::perMinute(10)->by($request->user()->id)
+            return auth('sanctum')->check()
+                ? Limit::perMinute(10)->by(auth('sanctum')->id())
                 : Limit::perMinute(5)->by($request->ip());
         });
 
@@ -119,7 +119,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Cart operations - 60 requests per minute
         RateLimiter::for('cart', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?? $request->ip());
+            return auth('sanctum')->check()
+                ? Limit::perMinute(60)->by(auth('sanctum')->id())
+                : Limit::perMinute(60)->by($request->ip());
         });
     }
 }
