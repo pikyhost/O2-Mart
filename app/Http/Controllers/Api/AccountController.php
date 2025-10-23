@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Notifications\EmailUpdateNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -139,8 +138,8 @@ class AccountController extends Controller
             $user->email_verified_at = null;
             $user->save();
 
+            // Only send verification email, no "email updated" notification
             $user->sendEmailVerificationNotification();
-            $user->notify(new EmailUpdateNotification());
             
             // Reload addresses
             $addresses = $user->addresses()->with(['country', 'governorate', 'city', 'area'])->get();

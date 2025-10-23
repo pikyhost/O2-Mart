@@ -69,7 +69,7 @@
                 "
               >
                 <p style="margin: 0 0 15px 0">Hello!</p>
-                <p style="margin: 0 0 20px 0">
+                <p style="margin: 0 0 25px 0">
                   Please click the button below to verify your email address.
                 </p>
 
@@ -78,13 +78,13 @@
                   cellpadding="0"
                   cellspacing="0"
                   border="0"
-                  align="center"
-                  style="margin: 20px auto;"
+                  align="left"
+                  style="margin: 0 0 25px 0;"
                 >
                   <tr>
                     <td align="center" style="padding: 0;">
                       <!--[if mso]>
-                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ $verificationUrl }}" style="height:44px;v-text-anchor:middle;width:250px;" arcsize="11%" stroke="f" fillcolor="#DF2020">
+                      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ $verificationUrl }}" style="height:44px;v-text-anchor:middle;width:220px;" arcsize="11%" stroke="f" fillcolor="#DF2020">
                         <w:anchorlock/>
                         <center style="color:#FFFFFF;font-family:Arial,sans-serif;font-size:16px;font-weight:bold;">Verify Email Address</center>
                       </v:roundrect>
@@ -116,6 +116,13 @@
                       </table>
                       <!--<![endif]-->
                     </td>
+                  </tr>
+                </table>
+
+                <!-- Clear float -->
+                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                  <tr>
+                    <td height="1" style="font-size: 1px; line-height: 1px;">&nbsp;</td>
                   </tr>
                 </table>
 
