@@ -192,14 +192,7 @@ class InquiryResource extends BaseResource
                                     ]),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Admin Notes')
-                            ->schema([
-                                Forms\Components\Section::make('Admin Notes')
-                                    ->schema([
-                                        Forms\Components\Textarea::make('admin_notes')
-                                            ->columnSpanFull(),
-                                    ]),
-                            ]),
+    
                     ])
                     ->persistTabInQueryString() // Optional: remembers the last active tab
                     ->columnSpanFull(),
