@@ -120,8 +120,8 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     $request->fulfill();
     
     $frontendUrl = config('app.frontend_url');
-    return redirect($frontendUrl . '/email-verified');
-})->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
+    return redirect($frontendUrl . '/email-verified?verified=true');
+})->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
 
 Route::prefix('brands')->group(function () {
 Route::get('/', [BrandController::class, 'index']); 
