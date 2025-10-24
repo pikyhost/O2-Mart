@@ -65,13 +65,8 @@ class InquiryResource extends BaseResource
                                         Forms\Components\TextInput::make('email')
                                             ->email()
                                             ->maxLength(255),
-                                        Forms\Components\Select::make('source')
-                                            ->options([
-                                                'website' => 'Website',
-                                                'phone' => 'Phone',
-                                                'email' => 'Email',
-                                                'walk-in' => 'Walk-in',
-                                            ]),
+                                        Forms\Components\TextINput::make('id')->disabled()
+                                           ,
                                     ])->columns(2),
                             ]),
 
