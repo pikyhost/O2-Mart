@@ -85,11 +85,9 @@ class InquiryResource extends BaseResource
                                         Forms\Components\TextInput::make('vin_chassis_number')
                                             ->label('VIN/Chassis Number')
                                             ->maxLength(50),
-                                        Forms\Components\Select::make('rim_size_id')
+                                        Forms\Components\TextInput::make('rim_size')
                                             ->label('Rim Size')
-                                            ->relationship('rimSize', 'size')
-                                            ->searchable()
-                                            ->preload()
+                                            ->maxLength(100)
                                             ->visible(fn (Forms\Get $get) => $get('type') === 'rims'),
     
                                     ])->columns(2),
@@ -122,11 +120,10 @@ class InquiryResource extends BaseResource
                                             ->columnSpanFull()
                                             ->collapsible(),
                                         Forms\Components\TextInput::make('quantity')
-                                            ->label('Overall Quantity (Legacy)')
+                                            ->label('Overall Quantity')
                                             ->numeric()
                                             ->minValue(1)
-                                            ->helperText('This field is for backward compatibility only')
-                                            ->hidden(),
+                                            ->default(1),
                                         Forms\Components\Textarea::make('battery_specs')
                                             ->label('Battery Specifications')
                                             ->columnSpanFull(),
@@ -298,10 +295,14 @@ class InquiryResource extends BaseResource
                     ->toggleable()
                     ->toggledHiddenByDefault(),
                 Tables\Columns\TextColumn::make('quantity')
-                    ->label('Qty (Legacy)')
+                    ->label('Quantity')
                     ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('rim_size')
+                    ->label('Rim Size')
+                    ->searchable()
                     ->toggleable()
-                    ->toggledHiddenByDefault(),
+                    ->visible(fn ($record) => $record->type === 'rims'),
                
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created')
