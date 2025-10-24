@@ -68,24 +68,46 @@ class InquiryController extends Controller
             $inquiry = Inquiry::create($inquiryData);
             
             // Handle file uploads with media library
-
+            \Log::info('File Upload Debug', [
+                'inquiry_id' => $inquiry->id,
+                'has_car_license_photos' => $request->hasFile('car_license_photos'),
+                'has_part_photos' => $request->hasFile('part_photos'),
+                'car_license_count' => $request->hasFile('car_license_photos') ? count($request->file('car_license_photos')) : 0,
+                'vin' => $inquiry->vin_chassis_number
+            ]);
             
             if ($request->hasFile('car_license_photos')) {
-
                 $files = is_array($request->file('car_license_photos')) ? $request->file('car_license_photos') : [$request->file('car_license_photos')];
-                foreach ($files as $file) {
-                    $inquiry->addMedia($file)->toMediaCollection('car_license_photos');
+                \Log::info('Processing car license photos', ['count' => count($files)]);
+                
+                foreach ($files as $index => $file) {
+                    try {
+                        $inquiry->addMedia($file)->toMediaCollection('car_license_photos');
+                        \Log::info('Car license photo added', ['index' => $index, 'name' => $file->getClientOriginalName()]);
+                    } catch (\Exception $e) {
+                        \Log::error('Failed to add car license photo', [
+                            'index' => $index,
+                            'error' => $e->getMessage()
+                        ]);
+                    }
                 }
-
             }
 
             if ($request->hasFile('part_photos')) {
-
                 $files = is_array($request->file('part_photos')) ? $request->file('part_photos') : [$request->file('part_photos')];
-                foreach ($files as $file) {
-                    $inquiry->addMedia($file)->toMediaCollection('part_photos');
+                \Log::info('Processing part photos', ['count' => count($files)]);
+                
+                foreach ($files as $index => $file) {
+                    try {
+                        $inquiry->addMedia($file)->toMediaCollection('part_photos');
+                        \Log::info('Part photo added', ['index' => $index, 'name' => $file->getClientOriginalName()]);
+                    } catch (\Exception $e) {
+                        \Log::error('Failed to add part photo', [
+                            'index' => $index,
+                            'error' => $e->getMessage()
+                        ]);
+                    }
                 }
-
             }
 
 
