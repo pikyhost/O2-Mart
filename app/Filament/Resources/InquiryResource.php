@@ -302,7 +302,7 @@ class InquiryResource extends BaseResource
                     ->label('Rim Size')
                     ->searchable()
                     ->toggleable()
-                    ->visible(fn ($record) => $record->type === 'rims'),
+                    ->visible(fn ($record) => $record?->type === 'rims'),
                
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created')
