@@ -213,15 +213,23 @@ class StoreInquiryRequest extends FormRequest
             // If it's already in the new format (array of objects), leave it as is
         }
 
-        // CRITICAL FIX: Always preserve and prioritize the quantity field if explicitly provided
-        // This handles the Rims case where quantity is sent as a direct field
-        if ($this->has('quantity')) {
+        // CRITICAL FIX: Handle quantity based on the format it's sent
+        
+        // 1. If quantity is explicitly provided as a direct field
+        if ($this->has('quantity') && $this->input('quantity') !== null) {
             $quantityValue = $this->input('quantity');
-            // Handle both string and integer inputs
             $mappedData['quantity'] = is_numeric($quantityValue) ? (int)$quantityValue : 1;
         }
-        // Fallback: Handle quantities array for backward compatibility (only if quantity not set)
-        elseif ($this->has('quantities') && is_array($this->input('quantities')) && !isset($mappedData['required_parts'])) {
+        // 2. If quantity is inside required_parts array (Rims case)
+        elseif (isset($mappedData['required_parts']) && is_array($mappedData['required_parts']) && !empty($mappedData['required_parts'])) {
+            // Extract quantity from first item in required_parts
+            $firstPart = $mappedData['required_parts'][0];
+            if (isset($firstPart['quantity'])) {
+                $mappedData['quantity'] = (int)$firstPart['quantity'];
+            }
+        }
+        // 3. Fallback: Handle quantities array for backward compatibility
+        elseif ($this->has('quantities') && is_array($this->input('quantities'))) {
             $quantities = $this->input('quantities');
             $mappedData['quantity'] = !empty($quantities) && is_numeric($quantities[0]) ? (int)$quantities[0] : 1;
         }
