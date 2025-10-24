@@ -190,7 +190,7 @@ class TyreController extends Controller
 
 
         
-        $tyres = $query->paginate(15);
+        $tyres = $query->paginate(2);
         
 
 
