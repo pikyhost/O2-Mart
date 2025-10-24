@@ -171,7 +171,7 @@ class RimController extends Controller
             $query->where('rim_country_id', $request->country_id);
         }
 
-        $rims = $query->paginate(15);
+        $rims = $query->paginate(9);
 
         $rims->getCollection()->transform(function ($rim) {
             $rimArray = $rim->toArray();

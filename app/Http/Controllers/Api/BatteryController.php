@@ -74,7 +74,7 @@ public function index(Request $request)
         $query->where('warranty', $request->warranty);
     }
 
-    $batteries = $query->get();
+    $batteries = $query->paginate(9);
 
     $batteries->transform(function ($battery) {
         return array_merge(

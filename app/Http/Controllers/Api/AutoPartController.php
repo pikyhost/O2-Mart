@@ -165,7 +165,7 @@ class AutoPartController extends Controller
             $query->where('discounted_price', '<=', $request->price_max);
         }
 
-        $data = $query->paginate(15);
+        $data = $query->paginate(9);
 
         $data->getCollection()->transform(fn ($item) => $this->transformAutoPart($item, withReviews: false));
 
