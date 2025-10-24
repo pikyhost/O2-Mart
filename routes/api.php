@@ -63,7 +63,7 @@ Route::get('/about-us', [AboutUsController::class, 'index'])->name('api.about-us
 Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle']);
 
 // Password reset endpoints with strict rate limiting
-Route::middleware('throttle.auth')->group(function () {
+Route::group(function () {
     Route::post('/forgot-password', [\App\Http\Controllers\Api\PasswordResetController::class, 'forgotPassword']);
     Route::post('/reset-password', [\App\Http\Controllers\Api\PasswordResetController::class, 'resetPassword']);
     Route::get('/password/validate', [\App\Http\Controllers\Api\PasswordResetController::class, 'validateToken']);
@@ -76,7 +76,7 @@ Route::get('/faqs', [FaqController::class, 'index']);
 Route::get('/contact-us', [\App\Http\Controllers\Api\ContactUsPageController::class, 'index']);
 
 // Form submissions with rate limiting
-Route::middleware('throttle.forms')->group(function () {
+Route::group(function () {
     Route::post('/contact', [ContactMessageController::class, 'store']);
     Route::post('/newsletter/subscribe', [NewsletterSubscriberController::class, 'store'])->name('newsletter.subscribe');
 });
@@ -88,7 +88,7 @@ Route::get('/policy/terms', [PolicyController::class, 'terms']);
 Route::get('/supplier-page', [SupplierPageController::class, 'show']);
 
 // Supplier form with rate limiting
-Route::middleware('throttle.forms')->group(function () {
+Route::group(function () {
     Route::post('/suppliers', [SupplierController::class, 'store']);
 });
 
@@ -177,7 +177,7 @@ return response()->json(['data' => request()->user()->last_filter]);
 Route::get('/categories', [CategoryController::class, 'index']);
 
 // General search endpoint for dropdowns with rate limiting
-Route::middleware('throttle.search')->group(function () {
+Route::group(function () {
     Route::get('/search', [SearchController::class, 'search']);
 });
 
@@ -268,7 +268,7 @@ Route::get('/{type}/years', [VehicleController::class, 'getCompatibleYears']);
 });
 
 // Cart operations with rate limiting
-Route::middleware([CheckAuthOrSession::class, 'throttle.cart'])->group(function () {
+Route::middleware([CheckAuthOrSession::class])->group(function () {
     Route::get('/cart-menu', [CartController::class, 'getCartMenu']);
     Route::get('/cart', [CartController::class, 'getCart']);
     Route::post('/cart/add', [CartController::class, 'add']);
@@ -285,7 +285,7 @@ Route::middleware([CheckAuthOrSession::class, 'throttle.cart'])->group(function 
     Route::get('/cart/summary', [CartController::class, 'getCartSummary']);
 });
 // Checkout operations with rate limiting
-Route::middleware('throttle.checkout')->group(function () {
+Route::group(function () {
     Route::post('/checkout/guest', [CheckoutController::class, 'guestCheckout']);
 });
 
@@ -333,7 +333,7 @@ Route::post('/webhooks/jeebly/status-update', [\App\Http\Controllers\JeeblyWebho
 
 
 // Authenticated checkout with rate limiting
-Route::middleware(['auth:sanctum', 'throttle.checkout'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/checkout', [CheckoutController::class, 'userCheckout']);
 });
 
@@ -354,7 +354,7 @@ Route::post('/addresses/transfer-to-user', [AddressBookController::class, 'trans
 });
 
 // Inquiry submissions with rate limiting
-Route::middleware('throttle.forms')->group(function () {
+Route::group(function () {
     Route::post('/inquiries', [InquiryController::class, 'store']);
 });
 
