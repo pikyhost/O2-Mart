@@ -117,9 +117,10 @@ Route::delete('/{id}', [UserVehicleController::class, 'destroy']);
 });
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-$request->fulfill();
-
-return redirect('http://localhost:3000/email-verified');
+    $request->fulfill();
+    
+    $frontendUrl = config('app.frontend_url');
+    return redirect($frontendUrl . '/email-verified');
 })->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
 
 Route::prefix('brands')->group(function () {
