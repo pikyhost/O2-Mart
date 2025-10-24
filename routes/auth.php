@@ -17,10 +17,10 @@ Route::post('/login', [AuthenticatedSessionController::class, 'store'])
     ->name('login');
 
 
-
-Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
-    ->middleware(['auth:sanctum', 'signed', 'throttle:6,1'])
-    ->name('verification.verify');
+// Disabled - using api.php route instead (doesn't require auth)
+// Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
+//     ->middleware(['auth:sanctum', 'signed', 'throttle:6,1'])
+//     ->name('verification.verify');
 
 Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
     ->middleware(['auth:sanctum', 'throttle:6,1'])
