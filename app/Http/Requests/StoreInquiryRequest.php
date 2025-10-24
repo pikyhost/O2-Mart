@@ -213,25 +213,50 @@ class StoreInquiryRequest extends FormRequest
             // If it's already in the new format (array of objects), leave it as is
         }
 
-        // CRITICAL FIX: Handle quantity based on the format it's sent
+        // CRITICAL FIX: Handle quantity based on inquiry type and format
         
-        // 1. If quantity is explicitly provided as a direct field
-        if ($this->has('quantity') && $this->input('quantity') !== null) {
-            $quantityValue = $this->input('quantity');
-            $mappedData['quantity'] = is_numeric($quantityValue) ? (int)$quantityValue : 1;
-        }
-        // 2. If quantity is inside required_parts array (Rims case)
-        elseif (isset($mappedData['required_parts']) && is_array($mappedData['required_parts']) && !empty($mappedData['required_parts'])) {
-            // Extract quantity from first item in required_parts
-            $firstPart = $mappedData['required_parts'][0];
-            if (isset($firstPart['quantity'])) {
-                $mappedData['quantity'] = (int)$firstPart['quantity'];
+        $inquiryType = $mappedData['type'] ?? $this->input('type');
+        
+        // For RIMS and BATTERY: Use top-level quantity field (Overall Quantity in UI)
+        // These types typically have a single quantity for all items
+        if (in_array($inquiryType, ['rims', 'battery', 'tires'])) {
+            // Priority 1: Check for explicit top-level quantity field
+            if ($this->has('quantity') && $this->input('quantity') !== null && $this->input('quantity') > 0) {
+                $mappedData['quantity'] = (int)$this->input('quantity');
+            }
+            // Priority 2: Sum quantities from required_parts if present
+            elseif (isset($mappedData['required_parts']) && is_array($mappedData['required_parts']) && !empty($mappedData['required_parts'])) {
+                $totalQuantity = 0;
+                foreach ($mappedData['required_parts'] as $part) {
+                    $totalQuantity += isset($part['quantity']) ? (int)$part['quantity'] : 1;
+                }
+                $mappedData['quantity'] = $totalQuantity > 0 ? $totalQuantity : 1;
+            }
+            // Priority 3: Fallback to quantities array
+            elseif ($this->has('quantities') && is_array($this->input('quantities'))) {
+                $quantities = $this->input('quantities');
+                $mappedData['quantity'] = !empty($quantities) && is_numeric($quantities[0]) ? (int)$quantities[0] : 1;
             }
         }
-        // 3. Fallback: Handle quantities array for backward compatibility
-        elseif ($this->has('quantities') && is_array($this->input('quantities'))) {
-            $quantities = $this->input('quantities');
-            $mappedData['quantity'] = !empty($quantities) && is_numeric($quantities[0]) ? (int)$quantities[0] : 1;
+        // For AUTO_PARTS: Use required_parts array quantities (multiple parts with individual quantities)
+        else {
+            // Priority 1: Calculate total from required_parts array
+            if (isset($mappedData['required_parts']) && is_array($mappedData['required_parts']) && !empty($mappedData['required_parts'])) {
+                $totalQuantity = 0;
+                foreach ($mappedData['required_parts'] as $part) {
+                    $totalQuantity += isset($part['quantity']) ? (int)$part['quantity'] : 1;
+                }
+                $mappedData['quantity'] = $totalQuantity > 0 ? $totalQuantity : 1;
+            }
+            // Priority 2: Use explicit quantity field
+            elseif ($this->has('quantity') && $this->input('quantity') !== null) {
+                $mappedData['quantity'] = (int)$this->input('quantity');
+            }
+            // Priority 3: Fallback to quantities array
+            elseif ($this->has('quantities') && is_array($this->input('quantities'))) {
+                $quantities = $this->input('quantities');
+                $mappedData['quantity'] = !empty($quantities) && is_numeric($quantities[0]) ? (int)$quantities[0] : 1;
+            }
         }
 
         $this->merge($mappedData);
