@@ -68,7 +68,7 @@
                 "
               >
                 <p style="margin:0 0 15px 0;">Hello {{ $order->user->name ?? $order->contact_name ?? 'Guest' }},</p>
-                <p style="margin:0 0 20px 0;">Thank you for your order\! Here's your receipt:</p>
+                <p style="margin:0 0 20px 0;">Thank you for your order Here's your receipt:</p>
 
                 <!-- Order Box -->
                 <table width="100%" cellpadding="20" cellspacing="0" border="0" style="background-color:#f8f9fa; border:2px solid #df2020; border-radius:8px; margin:20px 0;">
