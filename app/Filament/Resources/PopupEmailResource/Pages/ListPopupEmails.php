@@ -4,9 +4,9 @@ namespace App\Filament\Resources\PopupEmailResource\Pages;
 
 use App\Filament\Resources\PopupEmailResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListPopupEmails extends ListRecords
+class ListPopupEmails extends BaseListPage
 {
     protected static string $resource = PopupEmailResource::class;
 

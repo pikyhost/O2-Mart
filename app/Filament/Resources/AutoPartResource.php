@@ -508,9 +508,15 @@ class AutoPartResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
+                    ->label('Bulk Upload')
                     ->icon('heroicon-o-arrow-up-tray')
                     ->color('danger')
-                    ->importer(AutoPartImporter::class),
+                    ->importer(AutoPartImporter::class)
+                    ->job(\Filament\Actions\Imports\Jobs\ImportCsv::class)
+                    ->chunkSize(10) // Process 10 rows at a time for faster updates
+                    ->options([
+                        'updateExisting' => true,
+                    ]),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')
                     ->icon('heroicon-o-trash')
@@ -525,6 +531,13 @@ class AutoPartResource extends BaseResource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            AutoPartResource\Widgets\ImportProgressWidget::class,
+        ];
     }
 
     public static function getPages(): array

@@ -47,7 +47,9 @@ class ViscosityGradeResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->importer(ViscosityGradeImporter::class),
+                    ->label('Bulk Upload')
+                    ->importer(ViscosityGradeImporter::class)
+                    ->chunkSize(10),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')
                     ->icon('heroicon-o-trash')

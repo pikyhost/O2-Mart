@@ -4,9 +4,9 @@ namespace App\Filament\Resources\RimSizeResource\Pages;
 
 use App\Filament\Resources\RimSizeResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListRimSizes extends ListRecords
+class ListRimSizes extends BaseListPage
 {
     protected static string $resource = RimSizeResource::class;
 

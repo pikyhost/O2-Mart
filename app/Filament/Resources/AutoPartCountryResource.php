@@ -40,7 +40,9 @@ class AutoPartCountryResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->importer(AutoPartCountryImporter::class),
+                    ->label('Bulk Upload')
+                    ->importer(AutoPartCountryImporter::class)
+                    ->chunkSize(10),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')
                     ->icon('heroicon-o-trash')

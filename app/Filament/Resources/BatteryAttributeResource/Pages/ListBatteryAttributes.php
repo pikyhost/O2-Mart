@@ -4,9 +4,9 @@ namespace App\Filament\Resources\BatteryAttributeResource\Pages;
 
 use App\Filament\Resources\BatteryAttributeResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListBatteryAttributes extends ListRecords
+class ListBatteryAttributes extends BaseListPage
 {
     protected static string $resource = BatteryAttributeResource::class;
 

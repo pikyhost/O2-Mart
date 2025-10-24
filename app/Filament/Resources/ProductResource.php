@@ -295,9 +295,11 @@ class ProductResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
+                    ->label('Bulk Upload')
                     ->icon('heroicon-o-arrow-up-tray')
                     ->color('danger')
                     ->importer(ProductImporter::class)
+                    ->chunkSize(10)
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

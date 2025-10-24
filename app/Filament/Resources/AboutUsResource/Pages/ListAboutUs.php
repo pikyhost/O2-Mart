@@ -4,9 +4,9 @@ namespace App\Filament\Resources\AboutUsResource\Pages;
 
 use App\Filament\Resources\AboutUsResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListAboutUs extends ListRecords
+class ListAboutUs extends BaseListPage
 {
     protected static string $resource = AboutUsResource::class;
 

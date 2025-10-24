@@ -48,7 +48,7 @@ class RimSizeResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Rim Sizes')
+                    ->label('Bulk Upload')
                     ->importer(RimSizeImporter::class),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')

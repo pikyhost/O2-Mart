@@ -43,7 +43,7 @@ class BatteryCountryResource extends BaseResource
             ])
             ->headerActions([
             ImportAction::make()
-                ->label('Import Battery Countries')
+                ->label('Bulk Upload')
                 ->icon('heroicon-o-arrow-up-tray')
                 ->color('primary')
                 ->importer(BatteryCountryImporter::class),

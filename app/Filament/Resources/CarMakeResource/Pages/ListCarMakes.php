@@ -4,9 +4,9 @@ namespace App\Filament\Resources\CarMakeResource\Pages;
 
 use App\Filament\Resources\CarMakeResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListCarMakes extends ListRecords
+class ListCarMakes extends BaseListPage
 {
     protected static string $resource = CarMakeResource::class;
 

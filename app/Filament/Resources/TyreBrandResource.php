@@ -71,7 +71,7 @@ class TyreBrandResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Brands')
+                    ->label('Bulk Upload')
                     ->icon('heroicon-o-arrow-up-tray')
                     ->color('danger')
                     ->importer(\App\Filament\Imports\TyreBrandImporter::class),

@@ -50,7 +50,7 @@ class RimCountryResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Rim Countries')
+                    ->label('Bulk Upload')
                     ->importer(RimCountryImporter::class),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')

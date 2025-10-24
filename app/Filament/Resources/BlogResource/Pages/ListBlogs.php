@@ -4,9 +4,9 @@ namespace App\Filament\Resources\BlogResource\Pages;
 
 use App\Filament\Resources\BlogResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListBlogs extends ListRecords
+class ListBlogs extends BaseListPage
 {
     protected static string $resource = BlogResource::class;
 

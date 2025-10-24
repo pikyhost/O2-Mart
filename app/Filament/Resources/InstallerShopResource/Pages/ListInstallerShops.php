@@ -4,9 +4,9 @@ namespace App\Filament\Resources\InstallerShopResource\Pages;
 
 use App\Filament\Resources\InstallerShopResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListInstallerShops extends ListRecords
+class ListInstallerShops extends BaseListPage
 {
     protected static string $resource = InstallerShopResource::class;
 

@@ -255,8 +255,9 @@ class RimResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Rims')
-                    ->importer(RimImporter::class),
+                    ->label('Bulk Upload')
+                    ->importer(RimImporter::class)
+                    ->chunkSize(10),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')
                     ->icon('heroicon-o-trash')

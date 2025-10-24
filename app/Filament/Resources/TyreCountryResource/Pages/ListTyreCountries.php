@@ -4,9 +4,9 @@ namespace App\Filament\Resources\TyreCountryResource\Pages;
 
 use App\Filament\Resources\TyreCountryResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListTyreCountries extends ListRecords
+class ListTyreCountries extends BaseListPage
 {
     protected static string $resource = TyreCountryResource::class;
 

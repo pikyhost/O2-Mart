@@ -4,9 +4,9 @@ namespace App\Filament\Resources\ViscosityGradeResource\Pages;
 
 use App\Filament\Resources\ViscosityGradeResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListViscosityGrades extends ListRecords
+class ListViscosityGrades extends BaseListPage
 {
     protected static string $resource = ViscosityGradeResource::class;
 

@@ -4,9 +4,9 @@ namespace App\Filament\Resources\GovernorateResource\Pages;
 
 use App\Filament\Resources\GovernorateResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ManageRecords;
+use App\Filament\Resources\Pages\BaseManagePage;
 
-class ManageGovernorates extends ManageRecords
+class ManageGovernorates extends BaseManagePage
 {
     protected static string $resource = GovernorateResource::class;
 

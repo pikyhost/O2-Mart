@@ -4,9 +4,9 @@ namespace App\Filament\Resources\TyreAttributeResource\Pages;
 
 use App\Filament\Resources\TyreAttributeResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListTyreAttributes extends ListRecords
+class ListTyreAttributes extends BaseListPage
 {
     protected static string $resource = TyreAttributeResource::class;
 

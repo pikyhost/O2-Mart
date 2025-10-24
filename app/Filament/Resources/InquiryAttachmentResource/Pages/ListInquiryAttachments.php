@@ -4,9 +4,9 @@ namespace App\Filament\Resources\InquiryAttachmentResource\Pages;
 
 use App\Filament\Resources\InquiryAttachmentResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListInquiryAttachments extends ListRecords
+class ListInquiryAttachments extends BaseListPage
 {
     protected static string $resource = InquiryAttachmentResource::class;
 

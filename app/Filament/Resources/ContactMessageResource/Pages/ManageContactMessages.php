@@ -6,9 +6,9 @@ use App\Filament\Resources\ContactMessageResource;
 use App\Models\ContactMessage;
 use App\Notifications\ContactMessageNotifier;
 use Filament\Actions;
-use Filament\Resources\Pages\ManageRecords;
+use App\Filament\Resources\Pages\BaseManagePage;
 
-class ManageContactMessages extends ManageRecords
+class ManageContactMessages extends BaseManagePage
 {
     protected static string $resource = ContactMessageResource::class;
 

@@ -53,7 +53,7 @@ class TyreCountryResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Countries')
+                    ->label('Bulk Upload')
                     ->icon('heroicon-o-arrow-up-tray')
                     ->color('danger')
                     ->importer(TyreCountryImporter::class),

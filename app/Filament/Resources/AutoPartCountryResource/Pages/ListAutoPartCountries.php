@@ -4,9 +4,9 @@ namespace App\Filament\Resources\AutoPartCountryResource\Pages;
 
 use App\Filament\Resources\AutoPartCountryResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListAutoPartCountries extends ListRecords
+class ListAutoPartCountries extends BaseListPage
 {
     protected static string $resource = AutoPartCountryResource::class;
 

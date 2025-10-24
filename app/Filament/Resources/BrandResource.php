@@ -72,7 +72,7 @@ class BrandResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Brands')
+                    ->label('Bulk Upload')
                     ->importer(BrandImporter::class),
             ])
 

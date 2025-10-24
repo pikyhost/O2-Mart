@@ -4,9 +4,9 @@ namespace App\Filament\Resources\BatteryCountryResource\Pages;
 
 use App\Filament\Resources\BatteryCountryResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListBatteryCountries extends ListRecords
+class ListBatteryCountries extends BaseListPage
 {
     protected static string $resource = BatteryCountryResource::class;
 

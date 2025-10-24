@@ -5,10 +5,10 @@ namespace App\Filament\Resources\AreaResource\Pages;
 use App\Filament\Resources\AreaResource;
 use App\Filament\Imports\AreaImporter;
 use Filament\Actions;
-use Filament\Resources\Pages\ManageRecords;
+use App\Filament\Resources\Pages\BaseManagePage;
 use Illuminate\Database\Eloquent\Builder;
 
-class ManageAreas extends ManageRecords
+class ManageAreas extends BaseManagePage
 {
     protected static string $resource = AreaResource::class;
 
@@ -22,7 +22,9 @@ class ManageAreas extends ManageRecords
         return [
             Actions\CreateAction::make(),
             Actions\ImportAction::make()
-                ->importer(AreaImporter::class),
+                ->label('Bulk Upload')
+                ->importer(AreaImporter::class)
+                ->chunkSize(10),
         ];
     }
 }

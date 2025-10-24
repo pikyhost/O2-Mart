@@ -63,7 +63,7 @@ class TyreModelResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Models')
+                    ->label('Bulk Upload')
                     ->importer(TyreModelImporter::class),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')

@@ -4,18 +4,19 @@ namespace App\Filament\Resources\OrderResource\Pages;
 
 use App\Filament\Resources\OrderResource;
 use App\Models\Order;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Pages\Actions\CreateAction;
 
-class ListOrders extends ListRecords
+class ListOrders extends BaseListPage
 {
     protected static string $resource = OrderResource::class;
     
     protected function getHeaderWidgets(): array
     {
         return [
+            \App\Filament\Resources\AutoPartResource\Widgets\ImportProgressWidget::class,
             OrderResource\Widgets\OrderStatsWidget::class,
         ];
     }

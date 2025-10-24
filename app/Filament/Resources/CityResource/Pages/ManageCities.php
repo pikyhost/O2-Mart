@@ -5,9 +5,9 @@ namespace App\Filament\Resources\CityResource\Pages;
 use App\Filament\Imports\CityImporter;
 use App\Filament\Resources\CityResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ManageRecords;
+use App\Filament\Resources\Pages\BaseManagePage;
 
-class ManageCities extends ManageRecords
+class ManageCities extends BaseManagePage
 {
     protected static string $resource = CityResource::class;
 

@@ -4,9 +4,9 @@ namespace App\Filament\Resources\RimAttributeResource\Pages;
 
 use App\Filament\Resources\RimAttributeResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListRimAttributes extends ListRecords
+class ListRimAttributes extends BaseListPage
 {
     protected static string $resource = RimAttributeResource::class;
 

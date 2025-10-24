@@ -4,9 +4,9 @@ namespace App\Filament\Resources\ProductReviewResource\Pages;
 
 use App\Filament\Resources\ProductReviewResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListProductReviews extends ListRecords
+class ListProductReviews extends BaseListPage
 {
     protected static string $resource = ProductReviewResource::class;
 

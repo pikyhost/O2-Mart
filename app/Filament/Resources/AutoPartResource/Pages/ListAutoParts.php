@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\AutoPartResource\Pages;
 
 use App\Filament\Resources\AutoPartResource;
+use App\Filament\Resources\Pages\BaseListPage;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
 
-class ListAutoParts extends ListRecords
+class ListAutoParts extends BaseListPage
 {
     protected static string $resource = AutoPartResource::class;
 

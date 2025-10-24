@@ -4,9 +4,9 @@ namespace App\Filament\Resources\BatteryDimensionResource\Pages;
 
 use App\Filament\Resources\BatteryDimensionResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListBatteryDimensions extends ListRecords
+class ListBatteryDimensions extends BaseListPage
 {
     protected static string $resource = BatteryDimensionResource::class;
 

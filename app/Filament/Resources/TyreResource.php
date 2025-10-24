@@ -339,9 +339,11 @@ class TyreResource extends BaseResource
             ->defaultSort('id', 'desc')
             ->headerActions([
                 ImportAction::make()
+                    ->label('Bulk Upload')
                     ->icon('heroicon-o-arrow-up-tray')
                     ->color('danger')
-                    ->importer(TyreImporter::class),
+                    ->importer(TyreImporter::class)
+                    ->chunkSize(10),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')
                     ->icon('heroicon-o-trash')

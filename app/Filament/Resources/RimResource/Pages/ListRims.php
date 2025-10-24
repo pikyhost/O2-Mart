@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\RimResource\Pages;
 
 use App\Filament\Resources\RimResource;
+use App\Filament\Resources\Pages\BaseListPage;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
 
-class ListRims extends ListRecords
+class ListRims extends BaseListPage
 {
     protected static string $resource = RimResource::class;
 

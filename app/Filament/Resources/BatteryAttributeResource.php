@@ -105,7 +105,7 @@ class BatteryAttributeResource extends BaseResource
 
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Attributes')
+                    ->label('Bulk Upload')
                     ->icon('heroicon-o-arrow-up-tray')
                     ->color('danger')
                     ->importer(BatteryAttributeImporter::class)

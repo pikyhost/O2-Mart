@@ -4,9 +4,9 @@ namespace App\Filament\Resources\SupplierPageResource\Pages;
 
 use App\Filament\Resources\SupplierPageResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListSupplierPages extends ListRecords
+class ListSupplierPages extends BaseListPage
 {
     protected static string $resource = SupplierPageResource::class;
 

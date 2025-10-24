@@ -67,7 +67,7 @@ class BatteryBrandResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Brands')
+                    ->label('Bulk Upload')
                     ->importer(BatteryBrandImporter::class),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')

@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\TyreResource\Pages;
 
 use App\Filament\Resources\TyreResource;
+use App\Filament\Resources\Pages\BaseListPage;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
 
-class ListTyres extends ListRecords
+class ListTyres extends BaseListPage
 {
     protected static string $resource = TyreResource::class;
 

@@ -4,9 +4,9 @@ namespace App\Filament\Resources\BatteryCapacityResource\Pages;
 
 use App\Filament\Resources\BatteryCapacityResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListBatteryCapacities extends ListRecords
+class ListBatteryCapacities extends BaseListPage
 {
     protected static string $resource = BatteryCapacityResource::class;
 

@@ -4,9 +4,9 @@ namespace App\Filament\Resources\CarTyreSpecResource\Pages;
 
 use App\Filament\Resources\CarTyreSpecResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListCarTyreSpecs extends ListRecords
+class ListCarTyreSpecs extends BaseListPage
 {
     protected static string $resource = CarTyreSpecResource::class;
 

@@ -4,9 +4,9 @@ namespace App\Filament\Resources\HomeSectionResource\Pages;
 
 use App\Filament\Resources\HomeSectionResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListHomeSections extends ListRecords
+class ListHomeSections extends BaseListPage
 {
     protected static string $resource = HomeSectionResource::class;
 

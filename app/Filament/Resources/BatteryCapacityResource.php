@@ -52,7 +52,7 @@ class BatteryCapacityResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Capacities')
+                    ->label('Bulk Upload')
                     ->importer(BatteryCapacityImporter::class),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')

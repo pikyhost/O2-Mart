@@ -58,7 +58,7 @@ class RimBrandResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Rim Brands')
+                    ->label('Bulk Upload')
                     ->importer(RimBrandImporter::class),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')

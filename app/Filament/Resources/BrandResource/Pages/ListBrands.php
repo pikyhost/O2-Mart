@@ -4,9 +4,9 @@ namespace App\Filament\Resources\BrandResource\Pages;
 
 use App\Filament\Resources\BrandResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListBrands extends ListRecords
+class ListBrands extends BaseListPage
 {
     protected static string $resource = BrandResource::class;
 

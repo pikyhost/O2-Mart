@@ -4,9 +4,9 @@ namespace App\Filament\Resources\RimCountryResource\Pages;
 
 use App\Filament\Resources\RimCountryResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListRimCountries extends ListRecords
+class ListRimCountries extends BaseListPage
 {
     protected static string $resource = RimCountryResource::class;
 

@@ -4,9 +4,9 @@ namespace App\Filament\Resources\VinRecordResource\Pages;
 
 use App\Filament\Resources\VinRecordResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListVinRecords extends ListRecords
+class ListVinRecords extends BaseListPage
 {
     protected static string $resource = VinRecordResource::class;
 

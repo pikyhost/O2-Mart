@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\ProductResource\Pages;
 
 use App\Filament\Resources\ProductResource;
+use App\Filament\Resources\Pages\BaseListPage;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
 
-class ListProducts extends ListRecords
+class ListProducts extends BaseListPage
 {
     protected static string $resource = ProductResource::class;
 

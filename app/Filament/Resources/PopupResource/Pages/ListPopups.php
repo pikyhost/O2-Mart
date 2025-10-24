@@ -4,9 +4,9 @@ namespace App\Filament\Resources\PopupResource\Pages;
 
 use App\Filament\Resources\PopupResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 
-class ListPopups extends ListRecords
+class ListPopups extends BaseListPage
 {
     protected static string $resource = PopupResource::class;
 

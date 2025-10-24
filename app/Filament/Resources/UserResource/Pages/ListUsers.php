@@ -12,11 +12,11 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 
-class ListUsers extends ListRecords
+class ListUsers extends BaseListPage
 {
     protected static string $resource = UserResource::class;
 

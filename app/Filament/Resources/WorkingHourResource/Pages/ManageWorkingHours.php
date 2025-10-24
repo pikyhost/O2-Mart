@@ -4,9 +4,9 @@ namespace App\Filament\Resources\WorkingHourResource\Pages;
 
 use App\Filament\Resources\WorkingHourResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ManageRecords;
+use App\Filament\Resources\Pages\BaseManagePage;
 
-class ManageWorkingHours extends ManageRecords
+class ManageWorkingHours extends BaseManagePage
 {
     protected static string $resource = WorkingHourResource::class;
 

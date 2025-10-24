@@ -3,10 +3,10 @@
 namespace App\Filament\Resources\NewsletterSubscriberResource\Pages;
 
 use App\Filament\Resources\NewsletterSubscriberResource;
+use App\Filament\Resources\Pages\BaseManagePage;
 use Filament\Actions;
-use Filament\Resources\Pages\ManageRecords;
 
-class ManageNewsletterSubscribers extends ManageRecords
+class ManageNewsletterSubscribers extends BaseManagePage
 {
     protected static string $resource = NewsletterSubscriberResource::class;
 

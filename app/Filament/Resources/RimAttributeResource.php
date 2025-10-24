@@ -74,7 +74,7 @@ class RimAttributeResource extends BaseResource
         return $table
             ->headerActions([
                 ImportAction::make()
-                    ->label('Import Attributes')
+                    ->label('Bulk Upload')
                     ->color('danger')
                     ->importer(RimAttributeImporter::class),
                 Tables\Actions\Action::make('deleteAll')

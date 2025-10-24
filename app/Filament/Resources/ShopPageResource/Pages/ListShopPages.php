@@ -4,10 +4,10 @@ namespace App\Filament\Resources\ShopPageResource\Pages;
 
 use App\Filament\Resources\ShopPageResource;
 use Filament\Actions;
-use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\Pages\BaseListPage;
 use Illuminate\Database\Eloquent\Model;
 
-class ListShopPages extends ListRecords
+class ListShopPages extends BaseListPage
 {
     protected static string $resource = ShopPageResource::class;
 

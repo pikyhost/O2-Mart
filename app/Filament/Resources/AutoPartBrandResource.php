@@ -59,7 +59,9 @@ class AutoPartBrandResource extends BaseResource
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->importer(AutoPartBrandImporter::class),
+                    ->label('Bulk Upload')
+                    ->importer(AutoPartBrandImporter::class)
+                    ->chunkSize(10),
                 Tables\Actions\Action::make('deleteAll')
                     ->label('Delete All Records')
                     ->icon('heroicon-o-trash')
