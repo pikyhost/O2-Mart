@@ -28,8 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Configure Rate Limiters
-        $this->configureRateLimiting();
+        // // Configure Rate Limiters
+        // $this->configureRateLimiting();
         
         // Set password validation rules
         Password::defaults(function () {
