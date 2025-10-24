@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(prepend: [
             HandleCors::class,
-            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
+          //  \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
         ]);
 
         $middleware->alias([

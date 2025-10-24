@@ -144,7 +144,7 @@ if ($request->user()->hasVerifiedEmail()) {
 $request->user()->sendEmailVerificationNotification();
 
 return response()->json(['message' => 'Verification link sent!']);
-})->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
+})->middleware(['auth:sanctum'])->name('verification.send');
 
 Route::get('/car-makes', [VehicleController::class, 'carMakesWithModelsAndYears']);
 Route::get('/car-makes/{id}/models', [VehicleController::class, 'getModelsByMake']);
