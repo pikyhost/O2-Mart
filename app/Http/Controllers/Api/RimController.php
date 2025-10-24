@@ -240,7 +240,7 @@ class RimController extends Controller
             'data' => $rim,
         ]);
     }
-    public function show($id)
+    public function show($slug)
     {
         $rim = Rim::with([
             'attributes.make',
@@ -252,7 +252,7 @@ class RimController extends Controller
             'reviews' => function ($q) {
                 $q->where('is_approved', true)->latest();
             }
-        ])->find($id);
+        ])->where('slug', $slug)->first();
 
         if (! $rim) {
             return response()->json([

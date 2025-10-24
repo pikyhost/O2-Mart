@@ -289,7 +289,7 @@ class TyreController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show($slug)
     {
         $tyre = Tyre::with([
             'tyreAttribute',
@@ -300,7 +300,7 @@ class TyreController extends Controller
             'reviews' => function ($q) {
                 $q->where('is_approved', true)->latest();
             }
-        ])->find($id);
+        ])->where('slug', $slug)->first();
 
         if (! $tyre) {
             return response()->json([

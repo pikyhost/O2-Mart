@@ -126,7 +126,7 @@ public function index(Request $request)
         ]);
     }
 
-    public function show($id)
+    public function show($slug)
     {
         $battery = Battery::with([
             'attributes',
@@ -138,7 +138,7 @@ public function index(Request $request)
             'reviews' => function ($q) {
                 $q->where('is_approved', true)->latest();
             }
-        ])->find($id);
+        ])->where('slug', $slug)->first();
 
         if (! $battery) {
             return response()->json([

@@ -198,7 +198,7 @@ Route::get('/filters', [AutoPartController::class, 'filters']);
 Route::get('/categories', [AutoPartController::class, 'categoriesWithSub']);
 Route::get('/brands', [AutoPartController::class, 'brands']);
 Route::get('/countries', [AutoPartController::class, 'countries']);
-Route::get('/{id}', [AutoPartController::class, 'show']);
+Route::get('/{slug}', [AutoPartController::class, 'show']);
 Route::get('/part-number/search', [AutoPartController::class, 'searchByPartNumber']);
 Route::get('/cross-reference/search', [AutoPartController::class, 'findByCrossReference']);
 });
@@ -215,7 +215,7 @@ Route::get('/oem/search', [TyreController::class, 'searchByOem']);
 Route::get('/trims', [TyreController::class, 'trims']);
 Route::get('/search-by-size-options', [TyreController::class, 'searchBySizeOptions']);
 
-Route::get('/{id}', [TyreController::class, 'show']);
+Route::get('/{slug}', [TyreController::class, 'show']);
 });
 Route::get('/rim-sizes', fn () => \App\Models\RimSize::select('id', 'size')->orderBy('size')->get()->map(function($rimSize) {
     $rimSize->size = (string) intval($rimSize->size);
@@ -237,7 +237,7 @@ Route::get('/', [BatteryController::class, 'index']);
 Route::get('/filters', [BatteryController::class, 'filters']);
 Route::get('/compatible-search', [BatteryController::class, 'compatibleSearch']);
 Route::get('/compatible-car-makes', [BatteryController::class, 'compatibleCarMakes']);
-Route::get('/{id}', [BatteryController::class, 'show']);
+Route::get('/{slug}', [BatteryController::class, 'show']);
 });
 
 Route::prefix('rims')->group(function () {
@@ -245,7 +245,7 @@ Route::get('/', [RimController::class, 'index']);
 Route::get('/filters', [RimController::class, 'filters']);
 Route::get('/compatible-search', [RimController::class, 'compatibleSearch']);
 Route::get('/compatible-car-makes', [RimController::class, 'compatibleCarMakes']);
-Route::get('/{id}', [RimController::class, 'show']);
+Route::get('/{slug}', [RimController::class, 'show']);
 Route::get('/part-number/search', [RimController::class, 'searchByPartNumber']);
 });
 

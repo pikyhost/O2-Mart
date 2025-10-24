@@ -174,7 +174,7 @@ class AutoPartController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show($slug)
     {
         $autoPart = AutoPart::with([
             'autoPartBrand',
@@ -182,7 +182,7 @@ class AutoPartController extends Controller
             'category',
             'viscosityGrade',
             'reviews' => fn ($q) => $q->where('is_approved', true)->latest(),
-        ])->find($id);
+        ])->where('slug', $slug)->first();
 
         if (! $autoPart) {
             return response()->json([
