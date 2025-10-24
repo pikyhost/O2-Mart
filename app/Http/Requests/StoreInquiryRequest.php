@@ -39,11 +39,7 @@ class StoreInquiryRequest extends FormRequest
                 'string',
                 'max:50',
                 'alpha_num',
-                function ($attribute, $value, $fail) {
-                    if (!empty($value) && $this->hasFile('car_license_photos')) {
-                        $fail('You cannot provide both VIN/Chassis number and car license photos.');
-                    }
-                },
+                // Removed restriction - allow both VIN and car license photos
             ],
 
             // Inquiry Details
@@ -94,8 +90,6 @@ class StoreInquiryRequest extends FormRequest
             'car_year.min' => 'Car year must be 1900 or later.',
             'car_year.max' => 'Car year cannot be more than next year.',
             'vin_chassis_number.alpha_num' => 'VIN/Chassis number must contain only letters and numbers.',
-            'vin_chassis_number' => 'You cannot provide both VIN/Chassis number and car license photos.',
-            'car_license_photos' => 'You cannot provide both car license photos and VIN/Chassis number.',
             'required_parts.max' => 'Maximum 10 parts can be requested.',
             'car_license_photos.max' => 'Maximum 5 car license photos allowed.',
             'part_photos.max' => 'Maximum 10 part photos allowed.',

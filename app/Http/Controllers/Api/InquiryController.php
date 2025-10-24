@@ -57,40 +57,15 @@ class InquiryController extends Controller
 
     public function store(StoreInquiryRequest $request): JsonResponse
     {
-        // Debug logging
-        \Log::info('Inquiry Request Raw Data', [
-            'all' => $request->all(),
-            'quantity' => $request->input('quantity'),
-            'quantities' => $request->input('quantities'),
-            'type' => $request->input('type')
-        ]);
-        
         try {
             $data = $request->validated();
             
-            \Log::info('Inquiry Validated Data', [
-                'data' => $data,
-                'quantity' => $data['quantity'] ?? 'NOT SET'
-            ]);
-            
             DB::beginTransaction();
-
 
             // Remove file fields from data since we handle them with media library
             $inquiryData = collect($data)->except(['car_license_photos', 'part_photos'])->toArray();
 
-            \Log::info('Inquiry Data Before Create', [
-                'inquiryData' => $inquiryData,
-                'quantity' => $inquiryData['quantity'] ?? 'NOT SET'
-            ]);
-
             $inquiry = Inquiry::create($inquiryData);
-            
-            \Log::info('Inquiry After Create', [
-                'id' => $inquiry->id,
-                'quantity' => $inquiry->quantity,
-                'type' => $inquiry->type
-            ]);
             
             // Handle file uploads with media library
 
