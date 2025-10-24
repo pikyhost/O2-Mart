@@ -32,8 +32,12 @@ return Application::configure(basePath: dirname(__DIR__))
             // 'api.security' => \App\Http\Middleware\ApiSecurityMiddleware::class,
         ]);
 
+        // Add security headers to all requests
+        $middleware->append(\App\Http\Middleware\SecurityHeadersMiddleware::class);
+
         // API middleware group
         $middleware->prependToGroup('api', \App\Http\Middleware\AlwaysAcceptJson::class);
+        $middleware->prependToGroup('api', \App\Http\Middleware\ValidateJsonMiddleware::class);
 
 //        $middleware->prependToGroup('api', \App\Http\Middleware\CheckAuthOrSession::class);
 

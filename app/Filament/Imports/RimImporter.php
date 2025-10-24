@@ -174,10 +174,26 @@ class RimImporter extends BaseUpsertImporter
                     
                     // Download and save with clean filename
                     $tempFile = tempnam(sys_get_temp_dir(), 'rim_');
-                    $imageData = file_get_contents($url);
+                    
+                    // Validate URL and download with timeout
+                    $context = stream_context_create([
+                        'http' => [
+                            'timeout' => 10,
+                            'user_agent' => 'O2Mart/1.0',
+                            'max_redirects' => 3
+                        ]
+                    ]);
+                    
+                    $imageData = @file_get_contents($url, false, $context);
+                    if (!$imageData) {
+                        throw new \Exception('Failed to download image');
+                    }
+                    
                     file_put_contents($tempFile, $imageData);
                     
-                    if (getimagesize($tempFile)) {
+                    // Validate image and check for malicious content
+                    $imageInfo = getimagesize($tempFile);
+                    if ($imageInfo && in_array($imageInfo['mime'], ['image/jpeg', 'image/png', 'image/gif'])) {
                         $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION) ?: 'png';
                         $cleanFileName = \Str::random(26) . '.' . $extension;
                         
