@@ -26,7 +26,7 @@ class PasswordResetLinkController extends Controller
         $email = strtolower(trim($request->email));
         
         // Check if user exists with normalized email
-        $user = User::whereRaw('LOWER(TRIM(email)) = ?', [$email])->first();
+        $user = User::where('email', $email)->first();
         
         if (!$user) {
             throw ValidationException::withMessages([
