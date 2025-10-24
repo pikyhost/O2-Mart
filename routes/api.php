@@ -116,8 +116,25 @@ Route::put('/{id}', [UserVehicleController::class, 'update']);
 Route::delete('/{id}', [UserVehicleController::class, 'destroy']);
 });
 
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
+Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+    // Find the user
+    $user = \App\Models\User::findOrFail($id);
+    
+    // Verify the hash matches
+    if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        abort(403, 'Invalid verification link.');
+    }
+    
+    // Check if already verified
+    if ($user->hasVerifiedEmail()) {
+        $frontendUrl = config('app.frontend_url');
+        return redirect($frontendUrl . '/email-verified?verified=true&already=true');
+    }
+    
+    // Mark email as verified
+    $user->markEmailAsVerified();
+    
+    event(new \Illuminate\Auth\Events\Verified($user));
     
     $frontendUrl = config('app.frontend_url');
     return redirect($frontendUrl . '/email-verified?verified=true');
