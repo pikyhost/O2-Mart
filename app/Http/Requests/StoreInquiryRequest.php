@@ -214,9 +214,15 @@ class StoreInquiryRequest extends FormRequest
         }
 
         // Handle quantities array to quantity field (for backward compatibility)
-        if ($this->has('quantities') && is_array($this->input('quantities')) && !isset($mappedData['required_parts'])) {
+        // Only set quantity from quantities array if quantity is not already provided
+        if ($this->has('quantities') && is_array($this->input('quantities')) && !isset($mappedData['required_parts']) && !$this->has('quantity')) {
             $quantities = $this->input('quantities');
             $mappedData['quantity'] = !empty($quantities) ? (int)$quantities[0] : 1;
+        }
+        
+        // Preserve the quantity value if it was explicitly provided in the request
+        if ($this->has('quantity') && !isset($mappedData['quantity'])) {
+            $mappedData['quantity'] = (int)$this->input('quantity');
         }
 
         $this->merge($mappedData);
