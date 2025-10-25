@@ -241,18 +241,13 @@ Route::get('/rim-sizes', fn () => \App\Models\RimSize::select('id', 'size')->ord
 }));
 // fix
 
-Route::middleware(CheckAuthOrSession::class)->prefix('compare')->group(function () {
+Route::middleware([CheckAuthOrSession::class])->prefix('compare')->group(function () {
 Route::get('/', [CompareController::class, 'index']);
 Route::post('/add', [CompareController::class, 'add']);
 Route::delete('/remove', [CompareController::class, 'remove']);
 Route::post('/clear', [CompareController::class, 'clear']);
 Route::get('/debug', [CompareController::class, 'debug']);
 });
-
-// OPTIONS preflight for compare routes
-Route::options('compare/{any?}', function() {
-    return response('', 200);
-})->where('any', '.*');
 
 Route::prefix('batteries')->group(function () {
 Route::get('/part-number/search', [BatteryController::class, 'searchByPartNumber']);
@@ -277,7 +272,7 @@ Route::get('/reviews', [ProductReviewController::class, 'getAllReviews']);
 
 
 // Route
-Route::middleware(CheckAuthOrSession::class)->group(function () {
+Route::middleware([CheckAuthOrSession::class])->group(function () {
 Route::get('/wishlist', [WishlistController::class, 'index']);
 Route::post('/wishlist', [WishlistController::class, 'store']);
 Route::delete('/wishlist', [WishlistController::class, 'destroy']);
