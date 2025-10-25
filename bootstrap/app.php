@@ -36,8 +36,8 @@ return Application::configure(basePath: dirname(__DIR__))
       //  $middleware->append(\App\Http\Middleware\SecurityHeadersMiddleware::class);
 
         // API middleware group
-       $middleware->prependToGroup('api', \App\Http\Middleware\AlwaysAcceptJson::class);
-       $middleware->prependToGroup('api', \App\Http\Middleware\ValidateJsonMiddleware::class);
+     //   $middleware->prependToGroup('api', \App\Http\Middleware\AlwaysAcceptJson::class);
+      //  $middleware->prependToGroup('api', \App\Http\Middleware\ValidateJsonMiddleware::class);
 
 //        $middleware->prependToGroup('api', \App\Http\Middleware\CheckAuthOrSession::class);
 
