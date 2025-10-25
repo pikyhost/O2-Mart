@@ -1,2 +1,24 @@
 User-agent: *
-Disallow:
+Disallow: /api/
+Disallow: /admin/
+Disallow: /storage/
+Disallow: /_debugbar/
+Disallow: /telescope/
+Crawl-delay: 2
+
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+User-agent: python-requests
+Disallow: /
+
+User-agent: curl
+Disallow: /
+
+User-agent: scrapy
+Disallow: /
+
+User-agent: wget
+Disallow: /

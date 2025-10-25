@@ -68,6 +68,11 @@ class AppServiceProvider extends ServiceProvider
     {
         // Default API rate limiter - 60 requests per minute per IP
         RateLimiter::for('api', function (Request $request) {
+            // Stricter limits for suspicious requests
+            $userAgent = strtolower($request->userAgent() ?? '');
+            if (str_contains($userAgent, 'bot') || str_contains($userAgent, 'crawler')) {
+                return Limit::perMinute(10)->by($request->ip());
+            }
             return Limit::perMinute(60)->by($request->ip());
         });
 

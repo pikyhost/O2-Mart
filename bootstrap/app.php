@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(prepend: [
             HandleCors::class,
+            \App\Http\Middleware\AntiScrapingMiddleware::class,
            \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
         ]);
 
@@ -29,7 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'throttle.checkout' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':checkout',
             'throttle.search' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':search',
             'throttle.cart' => \Illuminate\Routing\Middleware\ThrottleRequests::class.':cart',
-            // 'api.security' => \App\Http\Middleware\ApiSecurityMiddleware::class,
+            'anti.scraping' => \App\Http\Middleware\AntiScrapingMiddleware::class,
         ]);
 
         // Add security headers to all requests
