@@ -249,6 +249,11 @@ Route::post('/clear', [CompareController::class, 'clear']);
 Route::get('/debug', [CompareController::class, 'debug']);
 });
 
+// OPTIONS preflight for compare routes
+Route::options('compare/{any?}', function() {
+    return response('', 200);
+})->where('any', '.*');
+
 Route::prefix('batteries')->group(function () {
 Route::get('/part-number/search', [BatteryController::class, 'searchByPartNumber']);
 Route::get('/', [BatteryController::class, 'index']);
